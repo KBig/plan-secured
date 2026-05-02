@@ -98,13 +98,18 @@ html, body {
   border-color: var(--border-2);
   color: var(--text);
 }
+.back-btn {
+  text-decoration: none;
+  font-weight: 500;
+}
+.back-btn:hover { color: var(--text); }
 
 /* TABS */
 .tabs {
   position: sticky;
-  top: 53px;
+  top: 51px;
   z-index: 90;
-  background: var(--bg);
+  background: var(--bg-2);
   border-bottom: 1px solid var(--border);
   display: flex;
   overflow-x: auto;
@@ -367,7 +372,8 @@ button.action:hover { background: var(--accent-2); }
 <body>
 
 <div class="topbar">
-  <h1>Outils &mdash; Calculateurs immobiliers</h1>
+  <a href="index.html" class="btn-text back-btn" title="Retour au plan">&larr; Plan</a>
+  <h1>Outils &mdash; Calculateurs</h1>
   <button class="btn-text" onclick="toggleTheme()" id="theme-btn">Sombre</button>
 </div>
 
@@ -610,8 +616,9 @@ function showTool(id) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tool-' + id).classList.add('active');
   event.target.classList.add('active');
-  // Sauvegarde dernier tab visité
   localStorage.setItem('outils_last_tab', id);
+  // Scroll au top pour ne pas atterrir au milieu de l'outil
+  window.scrollTo({top: 0, behavior: 'instant'});
 }
 
 // Restauration tab

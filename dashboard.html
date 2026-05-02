@@ -98,13 +98,18 @@ html, body {
   border-color: var(--border-2);
   color: var(--text);
 }
+.back-btn {
+  text-decoration: none;
+  font-weight: 500;
+}
+.back-btn:hover { color: var(--text); }
 
 /* TABS */
 .tabs {
   position: sticky;
-  top: 53px;
+  top: 51px;
   z-index: 90;
-  background: var(--bg);
+  background: var(--bg-2);
   border-bottom: 1px solid var(--border);
   display: flex;
   overflow-x: auto;
@@ -375,6 +380,7 @@ button.action.secondary:hover { background: var(--bg-4); }
 <body>
 
 <div class="topbar">
+  <a href="index.html" class="btn-text back-btn" title="Retour au plan">&larr; Plan</a>
   <h1>Dashboard &mdash; Plan vs Réalité</h1>
   <button class="btn-text" onclick="toggleTheme()" id="theme-btn">Sombre</button>
 </div>
@@ -639,16 +645,43 @@ const STORAGE_KEY = 'dashboard_data_v2';
 let userData = null;
 let selectedPath = 'A';
 
+// Valeurs par défaut au 1er chargement = chiffres canoniques Mathis mai 2026
+// (tirés de SOURCE_DE_VERITE.md). L'utilisateur peut les modifier ensuite.
+const DEFAULTS = {
+  date: new Date().toISOString().slice(0, 10),
+  age: '21',
+  fhsa: '10000',
+  celi: '2600',
+  reer: '0',
+  cash: '5000',
+  nonreg: '0',
+  revenu: '39900',
+  dette: '18900',
+  credit: '758',
+  portes: '0',
+  equity: '0',
+  cashflow: '0'
+};
+
 function loadData() {
   try {
-    userData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-  } catch(e) { userData = {}; }
+    userData = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+  } catch(e) { userData = null; }
+
+  // Si aucune donnée sauvegardée, pré-populer avec les défauts (chiffres Mathis)
+  if (!userData || Object.keys(userData).length === 0) {
+    userData = Object.assign({}, DEFAULTS);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+  }
+
   selectedPath = localStorage.getItem('dashboard_path') || 'A';
-  // Restaurer les inputs
+
+  // Restaurer les inputs depuis userData (qui contient soit le sauvegardé, soit les défauts)
   Object.keys(userData).forEach(k => {
     const el = document.getElementById('r-' + k);
     if (el && userData[k] !== undefined && userData[k] !== '') el.value = userData[k];
   });
+
   // Restaurer le path
   document.querySelectorAll('.path-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.path === selectedPath);
@@ -711,10 +744,15 @@ function importData() {
 }
 
 function resetData() {
-  if (!confirm('Effacer toutes tes données saisies ? Cette action est irréversible.')) return;
+  if (!confirm('Réinitialiser aux chiffres canoniques de Mathis (mai 2026) ? Tes saisies actuelles seront perdues.')) return;
   localStorage.removeItem(STORAGE_KEY);
-  document.querySelectorAll('input').forEach(i => i.value = '');
-  userData = {};
+  userData = Object.assign({}, DEFAULTS);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+  // Repopuler les inputs
+  Object.keys(userData).forEach(k => {
+    const el = document.getElementById('r-' + k);
+    if (el) el.value = userData[k];
+  });
   renderComparaison();
   drawChart();
 }
@@ -972,6 +1010,8 @@ function showTool(id) {
   document.getElementById('tool-' + id).classList.add('active');
   event.target.classList.add('active');
   localStorage.setItem('dashboard_last_tab', id);
+  // Scroll au top de la page (compense la sticky topbar + tabs)
+  window.scrollTo({top: 0, behavior: 'instant'});
   if (id === 'graphique') setTimeout(drawChart, 50);
   if (id === 'comparaison') renderComparaison();
 }
