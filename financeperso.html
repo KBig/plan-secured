@@ -799,16 +799,64 @@ td.negative { color: var(--red); }
 .bs-suggestion.good .bs-suggestion-icon { background: var(--green);  color: white; }
 .bs-suggestion strong.amount { color: inherit; }
 
-/* Mode compact */
+/* Mode compact (defaut) - 1 ligne ultra fine, ~50px tall */
 .budget-summary.collapsed .bs-section,
 .budget-summary.collapsed .bs-stats,
-.budget-summary.collapsed .bs-suggestion,
-.budget-summary.collapsed .bs-kpi-sub { display: none; }
-.budget-summary.collapsed { padding: 10px 14px; }
-.budget-summary.collapsed .bs-kpis { margin-bottom: 0; gap: 8px; }
-.budget-summary.collapsed .bs-kpi-card { padding: 8px 10px; }
-.budget-summary.collapsed .bs-kpi-value { font-size: 16px; }
-.budget-summary.collapsed .bs-kpi-label { margin-bottom: 2px; }
+.budget-summary.collapsed #bs-suggestion-wrap,
+.budget-summary.collapsed .bs-kpi-sub,
+.budget-summary.collapsed .bs-header { display: none; }
+
+.budget-summary.collapsed {
+  padding: 8px 14px;
+  position: relative;
+}
+.budget-summary.collapsed .bs-kpis {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  padding-right: 90px;  /* place pour bouton Details */
+}
+.budget-summary.collapsed .bs-kpi-card {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 4px 12px;
+  border-right: 1px solid var(--border);
+}
+.budget-summary.collapsed .bs-kpi-card:last-child { border-right: none; }
+.budget-summary.collapsed .bs-kpi-card::before {
+  width: 2px;
+}
+.budget-summary.collapsed .bs-kpi-label {
+  font-size: 9px; margin-bottom: 1px;
+  letter-spacing: 0.05em;
+}
+.budget-summary.collapsed .bs-kpi-value {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* Bouton Details flottant en haut a droite en mode collapsed */
+.bs-toggle-floating {
+  position: absolute;
+  top: 50%; right: 14px;
+  transform: translateY(-50%);
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 500;
+  display: none;
+  white-space: nowrap;
+}
+.bs-toggle-floating:hover {
+  background: var(--bg-4);
+  color: var(--text);
+}
+.budget-summary.collapsed .bs-toggle-floating { display: inline-block; }
 
 @media (max-width: 700px) {
   .budget-summary { padding: 14px 14px; }
@@ -1371,6 +1419,10 @@ const BUDGET_CATEGORIES = {
       { id: "rev_immoco", label: "Cashflow ImmoCo (post-2037)" },
       { id: "rev_dividendes", label: "Dividendes / interets placements" },
       { id: "rev_capital_gains", label: "Gains en capital (vente actifs)" },
+      { id: "rev_retrait_fhsa", label: "Retrait FHSA (acquisition propriete, max 40 000 $ a vie)" },
+      { id: "rev_retrait_celi", label: "Retrait CELI (libre, plafond restitue annee suivante)" },
+      { id: "rev_retrait_rap", label: "Retrait RAP REER (1er achat, max 60 000 $, remboursable 15 ans)" },
+      { id: "rev_rendement_celi", label: "Rendement CELI cumule (croissance interne, non taxable)" },
       { id: "rev_heritage", label: "Heritage / cadeaux famille" },
       { id: "rev_remb_recus", label: "Remboursements recus (PCAP, etc.)" },
       { id: "rev_autres", label: "Autres revenus" }
@@ -2941,6 +2993,16 @@ function updateBudgetKPIs() {
   updateBudgetInsights(totRev, totDep, totEpa, flux);
 }
 
+function toggleBudgetSummary() {
+  const el = document.getElementById("budget-summary");
+  if (!el) return;
+  el.classList.toggle("collapsed");
+  if (APP.data) {
+    APP.data.meta.budgetPanelCollapsed = el.classList.contains("collapsed");
+    scheduleSave();
+  }
+}
+
 function updateBudgetInsights(totRev, totDep, totEpa, flux) {
   const data = p();
 
@@ -3148,12 +3210,14 @@ function renderBudgetSaisie(root) {
   }
   const flux = totRev - totDep - totEpa;
 
-  // PANNEAU LIVE STICKY : KPIs + insights, toujours visible pendant la saisie
-  const summary = el("div", { class: "budget-summary", id: "budget-summary" });
+  // PANNEAU LIVE STICKY : compact par defaut (1 ligne fine), expandable
+  const startCollapsed = APP.data.meta.budgetPanelCollapsed !== false; // default: true
+  const summary = el("div", { class: "budget-summary" + (startCollapsed ? " collapsed" : ""), id: "budget-summary" });
   summary.innerHTML = `
+    <button class="bs-toggle-floating" onclick="toggleBudgetSummary()">Details</button>
     <div class="bs-header">
       <div class="bs-header-title">Synthese en temps reel</div>
-      <button class="bs-collapse-btn" onclick="document.getElementById('budget-summary').classList.toggle('collapsed')">Compact / Etendu</button>
+      <button class="bs-collapse-btn" onclick="toggleBudgetSummary()">Reduire</button>
     </div>
 
     <div class="bs-kpis">
