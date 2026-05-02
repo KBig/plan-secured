@@ -919,7 +919,7 @@ td.negative { color: var(--red); }
 }
 
 /* SETTINGS COLLAPSE */
-.collapse-card { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; }
+.collapse-card { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; scroll-margin-top: 140px; }
 .collapse-header {
   padding: 12px 14px; display: flex; justify-content: space-between;
   align-items: center; cursor: pointer; user-select: none;
@@ -931,6 +931,20 @@ td.negative { color: var(--red); }
 .collapse-card.open .collapse-arrow { transform: rotate(90deg); }
 .collapse-body { padding: 14px; display: none; border-top: 1px solid var(--border); }
 .collapse-card.open .collapse-body { display: block; }
+
+/* En-tetes de groupe sticky en chaine sous le panneau Synthese pour rester
+   visibles pendant le scroll dans le tableau Budget. Top calibre pour le
+   panneau en mode COMPACT (~75px de haut). */
+.collapse-card .collapse-header {
+  position: sticky;
+  top: 130px;
+  z-index: 20;
+  background: var(--bg-2);
+  box-shadow: 0 1px 0 var(--border);
+}
+@media (max-width: 700px) {
+  .collapse-card .collapse-header { top: 142px; }
+}
 </style>
 </head>
 <body data-theme="light">
@@ -1410,9 +1424,9 @@ const BUDGET_CATEGORIES = {
     type: "revenu",
     color: "green",
     sub: [
-      { id: "rev_salaire", label: "Salaire net (CCQ / T4)", defaut: 0 },
-      { id: "rev_vacances_ccq", label: "Vacances CCQ (paye 2x/an)" },
-      { id: "rev_remb_impot", label: "Remboursement d'impot" },
+      { id: "rev_salaire", label: "Salaire net (CCQ / T4)", defaut: 2740, defautProfile: "mathis" },
+      { id: "rev_vacances_ccq", label: "Vacances CCQ (paye 2x/an)", defaut: 417, defautProfile: "mathis" },
+      { id: "rev_remb_impot", label: "Remboursement d'impot", defaut: 167, defautProfile: "mathis" },
       { id: "rev_heures_supp", label: "Heures supplementaires" },
       { id: "rev_bonus", label: "Bonus / primes" },
       { id: "rev_loyers", label: "Loyers locatifs (post-2030)" },
@@ -1669,13 +1683,12 @@ const BUDGET_CATEGORIES = {
     type: "epargne",
     color: "blue",
     sub: [
-      { id: "ep_fhsa", label: "Cotisation FHSA", defaut: 154, defautProfile: "mathis" },
-      { id: "ep_celi", label: "Cotisation CELI", defaut: 100, defautProfile: "mathis" },
+      { id: "ep_fhsa", label: "Cotisation FHSA", defaut: 667, defautProfile: "mathis" },
+      { id: "ep_celi", label: "Cotisation CELI", defaut: 433, defautProfile: "mathis" },
       { id: "ep_reer", label: "Cotisation REER" },
       { id: "ep_reee", label: "Cotisation REEE (futur enfants)" },
       { id: "ep_non_enreg", label: "Cotisation compte non-enregistre" },
       { id: "ep_compte_conjoint_immo", label: "Cotisation compte conjoint immobilier (post-2027)" },
-      { id: "ep_capital_pret_auto", label: "Remboursement capital pret auto", defaut: 600, defautProfile: "mathis" },
       { id: "ep_capital_hypotheque", label: "Remboursement capital hypotheque" },
       { id: "ep_fonds_urgence", label: "Renflouement fonds d'urgence" }
     ]
@@ -3148,7 +3161,8 @@ function renderBudget() {
     ]),
     el("div", { class: "page-actions" }, [
       el("button", { class: "btn", onclick: () => exportBudgetCsv(), text: "Exporter CSV" }),
-      !isCouple ? el("button", { class: "btn btn-primary", onclick: () => openCustomCategoryModal(), text: "+ Categorie perso" }) : null
+      !isCouple ? el("button", { class: "btn", onclick: () => openCustomCategoryModal(), text: "+ Categorie perso" }) : null,
+      !isCouple ? el("button", { class: "btn btn-danger", onclick: () => resetBudgetToZero(), text: "Reset budget a zero" }) : null
     ].filter(Boolean))
   ]);
   root.appendChild(header);
@@ -3696,6 +3710,33 @@ function updateBudgetEntry(catId, value) {
 function updateBudgetMontant(catId, value) {
   setBudgetMensuel(p(), catId, value);
   scheduleSave();
+}
+
+function resetBudgetToZero() {
+  const profileName = PROFILES[APP.currentProfile]?.name || APP.currentProfile;
+  confirmModal(
+    `Reset budget a zero - ${profileName}`,
+    `Tous les montants budget de ce profil vont etre remis a <strong>0 $</strong>.<br><br>` +
+    `<strong>Conserve :</strong> les categories actives/desactivees, les categories perso ajoutees, les unites preferees, les notes mensuelles.<br>` +
+    `<strong>Efface :</strong> les montants budget previsionnels (toutes lignes -> 0 $).<br><br>` +
+    `Cette action est <strong>reversible</strong> via "Restaurer defauts mai 2026" dans Reglages.`,
+    () => {
+      const data = p();
+      // Vider toutes les valeurs budget mais garder la structure
+      if (data.budget.categories) {
+        for (const catId in data.budget.categories) {
+          data.budget.categories[catId].budget = 0;
+        }
+      }
+      // Optionnel : aussi vider les sources SDV pour eviter de garder du texte qui suggere des montants
+      data.budget.sources = {};
+      scheduleSave();
+      closeModal();
+      showSuccess(`Budget ${profileName} remis a zero.`);
+      renderBudget();
+    },
+    "Reset a zero"
+  );
 }
 
 function copyBudgetFromPrevious() {
