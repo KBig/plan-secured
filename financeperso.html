@@ -544,6 +544,40 @@ td.negative { color: var(--red); }
 .btn-note:hover { background: var(--bg-3); color: var(--text); border-color: var(--border-2); }
 .btn-note.has-note { background: rgba(209,132,29,0.12); color: var(--orange); border-color: rgba(209,132,29,0.3); font-weight: 600; }
 
+/* Accent couleur par sous-categorie (pastille a gauche du label) */
+.cat-accent {
+  display: inline-block; width: 4px; height: 22px;
+  border-radius: 2px; margin-right: 10px;
+  vertical-align: middle; background: var(--text-3);
+  flex-shrink: 0;
+}
+.cat-accent.color-green   { background: var(--green); }
+.cat-accent.color-blue    { background: var(--accent); }
+.cat-accent.color-purple  { background: var(--purple); }
+.cat-accent.color-orange  { background: var(--orange); }
+.cat-accent.color-red     { background: var(--red); }
+.cat-accent.color-muted   { background: var(--text-3); }
+
+.cat-label {
+  display: inline-flex; align-items: center;
+  font-weight: 500;
+}
+.cat-label small.cat-source {
+  display: block; font-weight: 400;
+  font-size: 11px; color: var(--text-3); margin-top: 2px;
+}
+
+/* Affichage Mensuel/Annuel calcule (read-only) */
+.calc-display {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.calc-display .calc-unit {
+  display: block; font-size: 10px;
+  color: var(--text-3); font-weight: 400;
+  text-transform: lowercase; letter-spacing: 0.02em;
+}
+
 /* PROGRESS */
 .progress {
   height: 6px; background: var(--bg-3); border-radius: 3px; overflow: hidden;
@@ -686,6 +720,7 @@ td.negative { color: var(--red); }
     <button class="topbar-burger" onclick="toggleSidebar()" aria-label="Menu">
       <span class="burger-icon"><span></span></span>
     </button>
+    <a href="index.html" class="topbar-btn" title="Retour au plan" style="text-decoration:none; display:inline-flex; align-items:center;">&larr; Plan</a>
     <button class="topbar-profile" id="topbar-profile-btn" onclick="goProfileSelect()">
       <div class="topbar-profile-avatar" id="tp-avatar">M</div>
       <div class="topbar-profile-name" id="tp-name">Mathis</div>
@@ -1690,15 +1725,9 @@ function setBudgetEntry(profileData, monthYM, catId, value) {
   }
 }
 function getBudgetMensuel(profileData, catId) {
-  const override = profileData.budget?.categories?.[catId]?.budget;
-  if (override != null) return override;
-  // chercher defaut dans BUDGET_CATEGORIES
-  for (const cat of Object.values(BUDGET_CATEGORIES)) {
-    for (const sub of cat.sub) {
-      if (sub.id === catId) return sub.defaut || 0;
-    }
-  }
-  return 0;
+  // Strict isolation: chaque profil a ses propres valeurs. Pas de fallback global
+  // (sinon une valeur defaut Mathis fuirait dans la conjointe).
+  return profileData.budget?.categories?.[catId]?.budget || 0;
 }
 function setBudgetMensuel(profileData, catId, montant) {
   if (!profileData.budget.categories[catId]) profileData.budget.categories[catId] = { budget: 0, active: true };
@@ -2501,8 +2530,32 @@ function escapeHTML(s) {
 /* ===========================================================================
  * PAGE : BUDGET (ULTRA COMPLET ULTRA DETAILLE)
  * =========================================================================== */
-let _budgetView = "saisie"; // saisie | comparaison | annuel | tendances
+let _budgetView = "saisie"; // saisie | reglages
 let _budgetMonth = currentMonth();
+
+/* Map de couleurs par groupe (utilise pour l'accent visuel des sous-categories) */
+const GROUP_COLORS = {
+  revenus: "green",
+  logement: "blue",
+  vehicule: "purple",
+  vehicule2: "purple",
+  transport: "blue",
+  alimentation: "orange",
+  sorties: "orange",
+  communication: "blue",
+  abonnements: "purple",
+  sante: "green",
+  vie_courante: "orange",
+  voyages: "orange",
+  assurances: "red",
+  professionnels: "purple",
+  education: "blue",
+  dettes_interets: "red",
+  frais_bancaires: "red",
+  taxes: "red",
+  autres: "muted",
+  epargne: "blue"
+};
 
 /* ---- Unites de temps : stockage canonique en MENSUEL, affichage selon prefs user ---- */
 const UNIT_FACTOR = { day: 30.4375, week: 4.34524, biweek: 2.17262, month: 1, year: 1/12 };
@@ -2682,20 +2735,16 @@ function renderBudget() {
   ]);
   root.appendChild(header);
 
-  // Tabs
+  // Tabs (simplifie: budget previsionnel + reglages seulement)
+  // Migration: si _budgetView pointe vers une vue retiree, basculer sur saisie
+  if (!["saisie", "reglages"].includes(_budgetView)) _budgetView = "saisie";
   const tabs = el("div", { class: "tabs" }, [
-    tabBtn("saisie", "Saisie mensuelle"),
-    tabBtn("comparaison", "Budget vs reel"),
-    tabBtn("annuel", "Vue annuelle"),
-    tabBtn("tendances", "Tendances"),
-    tabBtn("reglages", "Reglages budget")
+    tabBtn("saisie", "Budget"),
+    tabBtn("reglages", "Reglages")
   ]);
   root.appendChild(tabs);
 
   if (_budgetView === "saisie") renderBudgetSaisie(root);
-  else if (_budgetView === "comparaison") renderBudgetComparaison(root);
-  else if (_budgetView === "annuel") renderBudgetAnnuel(root);
-  else if (_budgetView === "tendances") renderBudgetTendances(root);
   else if (_budgetView === "reglages") renderBudgetReglages(root);
 }
 
