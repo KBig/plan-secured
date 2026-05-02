@@ -544,19 +544,20 @@ td.negative { color: var(--red); }
 .btn-note:hover { background: var(--bg-3); color: var(--text); border-color: var(--border-2); }
 .btn-note.has-note { background: rgba(209,132,29,0.12); color: var(--orange); border-color: rgba(209,132,29,0.3); font-weight: 600; }
 
-/* Accent couleur par sous-categorie (pastille a gauche du label) */
+/* Accent couleur uniforme bleu (pastille a gauche du label) */
 .cat-accent {
   display: inline-block; width: 4px; height: 22px;
   border-radius: 2px; margin-right: 10px;
-  vertical-align: middle; background: var(--text-3);
+  vertical-align: middle; background: var(--accent);
   flex-shrink: 0;
 }
-.cat-accent.color-green   { background: var(--green); }
-.cat-accent.color-blue    { background: var(--accent); }
-.cat-accent.color-purple  { background: var(--purple); }
-.cat-accent.color-orange  { background: var(--orange); }
-.cat-accent.color-red     { background: var(--red); }
-.cat-accent.color-muted   { background: var(--text-3); }
+/* Variantes color-* desactivees : tous les accents sont bleus uniformes */
+.cat-accent.color-green,
+.cat-accent.color-blue,
+.cat-accent.color-purple,
+.cat-accent.color-orange,
+.cat-accent.color-red,
+.cat-accent.color-muted { background: var(--accent); }
 
 .cat-label {
   display: inline-flex; align-items: center;
