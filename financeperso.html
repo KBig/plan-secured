@@ -3030,6 +3030,48 @@ function toggleBudgetSummary() {
   }
 }
 
+// Detecte quel groupe est actuellement visible en haut et l'affiche dans le panneau
+let _budgetGroupObserver = null;
+function setupCurrentGroupObserver() {
+  // Cleanup ancien observer
+  if (_budgetGroupObserver) { _budgetGroupObserver.disconnect(); _budgetGroupObserver = null; }
+  const badge = document.getElementById("bs-current-group");
+  if (!badge) return;
+  badge.classList.remove("show");
+  badge.textContent = "";
+
+  // Tracker pour savoir quels groupes sont actuellement visibles
+  const visibleGroups = new Set();
+  const groupOrder = [];
+  document.querySelectorAll('.collapse-card[id^="cb-"]').forEach(c => groupOrder.push(c.id));
+
+  _budgetGroupObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) visibleGroups.add(entry.target.id);
+      else visibleGroups.delete(entry.target.id);
+    });
+    // Premier groupe visible dans l'ordre du DOM
+    const firstVisible = groupOrder.find(id => visibleGroups.has(id));
+    if (firstVisible) {
+      const card = document.getElementById(firstVisible);
+      const titleEl = card?.querySelector('.collapse-title .badge');
+      const label = titleEl?.textContent?.trim() || "";
+      if (label) {
+        badge.textContent = label;
+        badge.classList.add("show");
+      }
+    } else {
+      badge.classList.remove("show");
+    }
+  }, {
+    // Trigger quand un groupe entre/sort de la zone juste sous le panneau (top 100-200px)
+    rootMargin: "-130px 0px -50% 0px",
+    threshold: 0
+  });
+
+  document.querySelectorAll('.collapse-card[id^="cb-"]').forEach(c => _budgetGroupObserver.observe(c));
+}
+
 function updateBudgetInsights(totRev, totDep, totEpa, flux) {
   const data = p();
 
@@ -3359,7 +3401,10 @@ function renderBudgetSaisie(root) {
   ` }));
 
   // Initialiser les insights live au premier rendu (sinon la barre alloc est vide)
-  setTimeout(() => updateBudgetInsights(totRev, totDep, totEpa, flux), 0);
+  setTimeout(() => {
+    updateBudgetInsights(totRev, totDep, totEpa, flux);
+    setupCurrentGroupObserver();
+  }, 0);
 }
 
 function renderBudgetSaisieCouple(root) {
