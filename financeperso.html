@@ -836,7 +836,7 @@ td.negative { color: var(--red); }
   font-weight: 700;
 }
 
-/* Bouton Details flottant en haut a droite en mode collapsed */
+/* Bouton Details + badge groupe courant flottants en mode collapsed */
 .bs-toggle-floating {
   position: absolute;
   top: 50%; right: 14px;
@@ -857,6 +857,19 @@ td.negative { color: var(--red); }
   color: var(--text);
 }
 .budget-summary.collapsed .bs-toggle-floating { display: inline-block; }
+
+/* Badge groupe courant : visible uniquement en mode compact, suit le scroll */
+.budget-summary.collapsed .bs-current-group.show {
+  position: absolute;
+  top: 50%; right: 92px; /* a gauche du bouton Details */
+  transform: translateY(-50%);
+  z-index: 31;
+}
+.budget-summary:not(.collapsed) .bs-current-group { display: none !important; }
+@media (max-width: 700px) {
+  .budget-summary.collapsed .bs-current-group.show { display: none; }
+  /* Sur mobile en compact: ne pas afficher le badge (manque de place) */
+}
 
 @media (max-width: 700px) {
   .budget-summary { padding: 14px 14px; }
@@ -932,19 +945,20 @@ td.negative { color: var(--red); }
 .collapse-body { padding: 14px; display: none; border-top: 1px solid var(--border); }
 .collapse-card.open .collapse-body { display: block; }
 
-/* En-tetes de groupe sticky en chaine sous le panneau Synthese pour rester
-   visibles pendant le scroll dans le tableau Budget. Top calibre pour le
-   panneau en mode COMPACT (~75px de haut). */
-.collapse-card .collapse-header {
-  position: sticky;
-  top: 130px;
-  z-index: 20;
-  background: var(--bg-2);
-  box-shadow: 0 1px 0 var(--border);
+/* Indicateur du groupe courant dans le panneau Synthese (suit le scroll) */
+.bs-current-group {
+  display: none;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  background: var(--bg-3);
+  border-radius: var(--radius);
+  margin-right: 8px;
 }
-@media (max-width: 700px) {
-  .collapse-card .collapse-header { top: 142px; }
-}
+.bs-current-group.show { display: inline-block; }
 </style>
 </head>
 <body data-theme="light">
@@ -3228,6 +3242,7 @@ function renderBudgetSaisie(root) {
   const startCollapsed = APP.data.meta.budgetPanelCollapsed !== false; // default: true
   const summary = el("div", { class: "budget-summary" + (startCollapsed ? " collapsed" : ""), id: "budget-summary" });
   summary.innerHTML = `
+    <span class="bs-current-group" id="bs-current-group"></span>
     <button class="bs-toggle-floating" onclick="toggleBudgetSummary()">Details</button>
     <div class="bs-header">
       <div class="bs-header-title">Synthese en temps reel</div>
