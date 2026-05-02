@@ -1,0 +1,3228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d0d0d">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>FinancePerso</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg: #ffffff;
+  --bg-2: #fafafa;
+  --bg-3: #f0f0f0;
+  --bg-4: #e8e8e8;
+  --text: #111111;
+  --text-2: #444444;
+  --text-3: #777777;
+  --border: #e0e0e0;
+  --border-2: #c8c8c8;
+  --accent: #0066cc;
+  --accent-2: #003d7a;
+  --green: #1a7f37;
+  --red: #cf222e;
+  --orange: #d1841d;
+  --purple: #6639ba;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+  --radius: 6px;
+  --radius-lg: 10px;
+}
+[data-theme="dark"] {
+  --bg: #0d0d0d;
+  --bg-2: #1a1a1a;
+  --bg-3: #222222;
+  --bg-4: #2a2a2a;
+  --text: #e8e8e8;
+  --text-2: #b8b8b8;
+  --text-3: #888888;
+  --border: #333333;
+  --border-2: #444444;
+  --accent: #66b3ff;
+  --accent-2: #99ccff;
+  --green: #3fb950;
+  --red: #f85149;
+  --orange: #f0883e;
+  --purple: #a371f7;
+  --shadow: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.5);
+}
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+body { overflow-x: hidden; }
+button { font-family: inherit; font-size: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; font-size: inherit; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ============ ÉCRANS PLEINE PAGE ============ */
+.fullscreen {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.fullscreen-inner {
+  width: 100%; max-width: 480px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  box-shadow: var(--shadow-lg);
+}
+.fs-title {
+  font-size: 22px; font-weight: 600; margin-bottom: 4px;
+}
+.fs-subtitle {
+  font-size: 13px; color: var(--text-3); margin-bottom: 24px;
+}
+.fs-form { display: flex; flex-direction: column; gap: 14px; }
+.fs-label {
+  font-size: 12px; font-weight: 500; color: var(--text-2);
+  text-transform: uppercase; letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+.fs-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: var(--radius);
+  font-size: 15px;
+}
+.fs-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.fs-btn {
+  width: 100%; padding: 12px 16px;
+  background: var(--text); color: var(--bg);
+  border: none; border-radius: var(--radius);
+  font-weight: 600; font-size: 15px;
+  margin-top: 8px;
+}
+.fs-btn:hover { opacity: 0.9; }
+.fs-btn-secondary {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border-2);
+}
+.fs-error {
+  background: rgba(207,34,46,0.1);
+  color: var(--red); padding: 10px 12px;
+  border-radius: var(--radius); font-size: 13px;
+  border: 1px solid rgba(207,34,46,0.3);
+}
+.fs-info {
+  background: rgba(0,102,204,0.08);
+  color: var(--text-2); padding: 12px;
+  border-radius: var(--radius); font-size: 12px;
+  border: 1px solid rgba(0,102,204,0.2);
+  line-height: 1.5;
+}
+
+/* Profil select */
+.profile-grid {
+  display: grid; gap: 12px; margin-top: 20px;
+}
+.profile-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px; background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius); cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+  text-align: left; width: 100%;
+  color: var(--text);
+}
+.profile-card:hover { border-color: var(--accent); }
+.profile-card:active { transform: scale(0.99); }
+.profile-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--bg-3);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 16px;
+  flex-shrink: 0;
+}
+.profile-card[data-color="blue"] .profile-avatar { background: rgba(0,102,204,0.15); color: var(--accent); }
+.profile-card[data-color="purple"] .profile-avatar { background: rgba(102,57,186,0.15); color: var(--purple); }
+.profile-card[data-color="green"] .profile-avatar { background: rgba(26,127,55,0.15); color: var(--green); }
+.profile-info { flex: 1; min-width: 0; }
+.profile-name { font-weight: 600; font-size: 15px; }
+.profile-desc { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.profile-stats { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+
+/* ============ APP LAYOUT ============ */
+.app { display: none; min-height: 100vh; }
+.app.active { display: block; }
+
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 52px;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 12px; gap: 8px;
+  z-index: 50;
+}
+.topbar-burger {
+  width: 40px; height: 40px; border: none; background: transparent;
+  color: var(--text); border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.topbar-burger:hover { background: var(--bg-3); }
+.burger-icon {
+  width: 18px; height: 14px; position: relative;
+}
+.burger-icon::before, .burger-icon::after, .burger-icon span {
+  content: ""; position: absolute; left: 0; width: 100%; height: 2px;
+  background: var(--text); border-radius: 1px;
+}
+.burger-icon::before { top: 0; }
+.burger-icon span { top: 6px; display: block; }
+.burger-icon::after { bottom: 0; }
+
+.topbar-profile {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  min-width: 0; padding: 0 4px;
+  background: transparent; border: none; color: var(--text);
+  font-size: 14px; font-weight: 600; text-align: left;
+  height: 40px; border-radius: var(--radius);
+}
+.topbar-profile:hover { background: var(--bg-3); }
+.topbar-profile-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg-3); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; flex-shrink: 0;
+}
+.topbar-profile[data-color="blue"] .topbar-profile-avatar { background: rgba(0,102,204,0.18); color: var(--accent); }
+.topbar-profile[data-color="purple"] .topbar-profile-avatar { background: rgba(102,57,186,0.18); color: var(--purple); }
+.topbar-profile[data-color="green"] .topbar-profile-avatar { background: rgba(26,127,55,0.18); color: var(--green); }
+.topbar-profile-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.topbar-profile-arrow { font-size: 10px; color: var(--text-3); flex-shrink: 0; }
+
+.topbar-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.topbar-btn {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-2); height: 32px; padding: 0 10px;
+  border-radius: var(--radius); font-size: 12px;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.topbar-btn:hover { background: var(--bg-3); color: var(--text); }
+.topbar-btn.icon { width: 32px; padding: 0; justify-content: center; font-size: 14px; }
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed; top: 52px; left: 0; bottom: 0;
+  width: 240px; background: var(--bg-2);
+  border-right: 1px solid var(--border);
+  overflow-y: auto; z-index: 40;
+  transition: transform 0.25s;
+}
+.sidebar.collapsed { transform: translateX(-100%); }
+.sidebar-section {
+  padding: 16px 12px 8px;
+  font-size: 11px; font-weight: 600;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; margin: 2px 8px;
+  border-radius: var(--radius);
+  color: var(--text-2); cursor: pointer;
+  font-size: 14px; border: none; background: transparent;
+  width: calc(100% - 16px); text-align: left;
+}
+.nav-item:hover { background: var(--bg-3); color: var(--text); }
+.nav-item.active { background: var(--bg-4); color: var(--text); font-weight: 600; }
+.nav-item-icon { width: 18px; flex-shrink: 0; text-align: center; font-size: 14px; opacity: 0.8; }
+
+.sidebar-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  z-index: 35; opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.sidebar-backdrop.show { opacity: 1; pointer-events: auto; }
+
+.main {
+  margin-left: 240px; padding-top: 52px;
+  min-height: 100vh; background: var(--bg);
+}
+.main-inner { padding: 20px 28px 60px; max-width: 1280px; }
+
+/* ============ MOBILE ============ */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .main-inner { padding: 16px 14px 60px; }
+  .topbar-btn .label { display: none; }
+}
+@media (min-width: 901px) {
+  .topbar-burger { display: none; }
+  .sidebar-backdrop { display: none; }
+}
+
+/* ============ COMPOSANTS ============ */
+.page-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.page-title {
+  font-size: 24px; font-weight: 700; letter-spacing: -0.01em;
+}
+.page-subtitle {
+  font-size: 13px; color: var(--text-3); margin-top: 2px;
+}
+.page-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: var(--radius);
+  border: 1px solid var(--border-2);
+  background: var(--bg); color: var(--text);
+  font-size: 13px; font-weight: 500;
+}
+.btn:hover { background: var(--bg-3); }
+.btn-primary {
+  background: var(--text); color: var(--bg); border-color: var(--text);
+}
+.btn-primary:hover { opacity: 0.9; background: var(--text); }
+.btn-danger {
+  color: var(--red); border-color: rgba(207,34,46,0.4);
+}
+.btn-danger:hover { background: rgba(207,34,46,0.08); }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-icon { padding: 6px 8px; }
+
+.card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px;
+  margin-bottom: 16px;
+}
+.card-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px; gap: 8px; flex-wrap: wrap;
+}
+.card-title { font-size: 15px; font-weight: 600; }
+.card-subtitle { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+.kpi-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 20px;
+}
+.kpi {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px 16px;
+}
+.kpi-label {
+  font-size: 11px; font-weight: 600; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.kpi-value {
+  font-size: 22px; font-weight: 700; margin-top: 6px;
+  letter-spacing: -0.01em;
+}
+.kpi-value.positive { color: var(--green); }
+.kpi-value.negative { color: var(--red); }
+.kpi-sub { font-size: 12px; color: var(--text-3); margin-top: 4px; }
+
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px;
+}
+th, td {
+  padding: 10px 12px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+th {
+  font-weight: 600; font-size: 11px; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.03em;
+  background: var(--bg-2); position: sticky; top: 0;
+}
+tbody tr:hover { background: var(--bg-2); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.positive { color: var(--green); }
+td.negative { color: var(--red); }
+
+.badge {
+  display: inline-block; padding: 2px 8px;
+  font-size: 11px; font-weight: 500;
+  border-radius: 999px; background: var(--bg-3);
+  color: var(--text-2); border: 1px solid var(--border);
+}
+.badge-green { background: rgba(26,127,55,0.12); color: var(--green); border-color: rgba(26,127,55,0.3); }
+.badge-red { background: rgba(207,34,46,0.12); color: var(--red); border-color: rgba(207,34,46,0.3); }
+.badge-orange { background: rgba(209,132,29,0.12); color: var(--orange); border-color: rgba(209,132,29,0.3); }
+.badge-blue { background: rgba(0,102,204,0.12); color: var(--accent); border-color: rgba(0,102,204,0.3); }
+.badge-purple { background: rgba(102,57,186,0.12); color: var(--purple); border-color: rgba(102,57,186,0.3); }
+
+.form-grid {
+  display: grid; gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.form-row { display: flex; flex-direction: column; gap: 4px; }
+.form-row.full { grid-column: 1 / -1; }
+.form-label {
+  font-size: 12px; font-weight: 500; color: var(--text-2);
+}
+.form-label .req { color: var(--red); margin-left: 2px; }
+.form-input, .form-select, .form-textarea {
+  padding: 8px 10px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--text);
+  border-radius: var(--radius); font-size: 14px;
+  width: 100%;
+}
+.form-textarea { min-height: 70px; resize: vertical; }
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: 2px solid var(--accent); outline-offset: -1px;
+}
+.form-help { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+/* MODAL */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 200; display: none;
+  align-items: center; justify-content: center;
+  padding: 16px;
+}
+.modal-backdrop.show { display: flex; }
+.modal {
+  background: var(--bg); border-radius: var(--radius-lg);
+  width: 100%; max-width: 720px;
+  max-height: 90vh; overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+}
+.modal-header {
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; flex-shrink: 0;
+}
+.modal-title { font-size: 16px; font-weight: 600; }
+.modal-close {
+  width: 32px; height: 32px; border: none; background: transparent;
+  color: var(--text-2); border-radius: var(--radius); font-size: 18px;
+}
+.modal-close:hover { background: var(--bg-3); color: var(--text); }
+.modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+.modal-footer {
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0;
+}
+
+/* TOAST */
+.toast-container {
+  position: fixed; bottom: 16px; left: 50%;
+  transform: translateX(-50%); z-index: 500;
+  display: flex; flex-direction: column; gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--text); color: var(--bg);
+  padding: 10px 16px; border-radius: var(--radius);
+  font-size: 13px; box-shadow: var(--shadow-lg);
+  animation: toastIn 0.2s ease-out;
+  pointer-events: auto;
+}
+.toast-success { background: var(--green); color: white; }
+.toast-error { background: var(--red); color: white; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } }
+
+/* DROPDOWN */
+.dropdown { position: relative; display: inline-block; }
+.dropdown-menu {
+  position: absolute; right: 0; top: calc(100% + 4px);
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-lg);
+  min-width: 200px; z-index: 80; overflow: hidden;
+  display: none;
+}
+.dropdown-menu.show { display: block; }
+.dropdown-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; cursor: pointer;
+  border: none; background: transparent;
+  color: var(--text); width: 100%; text-align: left;
+  font-size: 13px;
+}
+.dropdown-item:hover { background: var(--bg-3); }
+.dropdown-item.active { background: var(--bg-4); font-weight: 600; }
+.dropdown-divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+/* TABS */
+.tabs {
+  display: flex; gap: 2px; border-bottom: 1px solid var(--border);
+  margin-bottom: 16px; overflow-x: auto;
+}
+.tab {
+  padding: 10px 14px; border: none; background: transparent;
+  color: var(--text-2); font-size: 13px; font-weight: 500;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 600; }
+
+/* PROGRESS */
+.progress {
+  height: 6px; background: var(--bg-3); border-radius: 3px; overflow: hidden;
+}
+.progress-bar {
+  height: 100%; background: var(--accent);
+  transition: width 0.3s ease;
+}
+.progress-bar.over { background: var(--red); }
+.progress-bar.warn { background: var(--orange); }
+.progress-bar.good { background: var(--green); }
+
+/* CHART */
+.chart {
+  width: 100%; height: 240px; position: relative;
+}
+.spark { width: 100%; height: 40px; }
+
+/* EMPTY STATE */
+.empty {
+  text-align: center; padding: 40px 20px;
+  color: var(--text-3); font-size: 14px;
+}
+.empty-icon { font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
+.empty-title { font-size: 16px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; }
+
+/* UTIL */
+.muted { color: var(--text-3); }
+.bold { font-weight: 600; }
+.right { text-align: right; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.gap-8 { gap: 8px; }
+.gap-16 { gap: 16px; }
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.flex-wrap { flex-wrap: wrap; }
+.text-sm { font-size: 12px; }
+.hidden { display: none !important; }
+.no-print { }
+@media print {
+  .topbar, .sidebar, .topbar-actions, .no-print { display: none !important; }
+  .main { margin-left: 0; padding-top: 0; }
+}
+
+/* SETTINGS COLLAPSE */
+.collapse-card { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; }
+.collapse-header {
+  padding: 12px 14px; display: flex; justify-content: space-between;
+  align-items: center; cursor: pointer; user-select: none;
+  background: var(--bg-2); border-radius: var(--radius);
+}
+.collapse-header:hover { background: var(--bg-3); }
+.collapse-title { font-weight: 600; font-size: 14px; }
+.collapse-arrow { color: var(--text-3); transition: transform 0.2s; }
+.collapse-card.open .collapse-arrow { transform: rotate(90deg); }
+.collapse-body { padding: 14px; display: none; border-top: 1px solid var(--border); }
+.collapse-card.open .collapse-body { display: block; }
+</style>
+</head>
+<body data-theme="light">
+
+<!-- ============ ÉCRAN LOGIN (mot de passe) ============ -->
+<div id="screen-login" class="fullscreen">
+  <div class="fullscreen-inner">
+    <div class="fs-title">FinancePerso</div>
+    <div class="fs-subtitle">Système financier personnel — Mathis &amp; conjointe</div>
+    <form class="fs-form" onsubmit="event.preventDefault(); doLogin();">
+      <div>
+        <div class="fs-label">Mot de passe</div>
+        <input type="password" id="login-password" class="fs-input" autocomplete="current-password" autofocus>
+      </div>
+      <div id="login-error" class="fs-error hidden"></div>
+      <button type="submit" class="fs-btn">Déverrouiller</button>
+    </form>
+    <div class="fs-info mt-16">
+      Données chiffrées AES-256 (PBKDF2 100k itérations). Stockées localement (IndexedDB) + sync optionnelle vers ton repo GitHub privé.
+    </div>
+  </div>
+</div>
+
+<!-- ============ ÉCRAN SETUP INITIAL ============ -->
+<div id="screen-setup" class="fullscreen hidden">
+  <div class="fullscreen-inner" style="max-width: 540px;">
+    <div class="fs-title">Première configuration</div>
+    <div class="fs-subtitle">Définis ton mot de passe et choisis ton mode de démarrage.</div>
+    <form class="fs-form" onsubmit="event.preventDefault(); doSetup();">
+      <div>
+        <div class="fs-label">Mot de passe (min 8 caractères)</div>
+        <input type="password" id="setup-password" class="fs-input" autocomplete="new-password">
+        <div class="form-help mt-8">Recommandation : utiliser le même mot de passe que le plan chiffré.</div>
+      </div>
+      <div>
+        <div class="fs-label">Confirmer mot de passe</div>
+        <input type="password" id="setup-password-2" class="fs-input" autocomplete="new-password">
+      </div>
+      <div>
+        <div class="fs-label">Mode de démarrage</div>
+        <select id="setup-mode" class="fs-input">
+          <option value="couple">Solo + Conjointe + Couple (3 profils, recommandé)</option>
+          <option value="solo">Solo seulement (Mathis)</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:flex; gap:8px; align-items:flex-start; font-size:13px; cursor:pointer;">
+          <input type="checkbox" id="setup-preload" checked style="margin-top:3px;">
+          <span>Précharger les données réelles mai 2026 (comptes, catégories budget, données SDV)</span>
+        </label>
+      </div>
+      <div id="setup-error" class="fs-error hidden"></div>
+      <button type="submit" class="fs-btn">Créer le système</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ ÉCRAN SÉLECTION PROFIL ============ -->
+<div id="screen-profile" class="fullscreen hidden">
+  <div class="fullscreen-inner" style="max-width: 520px;">
+    <div class="fs-title">Choisir un profil</div>
+    <div class="fs-subtitle">Sélectionne le profil à ouvrir.</div>
+    <div id="profile-list" class="profile-grid"></div>
+    <div style="margin-top: 24px; display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap;">
+      <button class="btn btn-sm" onclick="logout()">Verrouiller</button>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-sm" onclick="openSettingsFromProfile()">Paramètres</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP PRINCIPAL ============ -->
+<div id="app" class="app">
+
+  <div class="topbar">
+    <button class="topbar-burger" onclick="toggleSidebar()" aria-label="Menu">
+      <span class="burger-icon"><span></span></span>
+    </button>
+    <button class="topbar-profile" id="topbar-profile-btn" onclick="goProfileSelect()">
+      <div class="topbar-profile-avatar" id="tp-avatar">M</div>
+      <div class="topbar-profile-name" id="tp-name">Mathis</div>
+      <span class="topbar-profile-arrow">▼</span>
+    </button>
+    <div class="topbar-actions">
+      <button class="topbar-btn icon" onclick="forceSync()" title="Sync GitHub" id="sync-btn">↻</button>
+      <button class="topbar-btn icon" onclick="toggleTheme()" title="Thème" id="theme-btn">◐</button>
+      <button class="topbar-btn icon" onclick="logout()" title="Verrouiller">🔒</button>
+    </div>
+  </div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">Navigation</div>
+    <button class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+      <span class="nav-item-icon">▦</span>Tableau de bord
+    </button>
+    <button class="nav-item" data-page="accounts" onclick="navigate('accounts')">
+      <span class="nav-item-icon">▤</span>Comptes
+    </button>
+    <button class="nav-item" data-page="budget" onclick="navigate('budget')">
+      <span class="nav-item-icon">≣</span>Budget
+    </button>
+    <button class="nav-item" data-page="pros" onclick="navigate('pros')">
+      <span class="nav-item-icon">◉</span>Réseau pro
+    </button>
+    <div class="sidebar-section">Système</div>
+    <button class="nav-item" data-page="settings" onclick="navigate('settings')">
+      <span class="nav-item-icon">⚙</span>Paramètres
+    </button>
+    <button class="nav-item" onclick="goProfileSelect()">
+      <span class="nav-item-icon">⇄</span>Changer de profil
+    </button>
+    <button class="nav-item" onclick="goPlan()">
+      <span class="nav-item-icon">↗</span>Retour au plan
+    </button>
+  </aside>
+
+  <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+  <main class="main">
+    <div class="main-inner" id="main-content">
+      <!-- Le contenu de la page sera injecté ici -->
+    </div>
+  </main>
+</div>
+
+<!-- ============ MODAL ============ -->
+<div class="modal-backdrop" id="modal-backdrop" onclick="if(event.target===this) closeModal()">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Titre</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+/* ===========================================================================
+ * FINANCEPERSO — Système financier personnel
+ * Tout est local + chiffré + sync GitHub optionnel
+ * =========================================================================== */
+
+const APP = {
+  version: "1.0.0",
+  password: null,        // mot de passe en mémoire (jamais persisté en clair)
+  currentProfile: null,  // 'mathis' | 'conjointe' | 'couple'
+  currentPage: 'dashboard',
+  data: null,            // tout le store déchiffré en mémoire
+  dirty: false,          // y a-t-il des changements à sauvegarder
+  syncing: false,
+  saveTimer: null,
+};
+
+const PROFILES = {
+  mathis:    { id: 'mathis',    name: 'Mathis',    desc: 'Profil personnel',                   color: 'blue',   initial: 'M' },
+  conjointe: { id: 'conjointe', name: 'Conjointe', desc: 'Profil personnel conjointe',         color: 'purple', initial: 'C' },
+  couple:    { id: 'couple',    name: 'Couple',    desc: 'Vue agrégée + comptes communs',      color: 'green',  initial: '★' }
+};
+
+/* ===========================================================================
+ * UTILS
+ * =========================================================================== */
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
+const el = (tag, attrs = {}, children = []) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v;
+    else if (k === 'html') e.innerHTML = v;
+    else if (k === 'text') e.textContent = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== null && v !== undefined && v !== false) e.setAttribute(k, v);
+  }
+  for (const c of (Array.isArray(children) ? children : [children])) {
+    if (c == null) continue;
+    if (typeof c === 'string') e.appendChild(document.createTextNode(c));
+    else e.appendChild(c);
+  }
+  return e;
+};
+const fmt = {
+  money: (n, opts = {}) => {
+    if (n == null || isNaN(n)) return '—';
+    const sign = n < 0 ? '-' : '';
+    const abs = Math.abs(n);
+    const s = abs.toLocaleString('fr-CA', { minimumFractionDigits: opts.dec ?? 0, maximumFractionDigits: opts.dec ?? 0 });
+    return `${sign}${s} $`;
+  },
+  moneyShort: (n) => {
+    if (n == null || isNaN(n)) return '—';
+    const sign = n < 0 ? '-' : '';
+    const abs = Math.abs(n);
+    if (abs >= 1e6) return `${sign}${(abs / 1e6).toFixed(2)} M$`;
+    if (abs >= 1e3) return `${sign}${(abs / 1e3).toFixed(1)} k$`;
+    return `${sign}${abs.toFixed(0)} $`;
+  },
+  pct: (n, dec = 1) => n == null ? '—' : `${(n * 100).toFixed(dec)} %`,
+  date: (s) => {
+    if (!s) return '—';
+    try { return new Date(s).toLocaleDateString('fr-CA'); } catch { return s; }
+  },
+  monthLabel: (ym) => {
+    if (!ym) return '—';
+    const [y, m] = ym.split('-');
+    const months = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juill.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+    return `${months[parseInt(m)-1]} ${y}`;
+  }
+};
+const todayISO = () => new Date().toISOString().slice(0, 10);
+const currentMonth = () => new Date().toISOString().slice(0, 7);
+const uid = () => 'id_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
+function toast(msg, type = '') {
+  const t = el('div', { class: `toast ${type ? 'toast-' + type : ''}`, text: msg });
+  $('#toast-container').appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.2s'; }, 2400);
+  setTimeout(() => t.remove(), 2700);
+}
+
+function showError(msg) { toast(msg, 'error'); }
+function showSuccess(msg) { toast(msg, 'success'); }
+
+/* ===========================================================================
+ * CRYPTO — AES-256-GCM avec PBKDF2
+ * =========================================================================== */
+const crypto_utils = {
+  async deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const baseKey = await crypto.subtle.importKey(
+      'raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']
+    );
+    return await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+      baseKey,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['encrypt', 'decrypt']
+    );
+  },
+  async encrypt(plaintext, password) {
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await this.deriveKey(password, salt);
+    const enc = new TextEncoder();
+    const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(plaintext));
+    const out = new Uint8Array(salt.length + iv.length + ct.byteLength);
+    out.set(salt, 0);
+    out.set(iv, salt.length);
+    out.set(new Uint8Array(ct), salt.length + iv.length);
+    return this.b64encode(out);
+  },
+  async decrypt(b64, password) {
+    const data = this.b64decode(b64);
+    const salt = data.slice(0, 16);
+    const iv = data.slice(16, 28);
+    const ct = data.slice(28);
+    const key = await this.deriveKey(password, salt);
+    const dec = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
+    return new TextDecoder().decode(dec);
+  },
+  b64encode(bytes) {
+    let s = '';
+    for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+    return btoa(s);
+  },
+  b64decode(b64) {
+    const s = atob(b64);
+    const bytes = new Uint8Array(s.length);
+    for (let i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i);
+    return bytes;
+  }
+};
+
+/* ===========================================================================
+ * INDEXEDDB — Stockage local
+ * =========================================================================== */
+const DB_NAME = 'financeperso';
+const DB_VERSION = 1;
+const STORE = 'data';
+const KEY = 'main';
+
+const idb = {
+  _db: null,
+  async open() {
+    if (this._db) return this._db;
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onerror = () => reject(req.error);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
+      };
+      req.onsuccess = () => { this._db = req.result; resolve(req.result); };
+    });
+  },
+  async get(key = KEY) {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, 'readonly');
+      const req = tx.objectStore(STORE).get(key);
+      req.onerror = () => reject(req.error);
+      req.onsuccess = () => resolve(req.result);
+    });
+  },
+  async set(value, key = KEY) {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, 'readwrite');
+      tx.objectStore(STORE).put(value, key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+  async clear() {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, 'readwrite');
+      tx.objectStore(STORE).clear();
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+};
+
+/* ===========================================================================
+ * STORAGE — Load/save chiffré
+ * =========================================================================== */
+const storage = {
+  async hasData() {
+    const v = await idb.get();
+    return !!v;
+  },
+  async load(password) {
+    const blob = await idb.get();
+    if (!blob) return null;
+    try {
+      const json = await crypto_utils.decrypt(blob, password);
+      return JSON.parse(json);
+    } catch (e) {
+      throw new Error('Mot de passe incorrect ou données corrompues.');
+    }
+  },
+  async save(data, password) {
+    const json = JSON.stringify(data);
+    const blob = await crypto_utils.encrypt(json, password);
+    await idb.set(blob);
+    return blob;
+  }
+};
+
+function scheduleSave() {
+  APP.dirty = true;
+  if (APP.saveTimer) clearTimeout(APP.saveTimer);
+  APP.saveTimer = setTimeout(async () => {
+    try {
+      APP.data.meta.updatedAt = new Date().toISOString();
+      const blob = await storage.save(APP.data, APP.password);
+      APP.dirty = false;
+      // Sync auto si configuré
+      if (APP.data.meta.sync && APP.data.meta.sync.autoSync) {
+        sync.push(blob).catch(e => console.error('Sync auto échouée:', e));
+      }
+    } catch (e) {
+      showError('Échec sauvegarde : ' + e.message);
+    }
+  }, 800);
+}
+
+/* ===========================================================================
+ * SYNC GITHUB — Repo privé via Personal Access Token
+ * Le fichier est .financeperso-data.enc dans le repo principal (privé)
+ * =========================================================================== */
+const sync = {
+  api: 'https://api.github.com',
+
+  config() { return APP.data?.meta?.sync || null; },
+
+  async push(blob) {
+    const cfg = this.config();
+    if (!cfg || !cfg.token || !cfg.owner || !cfg.repo) return false;
+    if (APP.syncing) return false;
+    APP.syncing = true;
+    this._setSyncStatus('sync');
+    try {
+      const path = cfg.path || '.financeperso-data.enc';
+      // Récupérer SHA actuel si existe
+      let sha = null;
+      try {
+        const r = await fetch(`${this.api}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
+          headers: { 'Authorization': `Bearer ${cfg.token}`, 'Accept': 'application/vnd.github+json' }
+        });
+        if (r.ok) { const j = await r.json(); sha = j.sha; }
+      } catch (e) { /* nouveau fichier */ }
+
+      const body = {
+        message: `FinancePerso sync ${new Date().toISOString()}`,
+        content: btoa(blob),
+        ...(sha ? { sha } : {})
+      };
+      const res = await fetch(`${this.api}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${cfg.token}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || `HTTP ${res.status}`);
+      }
+      cfg.lastSync = new Date().toISOString();
+      await idb.set(await crypto_utils.encrypt(JSON.stringify(APP.data), APP.password));
+      this._setSyncStatus('ok');
+      return true;
+    } catch (e) {
+      this._setSyncStatus('err');
+      throw e;
+    } finally {
+      APP.syncing = false;
+    }
+  },
+
+  async pull() {
+    const cfg = this.config();
+    if (!cfg || !cfg.token || !cfg.owner || !cfg.repo) throw new Error('Sync non configurée');
+    const path = cfg.path || '.financeperso-data.enc';
+    const r = await fetch(`${this.api}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
+      headers: { 'Authorization': `Bearer ${cfg.token}`, 'Accept': 'application/vnd.github+json' }
+    });
+    if (r.status === 404) throw new Error('Pas encore de backup distant');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const j = await r.json();
+    const blob = atob(j.content.replace(/\s/g, ''));
+    return blob; // chiffré, à déchiffrer avec mot de passe
+  },
+
+  _setSyncStatus(status) {
+    const btn = $('#sync-btn');
+    if (!btn) return;
+    btn.style.color = status === 'sync' ? 'var(--orange)' : status === 'err' ? 'var(--red)' : status === 'ok' ? 'var(--green)' : '';
+    btn.title = status === 'sync' ? 'Synchronisation...' : status === 'err' ? 'Échec sync' : status === 'ok' ? 'Sync OK' : 'Sync';
+    if (status === 'ok') setTimeout(() => { btn.style.color = ''; }, 2000);
+  }
+};
+
+async function forceSync() {
+  if (!APP.data) return;
+  if (!sync.config()?.token) {
+    showError('Sync non configurée. Voir Paramètres → Synchronisation.');
+    navigate('settings');
+    return;
+  }
+  try {
+    const blob = await storage.save(APP.data, APP.password);
+    await sync.push(blob);
+    showSuccess('Synchronisation réussie.');
+  } catch (e) {
+    showError('Sync échouée : ' + e.message);
+  }
+}
+
+
+/* ===========================================================================
+ * CATEGORIES BUDGET — Structure ultra complete (Section 17.7 + 18 du plan)
+ * =========================================================================== */
+const BUDGET_CATEGORIES = {
+  revenus: {
+    label: "Revenus",
+    type: "revenu",
+    color: "green",
+    sub: [
+      { id: "rev_salaire", label: "Salaire net (CCQ / T4)", defaut: 0 },
+      { id: "rev_vacances_ccq", label: "Vacances CCQ (paye 2x/an)" },
+      { id: "rev_remb_impot", label: "Remboursement d'impot" },
+      { id: "rev_heures_supp", label: "Heures supplementaires" },
+      { id: "rev_bonus", label: "Bonus / primes" },
+      { id: "rev_loyers", label: "Loyers locatifs (post-2030)" },
+      { id: "rev_immoco", label: "Cashflow ImmoCo (post-2037)" },
+      { id: "rev_dividendes", label: "Dividendes / interets placements" },
+      { id: "rev_capital_gains", label: "Gains en capital (vente actifs)" },
+      { id: "rev_heritage", label: "Heritage / cadeaux famille" },
+      { id: "rev_remb_recus", label: "Remboursements recus (PCAP, etc.)" },
+      { id: "rev_autres", label: "Autres revenus" }
+    ]
+  },
+  logement: {
+    label: "Logement",
+    type: "depense",
+    sub: [
+      { id: "log_youtube", label: "YouTube partage pere", defaut: 15, defautProfile: "mathis" },
+      { id: "log_hypotheque_capital", label: "Hypotheque - capital rembourse" },
+      { id: "log_hypotheque_interets", label: "Hypotheque - interets" },
+      { id: "log_loyer", label: "Loyer (si location)" },
+      { id: "log_taxes_municipales", label: "Taxes municipales" },
+      { id: "log_taxes_scolaires", label: "Taxes scolaires" },
+      { id: "log_internet", label: "Internet" },
+      { id: "log_electricite", label: "Electricite (Hydro-Quebec)" },
+      { id: "log_chauffage", label: "Chauffage (gaz/mazout/bois)" },
+      { id: "log_eau", label: "Eau / egout" },
+      { id: "log_cable", label: "Cable / streaming TV" },
+      { id: "log_entretien", label: "Entretien general" },
+      { id: "log_reparations", label: "Reparations imprevues" },
+      { id: "log_mobilier", label: "Mobilier / deco / electros" },
+      { id: "log_outils_jardin", label: "Outils / jardinage / deneigement" },
+      { id: "log_assurance", label: "Assurance habitation" },
+      { id: "log_autre", label: "Autres frais logement" }
+    ]
+  },
+  vehicule: {
+    label: "Vehicule principal",
+    type: "depense",
+    sub: [
+      { id: "vh_paiement", label: "Paiement pret / location", defaut: 700, defautProfile: "mathis" },
+      { id: "vh_assurance", label: "Assurance auto", defaut: 195, defautProfile: "mathis" },
+      { id: "vh_essence", label: "Essence", defaut: 280, defautProfile: "mathis" },
+      { id: "vh_entretien", label: "Entretien regulier", defaut: 42, defautProfile: "mathis" },
+      { id: "vh_reparations", label: "Reparations imprevues" },
+      { id: "vh_pneus", label: "Pneus (ete / hiver)" },
+      { id: "vh_immatriculation", label: "Immatriculation SAAQ", defaut: 28, defautProfile: "mathis" },
+      { id: "vh_permis", label: "Permis SAAQ", defaut: 13, defautProfile: "mathis" },
+      { id: "vh_lavages", label: "Lavages", defaut: 8, defautProfile: "mathis" },
+      { id: "vh_stationnement", label: "Stationnement" },
+      { id: "vh_contraventions", label: "Contraventions" },
+      { id: "vh_accessoires", label: "Accessoires" }
+    ]
+  },
+  vehicule2: {
+    label: "Vehicule secondaire (moto)",
+    type: "depense",
+    sub: [
+      { id: "mt_paiement", label: "Paiement moto" },
+      { id: "mt_plaque", label: "Plaque", defaut: 33, defautProfile: "mathis" },
+      { id: "mt_assurance", label: "Assurance moto", defaut: 4, defautProfile: "mathis" },
+      { id: "mt_essence", label: "Essence saisonniere", defaut: 25, defautProfile: "mathis" },
+      { id: "mt_entretien", label: "Entretien moto", defaut: 25, defautProfile: "mathis" },
+      { id: "mt_equipement", label: "Equipement (casque, gants)" }
+    ]
+  },
+  transport: {
+    label: "Transport alternatif",
+    type: "depense",
+    sub: [
+      { id: "tr_commun", label: "Transport en commun" },
+      { id: "tr_taxi", label: "Uber / taxi" },
+      { id: "tr_vol", label: "Avion (vols domestiques)" },
+      { id: "tr_train", label: "Train" }
+    ]
+  },
+  alimentation: {
+    label: "Epicerie & alimentation",
+    type: "depense",
+    sub: [
+      { id: "al_epicerie", label: "Epicerie generale" },
+      { id: "al_boucherie", label: "Boucherie / poissonnerie" },
+      { id: "al_marche", label: "Marche public" },
+      { id: "al_cafe_maison", label: "Cafe / the maison" },
+      { id: "al_alcool_maison", label: "Vin / alcool maison" }
+    ]
+  },
+  sorties: {
+    label: "Restaurants & sorties",
+    type: "depense",
+    sub: [
+      { id: "so_restaurants", label: "Restaurants" },
+      { id: "so_cafe_shop", label: "Cafe / coffee shop" },
+      { id: "so_bar", label: "Bar / pub" },
+      { id: "so_livraison", label: "Livraison (UberEats, DoorDash)" },
+      { id: "so_lunchs", label: "Lunchs travail" },
+      { id: "so_activites", label: "Activites / sorties (cinema, spectacles)", defaut: 325, defautProfile: "mathis" },
+      { id: "so_concerts", label: "Concerts / festivals" }
+    ]
+  },
+  communication: {
+    label: "Communication",
+    type: "depense",
+    sub: [
+      { id: "co_cellulaire", label: "Cellulaire (Fizz / Public Mobile)", defaut: 40, defautProfile: "mathis" },
+      { id: "co_data_supp", label: "Forfaits donnees mobiles supp." }
+    ]
+  },
+  abonnements: {
+    label: "Abonnements numeriques",
+    type: "depense",
+    sub: [
+      { id: "ab_ia", label: "IA (Claude, ChatGPT)", defaut: 50, defautProfile: "mathis" },
+      { id: "ab_streaming_video", label: "Streaming video (Netflix, Disney+, etc.)" },
+      { id: "ab_streaming_musique", label: "Streaming musique (Spotify, Apple Music)" },
+      { id: "ab_logiciels", label: "Logiciels (Adobe, MS 365, etc.)" },
+      { id: "ab_cloud", label: "Stockage cloud (iCloud, GDrive)" },
+      { id: "ab_vpn", label: "VPN" },
+      { id: "ab_gaming", label: "Gaming (Game Pass, Steam, etc.)", defaut: 8, defautProfile: "mathis" },
+      { id: "ab_autres", label: "Autres SaaS" }
+    ]
+  },
+  sante: {
+    label: "Sante",
+    type: "depense",
+    sub: [
+      { id: "sa_gym", label: "Gym / activites physiques", defaut: 30, defautProfile: "mathis" },
+      { id: "sa_supplements", label: "Supplements / vitamines" },
+      { id: "sa_medicaments", label: "Medicaments" },
+      { id: "sa_medecin", label: "Medecin (prive / sans couverture)" },
+      { id: "sa_dentiste", label: "Dentiste" },
+      { id: "sa_optometriste", label: "Optometriste" },
+      { id: "sa_physio", label: "Physio / chiro / massage" },
+      { id: "sa_lunettes", label: "Lunettes / lentilles" },
+      { id: "sa_psy", label: "Psychologue / therapeute" },
+      { id: "sa_autre", label: "Autres frais sante", defaut: 17, defautProfile: "mathis" }
+    ]
+  },
+  vie_courante: {
+    label: "Vie courante",
+    type: "depense",
+    sub: [
+      { id: "vc_vetements", label: "Vetements", defaut: 25, defautProfile: "mathis" },
+      { id: "vc_chaussures", label: "Chaussures" },
+      { id: "vc_coiffure", label: "Coiffure / soins perso", defaut: 27, defautProfile: "mathis" },
+      { id: "vc_cosmetiques", label: "Cosmetiques / hygiene" },
+      { id: "vc_lessive", label: "Lessive / buanderie" },
+      { id: "vc_articles_menagers", label: "Articles menagers" },
+      { id: "vc_cadeaux", label: "Cadeaux (anniv, Noel)", defaut: 13, defautProfile: "mathis" },
+      { id: "vc_loisirs_saison", label: "Loisirs saisonniers (snow, ski, velo)", defaut: 33, defautProfile: "mathis" },
+      { id: "vc_outils_perso", label: "Outils / equipement perso" },
+      { id: "vc_outils_ccq", label: "Outils CCQ", defaut: 8, defautProfile: "mathis" },
+      { id: "vc_dons", label: "Dons / charite" },
+      { id: "vc_imprevus", label: "Imprevus" }
+    ]
+  },
+  voyages: {
+    label: "Voyages",
+    type: "depense",
+    sub: [
+      { id: "vo_vols", label: "Vols" },
+      { id: "vo_hebergement", label: "Hebergement (hotel / AirBnB)" },
+      { id: "vo_transport_local", label: "Transport sur place" },
+      { id: "vo_restos", label: "Restos voyage" },
+      { id: "vo_activites", label: "Activites / excursions" },
+      { id: "vo_bagages", label: "Bagages / equipement" }
+    ]
+  },
+  assurances: {
+    label: "Assurances personnelles",
+    type: "depense",
+    sub: [
+      { id: "as_vie", label: "Vie" },
+      { id: "as_invalidite", label: "Invalidite" },
+      { id: "as_maladie_grave", label: "Maladie grave" },
+      { id: "as_responsabilite", label: "Responsabilite civile" },
+      { id: "as_voyage", label: "Voyage" },
+      { id: "as_immeuble", label: "Immeuble locatif (post-2030)" }
+    ]
+  },
+  professionnels: {
+    label: "Services professionnels",
+    type: "depense",
+    sub: [
+      { id: "pr_notaire", label: "Notaire" },
+      { id: "pr_comptable", label: "Comptable" },
+      { id: "pr_avocat", label: "Avocat" },
+      { id: "pr_fiscaliste", label: "Fiscaliste" },
+      { id: "pr_conseiller", label: "Conseiller financier" },
+      { id: "pr_inspecteur", label: "Inspecteur batiment" },
+      { id: "pr_courtier_hypo", label: "Courtier hypothecaire" },
+      { id: "pr_courtier_immo", label: "Courtier immobilier" },
+      { id: "pr_gestionnaire", label: "Gestionnaire immobilier (post-2035)" }
+    ]
+  },
+  education: {
+    label: "Education & formation",
+    type: "depense",
+    sub: [
+      { id: "ed_livres", label: "Livres" },
+      { id: "ed_formations_online", label: "Formations en ligne" },
+      { id: "ed_formations_presentiel", label: "Formations presentiel (CIIQ, MREX)" },
+      { id: "ed_cotisations", label: "Cotisations associations pro (CIQ, etc.)" },
+      { id: "ed_conferences", label: "Conferences / seminaires" },
+      { id: "ed_coaching", label: "Coaching / mentorat" }
+    ]
+  },
+  dettes_interets: {
+    label: "Interets de dettes",
+    type: "depense",
+    sub: [
+      { id: "di_pret_auto", label: "Interets pret auto" },
+      { id: "di_cartes_credit", label: "Interets cartes credit" },
+      { id: "di_marge", label: "Interets marge credit" },
+      { id: "di_pret_perso", label: "Interets pret personnel" },
+      { id: "di_hypotheque_perso", label: "Interets hypotheque residence (non deductible)" }
+    ]
+  },
+  frais_bancaires: {
+    label: "Frais bancaires",
+    type: "depense",
+    sub: [
+      { id: "fb_comptes", label: "Frais mensuels comptes" },
+      { id: "fb_cartes_annuels", label: "Frais cartes (annuels)" },
+      { id: "fb_courtage", label: "Frais transactions courtage" },
+      { id: "fb_virements", label: "Frais virements / transferts" },
+      { id: "fb_devises", label: "Frais devises (FX)" }
+    ]
+  },
+  taxes: {
+    label: "Taxes & impots (paiements directs)",
+    type: "depense",
+    sub: [
+      { id: "tx_acomptes", label: "Acomptes provisionnels" },
+      { id: "tx_solde_impot", label: "Solde impot a payer" },
+      { id: "tx_taxes_pro", label: "Taxes professionnelles" }
+    ]
+  },
+  autres: {
+    label: "Autres",
+    type: "depense",
+    sub: [
+      { id: "au_animal", label: "Animal domestique" },
+      { id: "au_enfants", label: "Enfants (futur)" },
+      { id: "au_legal", label: "Frais legaux divers" },
+      { id: "au_dons_politiques", label: "Dons politiques" },
+      { id: "au_autres", label: "Autres depenses" }
+    ]
+  },
+  epargne: {
+    label: "Epargne & investissement",
+    type: "epargne",
+    color: "blue",
+    sub: [
+      { id: "ep_fhsa", label: "Cotisation FHSA", defaut: 154, defautProfile: "mathis" },
+      { id: "ep_celi", label: "Cotisation CELI", defaut: 100, defautProfile: "mathis" },
+      { id: "ep_reer", label: "Cotisation REER" },
+      { id: "ep_reee", label: "Cotisation REEE (futur enfants)" },
+      { id: "ep_non_enreg", label: "Cotisation compte non-enregistre" },
+      { id: "ep_compte_conjoint_immo", label: "Cotisation compte conjoint immobilier (post-2027)" },
+      { id: "ep_capital_pret_auto", label: "Remboursement capital pret auto", defaut: 600, defautProfile: "mathis" },
+      { id: "ep_capital_hypotheque", label: "Remboursement capital hypotheque" },
+      { id: "ep_fonds_urgence", label: "Renflouement fonds d'urgence" }
+    ]
+  }
+};
+
+/* ===========================================================================
+ * TYPES DE COMPTES — Liste exhaustive
+ * =========================================================================== */
+const ACCOUNT_TYPES = {
+  // Liquide
+  cheque:        { label: "Compte cheque",         group: "liquide",     sign: 1 },
+  epargne:       { label: "Compte epargne",        group: "liquide",     sign: 1 },
+  cash:          { label: "Cash physique",         group: "liquide",     sign: 1 },
+  fonds_urgence: { label: "Fonds d'urgence",       group: "liquide",     sign: 1 },
+
+  // Investissements enregistres
+  fhsa:          { label: "FHSA / CELIAPP",        group: "enregistre",  sign: 1, hasContrib: true, plafondAnnuel: 8000, plafondVie: 40000 },
+  celi:          { label: "CELI",                  group: "enregistre",  sign: 1, hasContrib: true, plafondAnnuel: 7000 },
+  reer:          { label: "REER",                  group: "enregistre",  sign: 1, hasContrib: true },
+  reer_conjoint: { label: "REER conjoint",         group: "enregistre",  sign: 1, hasContrib: true },
+  ferr:          { label: "FERR",                  group: "enregistre",  sign: 1 },
+  reee:          { label: "REEE",                  group: "enregistre",  sign: 1, hasContrib: true },
+  cri:           { label: "CRI / immobilise",      group: "enregistre",  sign: 1 },
+  frv:           { label: "FRV",                   group: "enregistre",  sign: 1 },
+
+  // Investissements non enregistres
+  courtage:      { label: "Compte courtage non-enreg.", group: "non_enreg", sign: 1 },
+  placement:     { label: "Compte placement",      group: "non_enreg",   sign: 1 },
+  crypto:        { label: "Crypto / wallet",       group: "non_enreg",   sign: 1 },
+
+  // Pension
+  pension_ccq:   { label: "Fonds pension CCQ",     group: "pension",     sign: 1 },
+  ipp:           { label: "IPP (Individual Pension Plan)", group: "pension", sign: 1 },
+  rrq_estime:    { label: "RRQ estime (futur)",    group: "pension",     sign: 1 },
+
+  // Dettes
+  carte_credit:  { label: "Carte de credit",       group: "dette",       sign: -1, isCard: true },
+  marge_credit:  { label: "Marge de credit",       group: "dette",       sign: -1 },
+  pret_auto:     { label: "Pret auto",             group: "dette",       sign: -1, isLoan: true },
+  pret_etudiant: { label: "Pret etudiant",         group: "dette",       sign: -1, isLoan: true },
+  pret_perso:    { label: "Pret personnel",        group: "dette",       sign: -1, isLoan: true },
+  hypotheque:    { label: "Hypotheque",            group: "dette",       sign: -1, isMortgage: true },
+  heloc:         { label: "Marge hypothecaire (HELOC)", group: "dette",   sign: -1 },
+
+  // Actifs immobiliers
+  immeuble_locatif: { label: "Immeuble locatif",   group: "immobilier",  sign: 1, isProperty: true },
+  residence:        { label: "Residence principale", group: "immobilier", sign: 1, isProperty: true },
+  terrain:          { label: "Terrain",            group: "immobilier",  sign: 1 },
+
+  // Actifs corporatifs
+  immoco:        { label: "Societe ImmoCo",        group: "corporatif",  sign: 1 },
+  opco:          { label: "Societe OpCo",          group: "corporatif",  sign: 1 },
+  fiducie:       { label: "Fiducie",               group: "corporatif",  sign: 1 },
+
+  // Actifs divers
+  vehicule_actif:{ label: "Vehicule (valeur)",     group: "divers",      sign: 1 },
+  moto:          { label: "Moto (valeur)",         group: "divers",      sign: 1 },
+  metaux:        { label: "Or / metaux precieux",  group: "divers",      sign: 1 },
+  collection:    { label: "Collection / objets de valeur", group: "divers", sign: 1 },
+  autre_actif:   { label: "Autre actif",           group: "divers",      sign: 1 }
+};
+
+const ACCOUNT_GROUPS = {
+  liquide:     { label: "Liquidites",                 order: 1, color: "blue" },
+  enregistre:  { label: "Investissements enregistres", order: 2, color: "purple" },
+  non_enreg:   { label: "Investissements non enregistres", order: 3, color: "purple" },
+  pension:     { label: "Pension / retraite",         order: 4, color: "green" },
+  immobilier:  { label: "Actifs immobiliers",         order: 5, color: "green" },
+  corporatif:  { label: "Actifs corporatifs",         order: 6, color: "purple" },
+  divers:      { label: "Actifs divers",              order: 7, color: "blue" },
+  dette:       { label: "Dettes",                     order: 8, color: "red" }
+};
+
+const INSTITUTIONS = [
+  "Tangerine", "Desjardins", "Wealthsimple", "Valeurs mobilieres Desjardins (VMD)",
+  "Banque Nationale", "RBC", "TD", "BMO", "CIBC", "Scotia",
+  "Questrade", "IG Wealth", "EQ Bank",
+  "CCQ", "SCHL", "Mazda Finance",
+  "Autre"
+];
+
+/* ===========================================================================
+ * STRUCTURE DE DONNEES PAR DEFAUT
+ * =========================================================================== */
+function emptyProfileData() {
+  return {
+    accounts: [],
+    accountSnapshots: [],   // { id, accountId, date, balance }
+    budget: {
+      year: new Date().getFullYear(),
+      categories: {},        // { catId: { budget: number, active: bool } }  -- override defauts
+      monthlyEntries: {},    // { "YYYY-MM": { catId: amount } }
+      monthlyNotes: {}       // { "YYYY-MM": { catId: note } }
+    },
+    pros: []
+  };
+}
+
+function emptyStore() {
+  return {
+    meta: {
+      version: APP.version,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      theme: "light",
+      lastProfile: "mathis",
+      sync: {
+        autoSync: false,
+        token: "",
+        owner: "KBig",
+        repo: "immobilier-plan",
+        path: ".financeperso-data.enc",
+        lastSync: null
+      }
+    },
+    profiles: {
+      mathis:    emptyProfileData(),
+      conjointe: emptyProfileData(),
+      couple:    emptyProfileData()
+    }
+  };
+}
+
+/* ===========================================================================
+ * PRECHARGEMENT DES DONNEES MAI 2026 (depuis SOURCE_DE_VERITE.md)
+ * =========================================================================== */
+function preloadMathis(data) {
+  const today = "2026-05-02";
+  const accs = [
+    { id: uid(), nom: "FHSA VMD",                 type: "fhsa",         institution: "Valeurs mobilieres Desjardins (VMD)", solde: 10000,  cible2030: 46800, devise: "CAD", dateOuverture: "2025-09-01", statut: "actif", notes: "Allocation: ZAG-C 30% / VSP-C 29% / ZCN-C 26% / QQC.F-C 15% (70/30). MER 0,12%. Frais admin 80-150$/an." , cotisationYTD: 3300, plafondAnnuel: 8000, plafondVie: 40000, dateMaj: today },
+    { id: uid(), nom: "CELI Wealthsimple",        type: "celi",         institution: "Wealthsimple",                          solde: 2600,   cible2030: 33000, devise: "CAD", dateOuverture: "2025-01-01", statut: "actif", notes: "VEQT 60% / QQC 25-30% / PLTR 5% / RKLB 5%", cotisationYTD: 2000, plafondAnnuel: 7000, dateMaj: today },
+    { id: uid(), nom: "Cash + fonds urgence",     type: "fonds_urgence",institution: "Tangerine",                             solde: 5000,   cible2030: 30000, devise: "CAD", dateOuverture: "2024-01-01", statut: "actif", notes: "Combine cash transactionnel + urgence. Cible 2026-2027: separer 3k urgence + 2k cash courant.", dateMaj: today },
+    { id: uid(), nom: "Pret auto Mazda 3 2021",   type: "pret_auto",    institution: "Mazda Finance",                         solde: 18900,  devise: "CAD", dateOuverture: "2023-01-01", statut: "actif", notes: "27 mois restants estimes (max 30). Solde fin entre juin-novembre 2028.", taux: 5.0, paiementMensuel: 700, dateMaj: today },
+    { id: uid(), nom: "Carte Desjardins",         type: "carte_credit", institution: "Desjardins",                            solde: 0,      devise: "CAD", statut: "actif", limite: 1750, dateMaj: today, notes: "Cible: augmenter limite a 5000$ (T2 2026)." },
+    { id: uid(), nom: "Carte Tangerine",          type: "carte_credit", institution: "Tangerine",                             solde: 0,      devise: "CAD", statut: "actif", limite: 1000, dateMaj: today, notes: "Cible: augmenter limite a 3000-5000$ (T2 2026)." },
+    { id: uid(), nom: "Carte Wealthsimple",       type: "carte_credit", institution: "Wealthsimple",                          solde: 0,      devise: "CAD", statut: "actif", limite: 500, dateMaj: today, notes: "Carte virtuelle." },
+    { id: uid(), nom: "Fonds pension CCQ",        type: "pension_ccq",  institution: "CCQ",                                   solde: 7000,   devise: "CAD", statut: "actif", notes: "A valider dans Mon Dossier CCQ. Croit avec annees CCQ.", dateMaj: today },
+    { id: uid(), nom: "Moto (50% part)",          type: "moto",         institution: "",                                      solde: 4250,   devise: "CAD", statut: "actif", notes: "Valeur totale 8-9k$. Cash, 50% au pere.", dateMaj: today }
+  ];
+  data.accounts = accs;
+  data.accountSnapshots = accs.map(a => ({ id: uid(), accountId: a.id, date: today, balance: a.solde }));
+  // Budget mensuel reel
+  const monthEntries = {};
+  for (const cat of Object.values(BUDGET_CATEGORIES)) {
+    for (const sub of cat.sub) {
+      if (sub.defaut && (sub.defautProfile === "mathis" || !sub.defautProfile)) {
+        // pre-remplir mai 2026
+      }
+    }
+  }
+  // Cotes credit + scoreCible (stockes en metadata pour tableau de bord)
+  data.scoresCredit = {
+    equifax: { actuel: 758, cible2030: 780, dateMaj: today },
+    transunion: { actuel: 720, cible2030: 770, dateMaj: today }
+  };
+  // Pros recommandes (vides au depart, l'user remplira)
+  data.pros = [
+    { id: uid(), nom: "Conseiller VMD familial", cabinet: "Desjardins / VMD", categorie: "Routine", source: "Reseau VMD familial", phone: "", email: "", services: "Plan financier, allocation FHSA/CELI/REER", tarification: "Inclus dans services VMD familial", dateContact: "", prochainContact: "2026-09-01", evalPrix: 0, evalQualite: 0, evalChimie: 0, evalReseau: 0, notes: "Acces via pere. RV initial planifie automne 2026." }
+  ];
+  return data;
+}
+
+function preloadConjointe(data) {
+  const today = "2026-05-02";
+  const accs = [
+    { id: uid(), nom: "FHSA conjointe",           type: "fhsa",         institution: "(a definir)",     solde: 1500, cible2030: 46800, devise: "CAD", statut: "actif", notes: "Premier an, en demarrage (mai 2026).", cotisationYTD: 1500, plafondAnnuel: 8000, plafondVie: 40000, dateMaj: today },
+    { id: uid(), nom: "CELI conjointe",           type: "celi",         institution: "(a definir)",     solde: 0,    cible2030: 33000, devise: "CAD", statut: "actif", cotisationYTD: 0, plafondAnnuel: 7000, dateMaj: today },
+    { id: uid(), nom: "Cash conjointe",           type: "cheque",       institution: "(a definir)",     solde: 0,    devise: "CAD", statut: "actif", dateMaj: today },
+    { id: uid(), nom: "Pret auto conjointe",      type: "pret_auto",    institution: "(a definir)",     solde: 0,    devise: "CAD", statut: "actif", paiementMensuel: 355, notes: "82$/sem ~= 355$/mois ~= 4264$/an.", dateMaj: today }
+  ];
+  data.accounts = accs;
+  data.accountSnapshots = accs.map(a => ({ id: uid(), accountId: a.id, date: today, balance: a.solde }));
+  data.pros = [];
+  return data;
+}
+
+function preloadCouple(data) {
+  const today = "2026-05-02";
+  // Comptes communs - en mai 2026 il n'y en a pas encore (post-2027 avec convention)
+  // On pre-cree les structures avec solde 0 pour que l'user puisse les activer plus tard
+  const accs = [
+    { id: uid(), nom: "Compte conjoint immobilier (a creer 2027+)", type: "epargne", institution: "(a definir)", solde: 0, devise: "CAD", statut: "actif", notes: "A ouvrir avec convention notariee 14 clauses (planifie nov. 2027). Cotisations egales obligatoires (clause 2).", dateMaj: today },
+    { id: uid(), nom: "Compte conjoint depenses communes (optionnel)", type: "cheque", institution: "(a definir)", solde: 0, devise: "CAD", statut: "actif", notes: "Optionnel - epicerie / sorties communes.", dateMaj: today }
+  ];
+  data.accounts = accs;
+  data.accountSnapshots = accs.map(a => ({ id: uid(), accountId: a.id, date: today, balance: a.solde }));
+  // Cibles couple Mode B 50/50 (Section 8 SDV)
+  data.ciblesCouple = {
+    achatPremier: { date: "2030-06-30", montant: 700000, type: "Quadruplex 700k$ proprietaire-occupant", capitalRequis: 65000 },
+    patrimoineCible50ans: { min: 38000000, max: 44000000 },
+    portesCible50ans: { min: 250, max: 290 }
+  };
+  data.pros = [];
+  return data;
+}
+
+function applyPreload(store) {
+  preloadMathis(store.profiles.mathis);
+  preloadConjointe(store.profiles.conjointe);
+  preloadCouple(store.profiles.couple);
+  return store;
+}
+
+/* ===========================================================================
+ * HELPERS PROFILS / COMPTES / BUDGET
+ * =========================================================================== */
+function p() { return APP.data.profiles[APP.currentProfile]; }
+function pAll() { return APP.data.profiles; }
+
+function totalActifs(profileData) {
+  return (profileData.accounts || [])
+    .filter(a => a.statut !== "ferme" && (ACCOUNT_TYPES[a.type]?.sign ?? 1) > 0)
+    .reduce((s, a) => s + (Number(a.solde) || 0), 0);
+}
+function totalDettes(profileData) {
+  return (profileData.accounts || [])
+    .filter(a => a.statut !== "ferme" && (ACCOUNT_TYPES[a.type]?.sign ?? 1) < 0)
+    .reduce((s, a) => s + (Number(a.solde) || 0), 0);
+}
+function valeurNette(profileData) { return totalActifs(profileData) - totalDettes(profileData); }
+
+function totalsParGroupe(profileData) {
+  const groups = {};
+  for (const a of (profileData.accounts || [])) {
+    if (a.statut === "ferme") continue;
+    const t = ACCOUNT_TYPES[a.type];
+    if (!t) continue;
+    const g = t.group;
+    if (!groups[g]) groups[g] = 0;
+    groups[g] += Number(a.solde) || 0;
+  }
+  return groups;
+}
+
+// Vue couple agregee = somme Mathis + Conjointe + Couple
+function agregeCouple() {
+  const all = APP.data.profiles;
+  const accs = [
+    ...all.mathis.accounts.map(a => ({ ...a, _profil: "Mathis" })),
+    ...all.conjointe.accounts.map(a => ({ ...a, _profil: "Conjointe" })),
+    ...all.couple.accounts.map(a => ({ ...a, _profil: "Commun" }))
+  ];
+  return {
+    accounts: accs,
+    valeurNette: valeurNette({ accounts: accs }),
+    totalActifs: totalActifs({ accounts: accs }),
+    totalDettes: totalDettes({ accounts: accs }),
+    totalsGroupe: totalsParGroupe({ accounts: accs })
+  };
+}
+
+function getBudgetEntry(profileData, monthYM, catId) {
+  return profileData.budget?.monthlyEntries?.[monthYM]?.[catId] ?? null;
+}
+function setBudgetEntry(profileData, monthYM, catId, value) {
+  if (!profileData.budget.monthlyEntries[monthYM]) profileData.budget.monthlyEntries[monthYM] = {};
+  if (value == null || value === "" || isNaN(Number(value))) {
+    delete profileData.budget.monthlyEntries[monthYM][catId];
+  } else {
+    profileData.budget.monthlyEntries[monthYM][catId] = Number(value);
+  }
+}
+function getBudgetMensuel(profileData, catId) {
+  const override = profileData.budget?.categories?.[catId]?.budget;
+  if (override != null) return override;
+  // chercher defaut dans BUDGET_CATEGORIES
+  for (const cat of Object.values(BUDGET_CATEGORIES)) {
+    for (const sub of cat.sub) {
+      if (sub.id === catId) return sub.defaut || 0;
+    }
+  }
+  return 0;
+}
+function setBudgetMensuel(profileData, catId, montant) {
+  if (!profileData.budget.categories[catId]) profileData.budget.categories[catId] = { budget: 0, active: true };
+  profileData.budget.categories[catId].budget = Number(montant) || 0;
+}
+
+function findCategorie(catId) {
+  for (const [groupId, cat] of Object.entries(BUDGET_CATEGORIES)) {
+    for (const sub of cat.sub) {
+      if (sub.id === catId) return { group: groupId, groupLabel: cat.label, groupType: cat.type, sub };
+    }
+  }
+  return null;
+}
+
+/* ===========================================================================
+ * AUTHENTIFICATION / SETUP / NAVIGATION GLOBALE
+ * =========================================================================== */
+function showScreen(id) {
+  $$(".fullscreen").forEach(s => s.classList.add("hidden"));
+  $("#" + id)?.classList.remove("hidden");
+  $("#app").classList.remove("active");
+}
+function showApp() {
+  $$(".fullscreen").forEach(s => s.classList.add("hidden"));
+  $("#app").classList.add("active");
+}
+
+async function doSetup() {
+  const pw = $("#setup-password").value;
+  const pw2 = $("#setup-password-2").value;
+  const mode = $("#setup-mode").value;
+  const preload = $("#setup-preload").checked;
+  const errEl = $("#setup-error");
+  errEl.classList.add("hidden");
+  if (pw.length < 8) { errEl.textContent = "Mot de passe trop court (min 8)."; errEl.classList.remove("hidden"); return; }
+  if (pw !== pw2) { errEl.textContent = "Les mots de passe ne correspondent pas."; errEl.classList.remove("hidden"); return; }
+  let store = emptyStore();
+  if (preload) applyPreload(store);
+  if (mode === "solo") {
+    store.profiles.conjointe = emptyProfileData();
+    store.profiles.couple = emptyProfileData();
+  }
+  try {
+    APP.password = pw;
+    APP.data = store;
+    await storage.save(store, pw);
+    showSuccess("Configuration enregistree.");
+    enterApp();
+  } catch (e) {
+    errEl.textContent = "Erreur : " + e.message;
+    errEl.classList.remove("hidden");
+  }
+}
+
+async function doLogin() {
+  const pw = $("#login-password").value;
+  const errEl = $("#login-error");
+  errEl.classList.add("hidden");
+  try {
+    const data = await storage.load(pw);
+    APP.password = pw;
+    APP.data = data;
+    enterApp();
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.classList.remove("hidden");
+  }
+}
+
+function logout() {
+  APP.password = null;
+  APP.data = null;
+  APP.currentProfile = null;
+  $("#login-password").value = "";
+  showScreen("screen-login");
+}
+
+function enterApp() {
+  // Appliquer le theme
+  const theme = APP.data.meta.theme || "light";
+  document.body.setAttribute("data-theme", theme);
+  // Choisir le profil
+  const last = APP.data.meta.lastProfile || "mathis";
+  if (last && PROFILES[last]) {
+    selectProfile(last);
+  } else {
+    goProfileSelect();
+  }
+}
+
+function goProfileSelect() {
+  showScreen("screen-profile");
+  const list = $("#profile-list");
+  list.innerHTML = "";
+  for (const p of Object.values(PROFILES)) {
+    const data = APP.data.profiles[p.id];
+    const vn = valeurNette(data);
+    const card = el("button", { class: "profile-card", "data-color": p.color, onclick: () => selectProfile(p.id) }, [
+      el("div", { class: "profile-avatar", text: p.initial }),
+      el("div", { class: "profile-info" }, [
+        el("div", { class: "profile-name", text: p.name }),
+        el("div", { class: "profile-desc", text: p.desc }),
+        el("div", { class: "profile-stats", text: `Valeur nette: ${fmt.money(vn)} - ${data.accounts.length} compte(s)` })
+      ])
+    ]);
+    list.appendChild(card);
+  }
+}
+
+function selectProfile(profileId) {
+  APP.currentProfile = profileId;
+  APP.data.meta.lastProfile = profileId;
+  scheduleSave();
+  // MAJ topbar
+  const p = PROFILES[profileId];
+  $("#topbar-profile-btn").setAttribute("data-color", p.color);
+  $("#tp-avatar").textContent = p.initial;
+  $("#tp-name").textContent = p.name;
+  showApp();
+  navigate("dashboard");
+}
+
+function navigate(page) {
+  APP.currentPage = page;
+  $$(".nav-item").forEach(n => n.classList.remove("active"));
+  $$(`.nav-item[data-page="${page}"]`).forEach(n => n.classList.add("active"));
+  closeSidebar();
+  const renderers = {
+    dashboard: renderDashboard,
+    accounts: renderAccounts,
+    budget: renderBudget,
+    pros: renderPros,
+    settings: renderSettings
+  };
+  const fn = renderers[page] || renderDashboard;
+  $("#main-content").innerHTML = "";
+  fn();
+}
+
+function toggleSidebar() {
+  const sb = $("#sidebar");
+  const bd = $("#sidebar-backdrop");
+  if (sb.classList.contains("open")) { sb.classList.remove("open"); bd.classList.remove("show"); }
+  else { sb.classList.add("open"); bd.classList.add("show"); }
+}
+function closeSidebar() { $("#sidebar")?.classList.remove("open"); $("#sidebar-backdrop")?.classList.remove("show"); }
+
+function toggleTheme() {
+  const cur = document.body.getAttribute("data-theme") || "light";
+  const next = cur === "light" ? "dark" : "light";
+  document.body.setAttribute("data-theme", next);
+  if (APP.data) { APP.data.meta.theme = next; scheduleSave(); }
+}
+
+function goPlan() {
+  // Retour au plan principal
+  window.location.href = "plan_complet_secured.html";
+}
+
+function openSettingsFromProfile() {
+  // Si pas encore de profil selectionne, on doit en avoir un pour acceder aux settings
+  if (!APP.currentProfile) APP.currentProfile = "mathis";
+  showApp();
+  navigate("settings");
+}
+
+/* ===========================================================================
+ * MODAL HELPERS
+ * =========================================================================== */
+function openModal(title, bodyHTML, footerButtons = []) {
+  $("#modal-title").textContent = title;
+  $("#modal-body").innerHTML = bodyHTML;
+  const footer = $("#modal-footer");
+  footer.innerHTML = "";
+  for (const btn of footerButtons) {
+    const b = el("button", { class: "btn " + (btn.class || ""), onclick: () => btn.onClick?.(b) , text: btn.label });
+    footer.appendChild(b);
+  }
+  $("#modal-backdrop").classList.add("show");
+}
+function closeModal() { $("#modal-backdrop").classList.remove("show"); }
+
+function confirmModal(title, message, onConfirm, dangerLabel = "Confirmer") {
+  openModal(title, `<p>${message}</p>`, [
+    { label: "Annuler", onClick: closeModal },
+    { label: dangerLabel, class: "btn-danger", onClick: () => { closeModal(); onConfirm(); } }
+  ]);
+}
+
+function promptModal(title, fields, onSubmit) {
+  let html = '<form id="modal-form" onsubmit="event.preventDefault(); window._modalSubmit && window._modalSubmit();"><div class="form-grid">';
+  for (const f of fields) {
+    html += `<div class="form-row ${f.full ? "full" : ""}"><div class="form-label">${f.label}${f.required ? '<span class="req">*</span>' : ""}</div>`;
+    if (f.type === "select") {
+      html += `<select class="form-select" name="${f.name}">`;
+      for (const o of f.options) html += `<option value="${o.value}" ${o.value === f.value ? "selected" : ""}>${o.label}</option>`;
+      html += "</select>";
+    } else if (f.type === "textarea") {
+      html += `<textarea class="form-textarea" name="${f.name}">${f.value || ""}</textarea>`;
+    } else {
+      html += `<input class="form-input" type="${f.type || "text"}" name="${f.name}" value="${f.value ?? ""}" ${f.required ? "required" : ""}>`;
+    }
+    if (f.help) html += `<div class="form-help">${f.help}</div>`;
+    html += "</div>";
+  }
+  html += "</div></form>";
+  openModal(title, html, [
+    { label: "Annuler", onClick: closeModal },
+    { label: "Enregistrer", class: "btn-primary", onClick: () => window._modalSubmit() }
+  ]);
+  window._modalSubmit = () => {
+    const form = $("#modal-form");
+    const obj = {};
+    for (const el of form.elements) if (el.name) obj[el.name] = el.value;
+    onSubmit(obj);
+  };
+}
+
+/* ===========================================================================
+ * INIT GLOBAL
+ * =========================================================================== */
+async function bootstrap() {
+  try {
+    const has = await storage.hasData();
+    if (has) showScreen("screen-login");
+    else showScreen("screen-setup");
+  } catch (e) {
+    showError("Erreur d'initialisation : " + e.message);
+  }
+  // Raccourcis clavier
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { closeModal(); }
+    if (e.ctrlKey && e.key === "k") { e.preventDefault(); /* recherche future */ }
+  });
+}
+
+window.addEventListener("DOMContentLoaded", bootstrap);
+
+/* ===========================================================================
+ * PAGE : DASHBOARD
+ * =========================================================================== */
+function renderDashboard() {
+  const profile = APP.currentProfile;
+  const root = $("#main-content");
+  const isCouple = profile === "couple";
+
+  let actifs, dettes, vn, totalsGroupe, accountsForList;
+  if (isCouple) {
+    const agg = agregeCouple();
+    actifs = agg.totalActifs;
+    dettes = agg.totalDettes;
+    vn = agg.valeurNette;
+    totalsGroupe = agg.totalsGroupe;
+    accountsForList = agg.accounts;
+  } else {
+    const data = p();
+    actifs = totalActifs(data);
+    dettes = totalDettes(data);
+    vn = valeurNette(data);
+    totalsGroupe = totalsParGroupe(data);
+    accountsForList = data.accounts;
+  }
+
+  // Capacite epargne mensuelle (dernier mois saisi)
+  const month = currentMonth();
+  let revenusMois = 0, depensesMois = 0, epargneMois = 0;
+  if (!isCouple) {
+    const entries = p().budget.monthlyEntries[month] || {};
+    for (const [catId, val] of Object.entries(entries)) {
+      const c = findCategorie(catId);
+      if (!c) continue;
+      if (c.groupType === "revenu") revenusMois += val;
+      else if (c.groupType === "epargne") epargneMois += val;
+      else depensesMois += val;
+    }
+  }
+  const flux = revenusMois - depensesMois - epargneMois;
+
+  // Header
+  const header = el("div", { class: "page-header" }, [
+    el("div", {}, [
+      el("div", { class: "page-title", text: `Tableau de bord - ${PROFILES[profile].name}` }),
+      el("div", { class: "page-subtitle", text: isCouple ? "Vue agregee Mathis + Conjointe + Comptes communs" : `Profil personnel - mis a jour ${fmt.date(APP.data.meta.updatedAt)}` })
+    ]),
+    el("div", { class: "page-actions" }, [
+      el("button", { class: "btn", onclick: () => navigate("accounts"), text: "Voir tous les comptes" }),
+      el("button", { class: "btn btn-primary", onclick: () => quickAddAccount(), text: "+ Compte" })
+    ])
+  ]);
+  root.appendChild(header);
+
+  // KPIs
+  const kpis = el("div", { class: "kpi-grid" });
+  kpis.appendChild(makeKPI("Valeur nette", fmt.money(vn), vn >= 0 ? "positive" : "negative", `${accountsForList.length} compte(s)`));
+  kpis.appendChild(makeKPI("Actifs totaux", fmt.money(actifs), "positive"));
+  kpis.appendChild(makeKPI("Dettes totales", fmt.money(dettes), dettes > 0 ? "negative" : ""));
+  if (!isCouple) {
+    kpis.appendChild(makeKPI("Flux mois courant", fmt.money(flux), flux >= 0 ? "positive" : "negative", fmt.monthLabel(month)));
+  }
+  root.appendChild(kpis);
+
+  // Repartition par groupe
+  const cardGroupes = el("div", { class: "card" });
+  cardGroupes.appendChild(el("div", { class: "card-header" }, [
+    el("div", { class: "card-title", text: "Repartition par categorie" })
+  ]));
+  const total = Object.values(totalsGroupe).reduce((s, v) => s + Math.abs(v), 0);
+  if (total === 0) {
+    cardGroupes.appendChild(el("div", { class: "empty", text: "Aucun compte a afficher." }));
+  } else {
+    const sorted = Object.entries(totalsGroupe)
+      .map(([g, v]) => ({ g, v, info: ACCOUNT_GROUPS[g] }))
+      .sort((a, b) => (a.info?.order ?? 99) - (b.info?.order ?? 99));
+    const tbl = el("div", { class: "table-wrap" });
+    const t = el("table");
+    t.innerHTML = `<thead><tr><th>Categorie</th><th class="num">Solde</th><th class="num">Part</th><th>Repartition</th></tr></thead>`;
+    const tbody = el("tbody");
+    for (const r of sorted) {
+      const pct = total ? Math.abs(r.v) / total : 0;
+      const tr = el("tr");
+      tr.innerHTML = `<td><span class="badge badge-${r.info?.color || ""}">${r.info?.label || r.g}</span></td>
+        <td class="num ${r.v < 0 ? "negative" : ""}">${fmt.money(r.v)}</td>
+        <td class="num">${fmt.pct(pct)}</td>
+        <td style="min-width:120px;"><div class="progress"><div class="progress-bar" style="width:${(pct * 100).toFixed(1)}%"></div></div></td>`;
+      tbody.appendChild(tr);
+    }
+    t.appendChild(tbody);
+    tbl.appendChild(t);
+    cardGroupes.appendChild(tbl);
+  }
+  root.appendChild(cardGroupes);
+
+  // Top 8 comptes
+  const cardTop = el("div", { class: "card" });
+  cardTop.appendChild(el("div", { class: "card-header" }, [
+    el("div", { class: "card-title", text: "Comptes (top 12)" }),
+    el("button", { class: "btn btn-sm", onclick: () => navigate("accounts"), text: "Voir tout" })
+  ]));
+  const sortedAccs = [...accountsForList].sort((a, b) => Math.abs(b.solde) - Math.abs(a.solde)).slice(0, 12);
+  if (sortedAccs.length === 0) {
+    cardTop.appendChild(el("div", { class: "empty" }, [
+      el("div", { class: "empty-title", text: "Aucun compte" }),
+      el("div", { text: "Ajoute ton premier compte pour commencer." }),
+      el("button", { class: "btn btn-primary mt-16", onclick: () => quickAddAccount(), text: "+ Ajouter un compte" })
+    ]));
+  } else {
+    const tbl = el("div", { class: "table-wrap" });
+    const t = el("table");
+    t.innerHTML = `<thead><tr><th>Compte</th><th>Type</th>${isCouple ? "<th>Profil</th>" : ""}<th>Institution</th><th class="num">Solde</th></tr></thead>`;
+    const tbody = el("tbody");
+    for (const a of sortedAccs) {
+      const at = ACCOUNT_TYPES[a.type];
+      const sign = at?.sign ?? 1;
+      const display = sign < 0 ? -Math.abs(a.solde) : Math.abs(a.solde);
+      const tr = el("tr");
+      tr.style.cursor = "pointer";
+      tr.onclick = () => isCouple ? null : openAccountModal(a.id);
+      tr.innerHTML = `<td><strong>${a.nom}</strong></td>
+        <td>${at?.label || a.type}</td>
+        ${isCouple ? `<td><span class="badge">${a._profil}</span></td>` : ""}
+        <td>${a.institution || "-"}</td>
+        <td class="num ${display < 0 ? "negative" : "positive"}">${fmt.money(display)}</td>`;
+      tbody.appendChild(tr);
+    }
+    t.appendChild(tbody);
+    tbl.appendChild(t);
+    cardTop.appendChild(tbl);
+  }
+  root.appendChild(cardTop);
+
+  // Cibles 2030 (Mathis seulement, vu que SDV)
+  if (profile === "mathis") {
+    const cardCibles = el("div", { class: "card" });
+    cardCibles.appendChild(el("div", { class: "card-header" }, [
+      el("div", { class: "card-title", text: "Cibles 2030 (capital 1er achat - Mode B 50/50)" })
+    ]));
+    const cibles = [
+      { label: "FHSA", actuel: somme(p().accounts, "fhsa"), cible: 46800 },
+      { label: "CELI", actuel: somme(p().accounts, "celi"), cible: 33000 },
+      { label: "Cash + urgence", actuel: somme(p().accounts, "fonds_urgence") + somme(p().accounts, "epargne") + somme(p().accounts, "cheque"), cible: 30000 },
+      { label: "Pret auto solde", actuel: 18900 - somme(p().accounts, "pret_auto"), cible: 18900 },
+      { label: "Capital total liquide (toi)", actuel: totalActifs(p()) - somme(p().accounts, "moto") - somme(p().accounts, "pension_ccq"), cible: 107060 }
+    ];
+    const tbl = el("div", { class: "table-wrap" });
+    const t = el("table");
+    t.innerHTML = `<thead><tr><th>Cible</th><th class="num">Actuel</th><th class="num">Cible</th><th class="num">% atteint</th><th>Progression</th></tr></thead>`;
+    const tbody = el("tbody");
+    for (const c of cibles) {
+      const pct = c.cible > 0 ? Math.min(c.actuel / c.cible, 1.5) : 0;
+      const klass = pct >= 1 ? "good" : pct >= 0.5 ? "warn" : "";
+      const tr = el("tr");
+      tr.innerHTML = `<td>${c.label}</td>
+        <td class="num">${fmt.money(c.actuel)}</td>
+        <td class="num">${fmt.money(c.cible)}</td>
+        <td class="num">${(pct * 100).toFixed(0)} %</td>
+        <td style="min-width:140px;"><div class="progress"><div class="progress-bar ${klass}" style="width:${Math.min(pct * 100, 100).toFixed(1)}%"></div></div></td>`;
+      tbody.appendChild(tr);
+    }
+    t.appendChild(tbody);
+    tbl.appendChild(t);
+    cardCibles.appendChild(tbl);
+    root.appendChild(cardCibles);
+  }
+
+  // Cibles couple
+  if (profile === "couple" && p().ciblesCouple) {
+    const c = p().ciblesCouple;
+    const cardC = el("div", { class: "card" });
+    cardC.appendChild(el("div", { class: "card-header" }, [
+      el("div", { class: "card-title", text: "Cibles couple Mode B 50/50" })
+    ]));
+    const agg = agregeCouple();
+    cardC.appendChild(el("div", { html: `
+      <p><strong>1er achat (mi-2030):</strong> ${c.achatPremier.type} - prix ${fmt.money(c.achatPremier.montant)} - capital requis ~${fmt.money(c.achatPremier.capitalRequis)}</p>
+      <p style="margin-top:8px;"><strong>Cible 50 ans (Mode B 50/50):</strong> ${fmt.moneyShort(c.patrimoineCible50ans.min)} - ${fmt.moneyShort(c.patrimoineCible50ans.max)} couple, ${c.portesCible50ans.min}-${c.portesCible50ans.max} portes</p>
+      <p style="margin-top:8px;"><strong>Patrimoine actuel couple:</strong> ${fmt.money(agg.valeurNette)} (${(agg.valeurNette / c.achatPremier.capitalRequis * 100).toFixed(1)} % du capital pour 1er achat)</p>
+    ` }));
+    root.appendChild(cardC);
+  }
+
+  // Score credit (Mathis)
+  if (profile === "mathis" && p().scoresCredit) {
+    const sc = p().scoresCredit;
+    const cardSc = el("div", { class: "card" });
+    cardSc.appendChild(el("div", { class: "card-header" }, [
+      el("div", { class: "card-title", text: "Cotes de credit" }),
+      el("button", { class: "btn btn-sm", onclick: () => editScoresCredit(), text: "Modifier" })
+    ]));
+    cardSc.appendChild(el("div", { class: "kpi-grid" }, [
+      makeKPI("Equifax", `${sc.equifax.actuel}`, "", `Cible 2030: ${sc.equifax.cible2030} (MAJ ${fmt.date(sc.equifax.dateMaj)})`),
+      makeKPI("TransUnion", `${sc.transunion.actuel}`, "", `Cible 2030: ${sc.transunion.cible2030} (MAJ ${fmt.date(sc.transunion.dateMaj)})`)
+    ]));
+    root.appendChild(cardSc);
+  }
+
+  // Sync GitHub statut
+  if (APP.data.meta.sync?.token) {
+    const lastSync = APP.data.meta.sync.lastSync;
+    const note = el("div", { class: "muted text-sm mt-16", text: lastSync ? `Derniere synchronisation: ${new Date(lastSync).toLocaleString("fr-CA")}` : "Sync configuree mais jamais executee. Clique sur le bouton ↻ en haut pour forcer." });
+    root.appendChild(note);
+  } else {
+    const note = el("div", { class: "muted text-sm mt-16", html: `Sync GitHub non configuree. <a href="javascript:navigate('settings')">Configurer maintenant</a> pour acceder a tes donnees depuis ton iPhone et ton PC.` });
+    root.appendChild(note);
+  }
+}
+
+function makeKPI(label, value, klass = "", sub = "") {
+  return el("div", { class: "kpi" }, [
+    el("div", { class: "kpi-label", text: label }),
+    el("div", { class: "kpi-value " + klass, text: value }),
+    sub ? el("div", { class: "kpi-sub", text: sub }) : null
+  ]);
+}
+
+function somme(accounts, type) {
+  return accounts.filter(a => a.type === type && a.statut !== "ferme").reduce((s, a) => s + (Number(a.solde) || 0), 0);
+}
+
+function quickAddAccount() {
+  if (APP.currentPage !== "accounts") navigate("accounts");
+  setTimeout(() => openAccountModal(null), 100);
+}
+
+function editScoresCredit() {
+  const sc = p().scoresCredit || { equifax: { actuel: 0, cible2030: 770, dateMaj: todayISO() }, transunion: { actuel: 0, cible2030: 760, dateMaj: todayISO() } };
+  promptModal("Cotes de credit", [
+    { label: "Equifax actuel", name: "eq_actuel", type: "number", value: sc.equifax.actuel },
+    { label: "Equifax cible 2030", name: "eq_cible", type: "number", value: sc.equifax.cible2030 },
+    { label: "TransUnion actuel", name: "tu_actuel", type: "number", value: sc.transunion.actuel },
+    { label: "TransUnion cible 2030", name: "tu_cible", type: "number", value: sc.transunion.cible2030 }
+  ], (vals) => {
+    p().scoresCredit = {
+      equifax: { actuel: Number(vals.eq_actuel), cible2030: Number(vals.eq_cible), dateMaj: todayISO() },
+      transunion: { actuel: Number(vals.tu_actuel), cible2030: Number(vals.tu_cible), dateMaj: todayISO() }
+    };
+    closeModal();
+    scheduleSave();
+    renderDashboard();
+  });
+}
+
+/* ===========================================================================
+ * PAGE : COMPTES (ULTRA COMPLET)
+ * =========================================================================== */
+let _accountsFilter = { group: "all", search: "", statut: "actif" };
+let _accountsSort = { col: "solde", dir: "desc" };
+
+function renderAccounts() {
+  const root = $("#main-content");
+  const isCouple = APP.currentProfile === "couple";
+  let accountsForList;
+  if (isCouple) {
+    accountsForList = agregeCouple().accounts;
+  } else {
+    accountsForList = p().accounts;
+  }
+
+  // Header
+  const header = el("div", { class: "page-header" }, [
+    el("div", {}, [
+      el("div", { class: "page-title", text: `Comptes - ${PROFILES[APP.currentProfile].name}` }),
+      el("div", { class: "page-subtitle", text: isCouple ? "Vue agregee (Mathis + Conjointe + Communs) - lecture seule. Edite via les profils individuels." : `${accountsForList.length} compte(s)` })
+    ]),
+    !isCouple ? el("div", { class: "page-actions" }, [
+      el("button", { class: "btn", onclick: () => exportAccountsCsv(), text: "Exporter CSV" }),
+      el("button", { class: "btn btn-primary", onclick: () => openAccountModal(null), text: "+ Nouveau compte" })
+    ]) : null
+  ]);
+  root.appendChild(header);
+
+  // Filtres
+  const filters = el("div", { class: "card", style: "padding: 12px 14px;" });
+  const fbox = el("div", { style: "display:flex; gap:8px; flex-wrap:wrap; align-items:center;" });
+  // recherche
+  const searchInp = el("input", { class: "form-input", style: "max-width:240px;", placeholder: "Rechercher...", value: _accountsFilter.search, oninput: (e) => { _accountsFilter.search = e.target.value; renderAccounts(); } });
+  fbox.appendChild(searchInp);
+  // groupe
+  const groupSel = el("select", { class: "form-select", style: "max-width:180px;", onchange: (e) => { _accountsFilter.group = e.target.value; renderAccounts(); } });
+  groupSel.innerHTML = `<option value="all">Toutes categories</option>` + Object.entries(ACCOUNT_GROUPS).map(([k, v]) => `<option value="${k}" ${k === _accountsFilter.group ? "selected" : ""}>${v.label}</option>`).join("");
+  fbox.appendChild(groupSel);
+  // statut
+  const statSel = el("select", { class: "form-select", style: "max-width:140px;", onchange: (e) => { _accountsFilter.statut = e.target.value; renderAccounts(); } });
+  statSel.innerHTML = `<option value="all" ${_accountsFilter.statut === "all" ? "selected" : ""}>Tous statuts</option>
+    <option value="actif" ${_accountsFilter.statut === "actif" ? "selected" : ""}>Actifs</option>
+    <option value="ferme" ${_accountsFilter.statut === "ferme" ? "selected" : ""}>Fermes</option>
+    <option value="archive" ${_accountsFilter.statut === "archive" ? "selected" : ""}>Archives</option>`;
+  fbox.appendChild(statSel);
+  filters.appendChild(fbox);
+  root.appendChild(filters);
+
+  // Filtrage
+  let filtered = accountsForList.filter(a => {
+    if (_accountsFilter.statut !== "all" && a.statut !== _accountsFilter.statut) return false;
+    if (_accountsFilter.group !== "all") {
+      const at = ACCOUNT_TYPES[a.type];
+      if (!at || at.group !== _accountsFilter.group) return false;
+    }
+    if (_accountsFilter.search) {
+      const q = _accountsFilter.search.toLowerCase();
+      if (!(a.nom || "").toLowerCase().includes(q) && !(a.institution || "").toLowerCase().includes(q) && !(a.notes || "").toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+
+  // Tri
+  filtered.sort((a, b) => {
+    const dir = _accountsSort.dir === "asc" ? 1 : -1;
+    const va = a[_accountsSort.col] ?? "";
+    const vb = b[_accountsSort.col] ?? "";
+    if (typeof va === "number" && typeof vb === "number") return (va - vb) * dir;
+    return String(va).localeCompare(String(vb)) * dir;
+  });
+
+  // Groupement par categorie
+  const byGroup = {};
+  for (const a of filtered) {
+    const g = ACCOUNT_TYPES[a.type]?.group || "divers";
+    if (!byGroup[g]) byGroup[g] = [];
+    byGroup[g].push(a);
+  }
+
+  if (filtered.length === 0) {
+    root.appendChild(el("div", { class: "empty" }, [
+      el("div", { class: "empty-title", text: "Aucun compte" }),
+      el("div", { text: isCouple ? "Va dans les profils Mathis ou Conjointe pour ajouter des comptes." : "Ajoute ton premier compte pour commencer." }),
+      !isCouple ? el("button", { class: "btn btn-primary mt-16", onclick: () => openAccountModal(null), text: "+ Ajouter" }) : null
+    ]));
+    return;
+  }
+
+  const groupOrder = Object.entries(ACCOUNT_GROUPS).sort((a, b) => a[1].order - b[1].order).map(x => x[0]);
+  for (const g of groupOrder) {
+    const accs = byGroup[g];
+    if (!accs || accs.length === 0) continue;
+    const info = ACCOUNT_GROUPS[g];
+    const card = el("div", { class: "card" });
+    const totalGroup = accs.reduce((s, a) => s + (a.solde || 0), 0);
+    const sign = ACCOUNT_TYPES[accs[0].type]?.sign ?? 1;
+    const displayTotal = sign < 0 ? -Math.abs(totalGroup) : totalGroup;
+    card.appendChild(el("div", { class: "card-header" }, [
+      el("div", {}, [
+        el("div", { class: "card-title" }, [
+          el("span", { class: `badge badge-${info.color}`, text: info.label }),
+          el("span", { style: "margin-left:8px;", text: `${accs.length} compte(s)` })
+        ]),
+      ]),
+      el("div", { class: "bold " + (displayTotal < 0 ? "kpi-value negative" : "kpi-value positive"), style: "font-size:18px;", text: fmt.money(displayTotal) })
+    ]));
+
+    const tbl = el("div", { class: "table-wrap" });
+    const t = el("table");
+    t.innerHTML = `<thead><tr>
+      <th>Nom</th><th>Type</th>${isCouple ? "<th>Profil</th>" : ""}<th>Institution</th>
+      <th class="num">Solde</th><th class="num">Cible 2030</th><th>MAJ</th><th></th>
+    </tr></thead>`;
+    const tbody = el("tbody");
+    for (const a of accs) {
+      const at = ACCOUNT_TYPES[a.type];
+      const sign = at?.sign ?? 1;
+      const display = sign < 0 ? -Math.abs(a.solde || 0) : (a.solde || 0);
+      const pctCible = a.cible2030 ? Math.min((a.solde || 0) / a.cible2030, 1.5) : null;
+      const tr = el("tr");
+      tr.innerHTML = `<td><strong>${a.nom}</strong>${a.notes ? `<div class="muted text-sm" style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${a.notes}</div>` : ""}</td>
+        <td>${at?.label || a.type}</td>
+        ${isCouple ? `<td><span class="badge">${a._profil}</span></td>` : ""}
+        <td>${a.institution || "-"}</td>
+        <td class="num ${display < 0 ? "negative" : "positive"}"><strong>${fmt.money(display)}</strong></td>
+        <td class="num">${a.cible2030 ? fmt.money(a.cible2030) : "-"}${pctCible != null ? `<div class="text-sm muted">${(pctCible * 100).toFixed(0)} %</div>` : ""}</td>
+        <td class="text-sm muted">${fmt.date(a.dateMaj)}</td>
+        <td>${isCouple ? "" : `<button class="btn btn-sm" onclick="openAccountModal('${a.id}')">Editer</button>`}</td>`;
+      tbody.appendChild(tr);
+    }
+    t.appendChild(tbody);
+    tbl.appendChild(t);
+    card.appendChild(tbl);
+    root.appendChild(card);
+  }
+
+  // Total general
+  const allTotal = filtered.reduce((s, a) => {
+    const sign = ACCOUNT_TYPES[a.type]?.sign ?? 1;
+    return s + (sign * Math.abs(a.solde || 0));
+  }, 0);
+  const totalCard = el("div", { class: "card", style: "background: var(--bg-3);" });
+  totalCard.appendChild(el("div", { style: "display:flex; justify-content:space-between; align-items:center;" }, [
+    el("div", { class: "bold", text: "Total filtre (valeur nette)" }),
+    el("div", { class: "kpi-value " + (allTotal >= 0 ? "positive" : "negative"), text: fmt.money(allTotal) })
+  ]));
+  root.appendChild(totalCard);
+}
+
+function openAccountModal(accId) {
+  const data = p();
+  const isNew = !accId;
+  const acc = isNew ? { id: uid(), nom: "", type: "cheque", institution: "", solde: 0, devise: "CAD", statut: "actif", dateMaj: todayISO() } : data.accounts.find(a => a.id === accId);
+  if (!acc) return;
+
+  // Construire le formulaire
+  const typeOptions = Object.entries(ACCOUNT_TYPES).map(([k, v]) => ({ value: k, label: `${ACCOUNT_GROUPS[v.group]?.label || v.group} - ${v.label}` }));
+
+  let html = `<form id="acc-form" onsubmit="event.preventDefault(); saveAccount('${acc.id}');"><div class="form-grid">`;
+  html += `<div class="form-row"><div class="form-label">Nom <span class="req">*</span></div><input class="form-input" name="nom" required value="${escapeHTML(acc.nom)}"></div>`;
+  html += `<div class="form-row"><div class="form-label">Type <span class="req">*</span></div><select class="form-select" name="type" id="acc-type" onchange="updateAccountFormFields(this.value)">${typeOptions.map(o => `<option value="${o.value}" ${o.value === acc.type ? "selected" : ""}>${o.label}</option>`).join("")}</select></div>`;
+  html += `<div class="form-row"><div class="form-label">Institution</div><select class="form-select" name="institution"><option value="">--</option>${INSTITUTIONS.map(i => `<option ${i === acc.institution ? "selected" : ""}>${i}</option>`).join("")}</select></div>`;
+  html += `<div class="form-row"><div class="form-label">Solde actuel <span class="req">*</span></div><input class="form-input" type="number" step="0.01" name="solde" required value="${acc.solde ?? 0}"><div class="form-help">Pour les dettes: entrer le solde en valeur positive.</div></div>`;
+  html += `<div class="form-row"><div class="form-label">Devise</div><select class="form-select" name="devise"><option ${acc.devise === "CAD" ? "selected" : ""}>CAD</option><option ${acc.devise === "USD" ? "selected" : ""}>USD</option><option ${acc.devise === "EUR" ? "selected" : ""}>EUR</option></select></div>`;
+  html += `<div class="form-row"><div class="form-label">Cible 2030 (optionnel)</div><input class="form-input" type="number" step="0.01" name="cible2030" value="${acc.cible2030 ?? ""}"></div>`;
+  html += `<div class="form-row"><div class="form-label">Date d'ouverture</div><input class="form-input" type="date" name="dateOuverture" value="${acc.dateOuverture || ""}"></div>`;
+  html += `<div class="form-row"><div class="form-label">Date derniere MAJ solde</div><input class="form-input" type="date" name="dateMaj" value="${acc.dateMaj || todayISO()}"></div>`;
+  html += `<div class="form-row"><div class="form-label">Statut</div><select class="form-select" name="statut">
+    <option value="actif" ${acc.statut === "actif" ? "selected" : ""}>Actif</option>
+    <option value="ferme" ${acc.statut === "ferme" ? "selected" : ""}>Ferme</option>
+    <option value="archive" ${acc.statut === "archive" ? "selected" : ""}>Archive</option>
+  </select></div>`;
+  html += `<div class="form-row"><div class="form-label">Numero de compte (optionnel)</div><input class="form-input" name="numero" value="${escapeHTML(acc.numero || "")}"></div>`;
+  // Champs specifiques selon le type
+  html += `<div id="acc-extra-fields" class="form-row full"></div>`;
+  html += `<div class="form-row full"><div class="form-label">Notes</div><textarea class="form-textarea" name="notes">${escapeHTML(acc.notes || "")}</textarea></div>`;
+  html += `</div></form>`;
+
+  openModal(isNew ? "Nouveau compte" : "Editer le compte", html, [
+    !isNew ? { label: "Supprimer", class: "btn-danger", onClick: () => deleteAccount(acc.id) } : null,
+    { label: "Annuler", onClick: closeModal },
+    { label: "Enregistrer", class: "btn-primary", onClick: () => saveAccount(acc.id) }
+  ].filter(Boolean));
+
+  // Stocker l'objet original pour acceder aux champs custom
+  window._editingAccount = acc;
+  updateAccountFormFields(acc.type);
+}
+
+function updateAccountFormFields(typeId) {
+  const at = ACCOUNT_TYPES[typeId];
+  const acc = window._editingAccount || {};
+  const container = $("#acc-extra-fields");
+  if (!container) return;
+  let extraHTML = "";
+  if (at?.hasContrib) {
+    extraHTML += `<div class="form-grid">
+      <div class="form-row"><div class="form-label">Cotisation YTD ($)</div><input class="form-input" type="number" step="0.01" name="cotisationYTD" value="${acc.cotisationYTD ?? ""}"><div class="form-help">Combien cotise depuis le 1er janvier de l'annee courante</div></div>
+      <div class="form-row"><div class="form-label">Plafond annuel ($)</div><input class="form-input" type="number" step="0.01" name="plafondAnnuel" value="${acc.plafondAnnuel ?? at.plafondAnnuel ?? ""}"></div>
+      ${at.plafondVie ? `<div class="form-row"><div class="form-label">Plafond a vie ($)</div><input class="form-input" type="number" step="0.01" name="plafondVie" value="${acc.plafondVie ?? at.plafondVie ?? ""}"></div>` : ""}
+    </div>`;
+  }
+  if (at?.isCard) {
+    extraHTML += `<div class="form-grid">
+      <div class="form-row"><div class="form-label">Limite ($)</div><input class="form-input" type="number" step="0.01" name="limite" value="${acc.limite ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Date fermeture du releve (jour du mois)</div><input class="form-input" type="number" min="1" max="31" name="dateFermeture" value="${acc.dateFermeture ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Frais annuels ($)</div><input class="form-input" type="number" step="0.01" name="fraisAnnuels" value="${acc.fraisAnnuels ?? 0}"></div>
+    </div>`;
+  }
+  if (at?.isLoan) {
+    extraHTML += `<div class="form-grid">
+      <div class="form-row"><div class="form-label">Taux d'interet (%)</div><input class="form-input" type="number" step="0.01" name="taux" value="${acc.taux ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Paiement mensuel ($)</div><input class="form-input" type="number" step="0.01" name="paiementMensuel" value="${acc.paiementMensuel ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Date prochaine echeance</div><input class="form-input" type="date" name="prochainPaiement" value="${acc.prochainPaiement || ""}"></div>
+      <div class="form-row"><div class="form-label">Date de fin estimee</div><input class="form-input" type="date" name="dateFin" value="${acc.dateFin || ""}"></div>
+    </div>`;
+  }
+  if (at?.isMortgage) {
+    extraHTML += `<div class="form-grid">
+      <div class="form-row"><div class="form-label">Taux (%)</div><input class="form-input" type="number" step="0.01" name="taux" value="${acc.taux ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Amortissement (annees)</div><input class="form-input" type="number" name="amortissement" value="${acc.amortissement ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Paiement mensuel</div><input class="form-input" type="number" step="0.01" name="paiementMensuel" value="${acc.paiementMensuel ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Date renouvellement</div><input class="form-input" type="date" name="dateRenouvellement" value="${acc.dateRenouvellement || ""}"></div>
+      <div class="form-row"><div class="form-label">Frequence (mensuel/2sem)</div><select class="form-select" name="frequence"><option value="mensuel" ${acc.frequence === "mensuel" ? "selected" : ""}>Mensuel</option><option value="bimensuel" ${acc.frequence === "bimensuel" ? "selected" : ""}>2 semaines</option><option value="hebdo" ${acc.frequence === "hebdo" ? "selected" : ""}>Hebdomadaire</option></select></div>
+    </div>`;
+  }
+  if (at?.isProperty) {
+    extraHTML += `<div class="form-grid">
+      <div class="form-row full"><div class="form-label">Adresse</div><input class="form-input" name="adresse" value="${escapeHTML(acc.adresse || "")}"></div>
+      <div class="form-row"><div class="form-label">Annee construction</div><input class="form-input" type="number" name="anneeConstruction" value="${acc.anneeConstruction ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Nombre d'unites</div><input class="form-input" type="number" name="nbUnites" value="${acc.nbUnites ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Loyers annuels bruts ($)</div><input class="form-input" type="number" step="0.01" name="loyersAnnuels" value="${acc.loyersAnnuels ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Valeur marche ($)</div><input class="form-input" type="number" step="0.01" name="valeurMarche" value="${acc.valeurMarche ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Prix d'achat ($)</div><input class="form-input" type="number" step="0.01" name="prixAchat" value="${acc.prixAchat ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Date d'achat</div><input class="form-input" type="date" name="dateAchat" value="${acc.dateAchat || ""}"></div>
+    </div>`;
+  }
+  container.innerHTML = extraHTML;
+}
+
+function saveAccount(accId) {
+  const form = $("#acc-form");
+  if (!form) return;
+  const obj = {};
+  for (const e of form.elements) if (e.name) obj[e.name] = e.value;
+  if (!obj.nom?.trim()) { showError("Le nom est requis."); return; }
+  if (!obj.type) { showError("Le type est requis."); return; }
+  // Numeriser
+  const numericFields = ["solde", "cible2030", "limite", "fraisAnnuels", "taux", "paiementMensuel", "amortissement", "loyersAnnuels", "valeurMarche", "prixAchat", "anneeConstruction", "nbUnites", "cotisationYTD", "plafondAnnuel", "plafondVie", "dateFermeture"];
+  for (const f of numericFields) if (obj[f] !== undefined && obj[f] !== "") obj[f] = Number(obj[f]); else delete obj[f];
+
+  const data = p();
+  const existing = data.accounts.find(a => a.id === accId);
+  if (existing) {
+    // MAJ snapshot si solde change
+    if (Number(obj.solde) !== Number(existing.solde)) {
+      data.accountSnapshots.push({ id: uid(), accountId: accId, date: obj.dateMaj || todayISO(), balance: Number(obj.solde) });
+    }
+    Object.assign(existing, obj, { id: accId });
+  } else {
+    data.accounts.push({ id: accId, ...obj });
+    data.accountSnapshots.push({ id: uid(), accountId: accId, date: obj.dateMaj || todayISO(), balance: Number(obj.solde) });
+  }
+  closeModal();
+  scheduleSave();
+  showSuccess("Compte enregistre.");
+  renderAccounts();
+}
+
+function deleteAccount(accId) {
+  confirmModal("Supprimer le compte ?", "Cette action est irreversible. L'historique des soldes sera aussi supprime.", () => {
+    const data = p();
+    data.accounts = data.accounts.filter(a => a.id !== accId);
+    data.accountSnapshots = data.accountSnapshots.filter(s => s.accountId !== accId);
+    scheduleSave();
+    closeModal();
+    showSuccess("Compte supprime.");
+    renderAccounts();
+  }, "Supprimer");
+}
+
+function exportAccountsCsv() {
+  const accs = p().accounts;
+  const headers = ["Nom", "Type", "Institution", "Solde", "Devise", "Cible 2030", "Statut", "Date MAJ", "Notes"];
+  const rows = accs.map(a => [a.nom, ACCOUNT_TYPES[a.type]?.label || a.type, a.institution || "", a.solde, a.devise || "CAD", a.cible2030 || "", a.statut, a.dateMaj || "", (a.notes || "").replace(/"/g, '""').replace(/\n/g, " ")]);
+  const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(",")).join("\n");
+  downloadFile(`comptes-${APP.currentProfile}-${todayISO()}.csv`, csv, "text/csv");
+}
+
+function downloadFile(filename, content, type = "text/plain") {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+
+function escapeHTML(s) {
+  return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+/* ===========================================================================
+ * PAGE : BUDGET (ULTRA COMPLET ULTRA DETAILLE)
+ * =========================================================================== */
+let _budgetView = "saisie"; // saisie | comparaison | annuel | tendances
+let _budgetMonth = currentMonth();
+
+function renderBudget() {
+  const root = $("#main-content");
+  const isCouple = APP.currentProfile === "couple";
+
+  // Header
+  const header = el("div", { class: "page-header" }, [
+    el("div", {}, [
+      el("div", { class: "page-title", text: `Budget - ${PROFILES[APP.currentProfile].name}` }),
+      el("div", { class: "page-subtitle", text: isCouple ? "Vue couple consolidee (Mathis + Conjointe + Communs)" : "Saisie mensuelle simplifiee + budget previsionnel par categorie" })
+    ]),
+    el("div", { class: "page-actions" }, [
+      el("button", { class: "btn", onclick: () => exportBudgetCsv(), text: "Exporter CSV" }),
+      !isCouple ? el("button", { class: "btn", onclick: () => copyBudgetFromPrevious(), text: "Copier mois precedent" }) : null,
+      !isCouple ? el("button", { class: "btn btn-primary", onclick: () => openCustomCategoryModal(), text: "+ Categorie perso" }) : null
+    ].filter(Boolean))
+  ]);
+  root.appendChild(header);
+
+  // Tabs
+  const tabs = el("div", { class: "tabs" }, [
+    tabBtn("saisie", "Saisie mensuelle"),
+    tabBtn("comparaison", "Budget vs reel"),
+    tabBtn("annuel", "Vue annuelle"),
+    tabBtn("tendances", "Tendances"),
+    tabBtn("reglages", "Reglages budget")
+  ]);
+  root.appendChild(tabs);
+
+  if (_budgetView === "saisie") renderBudgetSaisie(root);
+  else if (_budgetView === "comparaison") renderBudgetComparaison(root);
+  else if (_budgetView === "annuel") renderBudgetAnnuel(root);
+  else if (_budgetView === "tendances") renderBudgetTendances(root);
+  else if (_budgetView === "reglages") renderBudgetReglages(root);
+}
+
+function tabBtn(id, label) {
+  return el("button", { class: "tab " + (_budgetView === id ? "active" : ""), onclick: () => { _budgetView = id; renderBudget(); }, text: label });
+}
+
+function getEffectiveCategories(profileData) {
+  // Combine BUDGET_CATEGORIES + categories perso (stockees dans profileData.budget.customCategories)
+  const out = JSON.parse(JSON.stringify(BUDGET_CATEGORIES));
+  const custom = profileData.budget.customCategories || [];
+  for (const c of custom) {
+    if (!out[c.group]) {
+      out[c.group] = { label: c.groupLabel || c.group, type: c.type || "depense", sub: [] };
+    }
+    out[c.group].sub.push(c);
+  }
+  // Filtrer categories desactivees
+  const overrides = profileData.budget.categories || {};
+  for (const cat of Object.values(out)) {
+    cat.sub = cat.sub.filter(s => overrides[s.id]?.active !== false);
+  }
+  return out;
+}
+
+function renderBudgetSaisie(root) {
+  const isCouple = APP.currentProfile === "couple";
+  // Selecteur de mois
+  const monthBar = el("div", { class: "card", style: "padding:12px 14px;" });
+  const fbox = el("div", { style: "display:flex; gap:10px; align-items:center; flex-wrap:wrap;" });
+  fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = shiftMonth(_budgetMonth, -1); renderBudget(); }, text: "<" }));
+  const monthInp = el("input", { class: "form-input", type: "month", style: "max-width:160px;", value: _budgetMonth, onchange: (e) => { _budgetMonth = e.target.value; renderBudget(); } });
+  fbox.appendChild(monthInp);
+  fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = shiftMonth(_budgetMonth, 1); renderBudget(); }, text: ">" }));
+  fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = currentMonth(); renderBudget(); }, text: "Aujourd'hui" }));
+  monthBar.appendChild(fbox);
+  root.appendChild(monthBar);
+
+  if (isCouple) {
+    // Vue couple = somme des entries des 3 profils
+    renderBudgetSaisieCouple(root);
+    return;
+  }
+
+  const data = p();
+  const cats = getEffectiveCategories(data);
+
+  // Totaux du mois
+  let totRev = 0, totDep = 0, totEpa = 0;
+  const entries = data.budget.monthlyEntries[_budgetMonth] || {};
+  for (const [id, v] of Object.entries(entries)) {
+    const c = findCategorie(id) || customFindCat(data, id);
+    if (!c) continue;
+    if (c.groupType === "revenu") totRev += Number(v);
+    else if (c.groupType === "epargne") totEpa += Number(v);
+    else totDep += Number(v);
+  }
+  const flux = totRev - totDep - totEpa;
+
+  // KPIs du mois
+  const kpis = el("div", { class: "kpi-grid" }, [
+    makeKPI("Revenus du mois", fmt.money(totRev), "positive", fmt.monthLabel(_budgetMonth)),
+    makeKPI("Depenses du mois", fmt.money(totDep), totDep > 0 ? "negative" : ""),
+    makeKPI("Epargne placee", fmt.money(totEpa), "positive"),
+    makeKPI("Flux net", fmt.money(flux), flux >= 0 ? "positive" : "negative", flux >= 0 ? "Surplus a allouer" : "Deficit - reduire depenses")
+  ]);
+  root.appendChild(kpis);
+
+  // Saisie par categorie groupe
+  for (const [groupId, cat] of Object.entries(cats)) {
+    const card = el("div", { class: "collapse-card open", id: `cb-${groupId}` });
+    const subTotal = cat.sub.reduce((s, sub) => s + (Number(entries[sub.id]) || 0), 0);
+    const subBudgetTotal = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
+
+    const head = el("div", { class: "collapse-header", onclick: (e) => { if (!e.target.matches("input,select,button,textarea")) card.classList.toggle("open"); } }, [
+      el("div", {}, [
+        el("div", { class: "collapse-title" }, [
+          el("span", { class: `badge badge-${cat.color || (cat.type === "revenu" ? "green" : cat.type === "epargne" ? "blue" : "")}`, text: cat.label }),
+          el("span", { style: "margin-left:8px;", class: "muted text-sm", text: `${cat.sub.length} categorie(s)` })
+        ])
+      ]),
+      el("div", { class: "flex gap-16 items-center" }, [
+        el("span", { class: "muted text-sm", text: `Reel: ${fmt.money(subTotal)} / Budget: ${fmt.money(subBudgetTotal)}` }),
+        el("span", { class: "collapse-arrow", text: "▶" })
+      ])
+    ]);
+    card.appendChild(head);
+
+    const body = el("div", { class: "collapse-body" });
+    const tbl = el("div", { class: "table-wrap" });
+    const t = el("table");
+    t.innerHTML = `<thead><tr>
+      <th>Categorie</th>
+      <th class="num">Budget</th>
+      <th class="num">Reel ${fmt.monthLabel(_budgetMonth)}</th>
+      <th class="num">Ecart</th>
+      <th></th>
+    </tr></thead>`;
+    const tbody = el("tbody");
+    for (const sub of cat.sub) {
+      const reel = entries[sub.id] ?? "";
+      const budget = getBudgetMensuel(data, sub.id);
+      const ecart = (Number(reel) || 0) - budget;
+      const tr = el("tr");
+      const ecartCell = budget === 0 && !reel ? "-" : `<span class="${ecart > 0 && cat.type === "depense" ? "negative" : ecart < 0 && cat.type === "depense" ? "positive" : ""}">${ecart === 0 ? "-" : fmt.money(ecart)}</span>`;
+      tr.innerHTML = `<td>${sub.label}</td>
+        <td class="num"><input class="form-input" type="number" step="0.01" style="max-width:110px; padding:4px 8px;" value="${budget || ""}" placeholder="0" onchange="updateBudgetMontant('${sub.id}', this.value)"></td>
+        <td class="num"><input class="form-input" type="number" step="0.01" style="max-width:110px; padding:4px 8px;" value="${reel}" placeholder="0" onchange="updateBudgetEntry('${sub.id}', this.value)"></td>
+        <td class="num">${ecartCell}</td>
+        <td><button class="btn btn-sm" onclick="addNoteToCategory('${sub.id}')" title="Ajouter une note">📝</button></td>`;
+      tbody.appendChild(tr);
+    }
+    t.appendChild(tbody);
+    tbl.appendChild(t);
+    body.appendChild(tbl);
+    card.appendChild(body);
+    root.appendChild(card);
+  }
+
+  // Aide
+  root.appendChild(el("div", { class: "muted text-sm mt-16", html: "Astuce : entre simplement les totaux de chaque categorie pour le mois. Pas besoin de saisir transaction par transaction. Le budget est sauvegarde automatiquement." }));
+}
+
+function renderBudgetSaisieCouple(root) {
+  const aggData = mergeBudgetCouple(_budgetMonth);
+  const kpis = el("div", { class: "kpi-grid" }, [
+    makeKPI("Revenus couple", fmt.money(aggData.revenus), "positive", fmt.monthLabel(_budgetMonth)),
+    makeKPI("Depenses couple", fmt.money(aggData.depenses), aggData.depenses > 0 ? "negative" : ""),
+    makeKPI("Epargne couple", fmt.money(aggData.epargne), "positive"),
+    makeKPI("Flux net couple", fmt.money(aggData.flux), aggData.flux >= 0 ? "positive" : "negative")
+  ]);
+  root.appendChild(kpis);
+
+  const card = el("div", { class: "card" });
+  card.appendChild(el("div", { class: "card-header" }, [
+    el("div", { class: "card-title", text: "Repartition Mathis / Conjointe / Commun" })
+  ]));
+  const tbl = el("div", { class: "table-wrap" });
+  const t = el("table");
+  t.innerHTML = `<thead><tr><th>Categorie</th><th class="num">Mathis</th><th class="num">Conjointe</th><th class="num">Commun</th><th class="num">Total couple</th></tr></thead>`;
+  const tbody = el("tbody");
+  for (const [groupId, lines] of Object.entries(aggData.byCat)) {
+    const cat = BUDGET_CATEGORIES[groupId] || { label: groupId };
+    const tr = el("tr");
+    tr.innerHTML = `<td><strong>${cat.label}</strong></td>
+      <td class="num">${fmt.money(lines.mathis)}</td>
+      <td class="num">${fmt.money(lines.conjointe)}</td>
+      <td class="num">${fmt.money(lines.couple)}</td>
+      <td class="num"><strong>${fmt.money(lines.mathis + lines.conjointe + lines.couple)}</strong></td>`;
+    tbody.appendChild(tr);
+  }
+  t.appendChild(tbody);
+  tbl.appendChild(t);
+  card.appendChild(tbl);
+  root.appendChild(card);
+
+  root.appendChild(el("div", { class: "muted text-sm mt-16", text: "La saisie individuelle se fait dans les profils Mathis et Conjointe." }));
+}
+
+function mergeBudgetCouple(month) {
+  const result = { revenus: 0, depenses: 0, epargne: 0, flux: 0, byCat: {} };
+  for (const profileId of ["mathis", "conjointe", "couple"]) {
+    const data = APP.data.profiles[profileId];
+    const entries = data.budget?.monthlyEntries?.[month] || {};
+    for (const [catId, val] of Object.entries(entries)) {
+      const c = findCategorie(catId);
+      if (!c) continue;
+      if (c.groupType === "revenu") result.revenus += val;
+      else if (c.groupType === "epargne") result.epargne += val;
+      else result.depenses += val;
+      if (!result.byCat[c.group]) result.byCat[c.group] = { mathis: 0, conjointe: 0, couple: 0 };
+      result.byCat[c.group][profileId] += val;
+    }
+  }
+  result.flux = result.revenus - result.depenses - result.epargne;
+  return result;
+}
+
+function renderBudgetComparaison(root) {
+  const isCouple = APP.currentProfile === "couple";
+  if (isCouple) {
+    root.appendChild(el("div", { class: "empty", text: "Vue comparaison disponible uniquement par profil individuel." }));
+    return;
+  }
+  const data = p();
+  const cats = getEffectiveCategories(data);
+  const month = _budgetMonth;
+  const entries = data.budget.monthlyEntries[month] || {};
+
+  const card = el("div", { class: "card" });
+  card.appendChild(el("div", { class: "card-header" }, [
+    el("div", {}, [
+      el("div", { class: "card-title", text: `Budget vs Reel - ${fmt.monthLabel(month)}` }),
+      el("div", { class: "card-subtitle", text: "Compare ton budget previsionnel mensuel avec ce que tu as reellement depense." })
+    ])
+  ]));
+  const tbl = el("div", { class: "table-wrap" });
+  const t = el("table");
+  t.innerHTML = `<thead><tr><th>Categorie</th><th class="num">Budget</th><th class="num">Reel</th><th class="num">Ecart</th><th class="num">% utilise</th><th>Progression</th></tr></thead>`;
+  const tbody = el("tbody");
+  for (const [groupId, cat] of Object.entries(cats)) {
+    const subBudget = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
+    const subReel = cat.sub.reduce((s, sub) => s + (Number(entries[sub.id]) || 0), 0);
+    if (subBudget === 0 && subReel === 0) continue;
+    const ecart = subReel - subBudget;
+    const pct = subBudget > 0 ? subReel / subBudget : 0;
+    const klass = pct > 1.1 ? "over" : pct > 0.9 ? "warn" : "good";
+    const tr = el("tr");
+    tr.innerHTML = `<td><strong>${cat.label}</strong></td>
+      <td class="num">${fmt.money(subBudget)}</td>
+      <td class="num">${fmt.money(subReel)}</td>
+      <td class="num ${ecart > 0 && cat.type === "depense" ? "negative" : "positive"}">${fmt.money(ecart)}</td>
+      <td class="num">${subBudget > 0 ? (pct * 100).toFixed(0) + " %" : "-"}</td>
+      <td style="min-width:140px;"><div class="progress"><div class="progress-bar ${klass}" style="width:${Math.min(pct * 100, 100).toFixed(1)}%"></div></div></td>`;
+    tbody.appendChild(tr);
+  }
+  t.appendChild(tbody);
+  tbl.appendChild(t);
+  card.appendChild(tbl);
+  root.appendChild(card);
+}
+
+function renderBudgetAnnuel(root) {
+  const data = p();
+  const isCouple = APP.currentProfile === "couple";
+  // Mois de l'annee courante
+  const year = (new Date()).getFullYear();
+  const months = [];
+  for (let m = 1; m <= 12; m++) months.push(`${year}-${String(m).padStart(2, "0")}`);
+
+  const card = el("div", { class: "card" });
+  card.appendChild(el("div", { class: "card-header" }, [
+    el("div", {}, [
+      el("div", { class: "card-title", text: `Vue annuelle ${year}` }),
+      el("div", { class: "card-subtitle", text: "Reel mois par mois pour chaque grande categorie." })
+    ])
+  ]));
+  const tbl = el("div", { class: "table-wrap" });
+  const t = el("table");
+  let header = `<thead><tr><th>Categorie</th>` + months.map(m => `<th class="num">${fmt.monthLabel(m).split(" ")[0]}</th>`).join("") + `<th class="num">Total YTD</th><th class="num">Moy/mois</th></tr></thead>`;
+  t.innerHTML = header;
+  const tbody = el("tbody");
+  for (const [groupId, cat] of Object.entries(BUDGET_CATEGORIES)) {
+    const tr = el("tr");
+    let cells = `<td><strong>${cat.label}</strong></td>`;
+    let total = 0, count = 0;
+    for (const m of months) {
+      let val = 0;
+      if (isCouple) {
+        val = mergeBudgetCouple(m).byCat[groupId];
+        val = (val?.mathis || 0) + (val?.conjointe || 0) + (val?.couple || 0);
+      } else {
+        const entries = data.budget.monthlyEntries[m] || {};
+        for (const sub of cat.sub) val += Number(entries[sub.id]) || 0;
+      }
+      total += val;
+      if (val > 0) count++;
+      cells += `<td class="num">${val ? fmt.moneyShort(val) : "-"}</td>`;
+    }
+    cells += `<td class="num bold">${fmt.money(total)}</td><td class="num">${count > 0 ? fmt.money(total / count) : "-"}</td>`;
+    tr.innerHTML = cells;
+    tbody.appendChild(tr);
+  }
+  t.appendChild(tbody);
+  tbl.appendChild(t);
+  card.appendChild(tbl);
+  root.appendChild(card);
+}
+
+function renderBudgetTendances(root) {
+  const data = p();
+  const isCouple = APP.currentProfile === "couple";
+  // Calcul moyennes 3/6/12 mois pour chaque categorie
+  const refMonth = _budgetMonth;
+  const last3 = lastNMonths(refMonth, 3);
+  const last6 = lastNMonths(refMonth, 6);
+  const last12 = lastNMonths(refMonth, 12);
+
+  const card = el("div", { class: "card" });
+  card.appendChild(el("div", { class: "card-header" }, [
+    el("div", {}, [
+      el("div", { class: "card-title", text: "Tendances par categorie" }),
+      el("div", { class: "card-subtitle", text: `Moyennes glissantes 3 / 6 / 12 mois jusqu'a ${fmt.monthLabel(refMonth)}` })
+    ])
+  ]));
+  const tbl = el("div", { class: "table-wrap" });
+  const t = el("table");
+  t.innerHTML = `<thead><tr><th>Categorie</th><th class="num">Moy 3 mois</th><th class="num">Moy 6 mois</th><th class="num">Moy 12 mois</th><th>Tendance</th></tr></thead>`;
+  const tbody = el("tbody");
+  for (const [groupId, cat] of Object.entries(BUDGET_CATEGORIES)) {
+    const m3 = avgForCategory(data, groupId, last3, isCouple);
+    const m6 = avgForCategory(data, groupId, last6, isCouple);
+    const m12 = avgForCategory(data, groupId, last12, isCouple);
+    if (m3 === 0 && m6 === 0 && m12 === 0) continue;
+    const trend = m3 > m12 * 1.1 ? "↑ Hausse" : m3 < m12 * 0.9 ? "↓ Baisse" : "→ Stable";
+    const trendClass = m3 > m12 * 1.1 ? "negative" : m3 < m12 * 0.9 ? "positive" : "muted";
+    const tr = el("tr");
+    tr.innerHTML = `<td><strong>${cat.label}</strong></td>
+      <td class="num">${fmt.money(m3)}</td>
+      <td class="num">${fmt.money(m6)}</td>
+      <td class="num">${fmt.money(m12)}</td>
+      <td class="${trendClass}">${trend}</td>`;
+    tbody.appendChild(tr);
+  }
+  t.appendChild(tbody);
+  tbl.appendChild(t);
+  card.appendChild(tbl);
+  root.appendChild(card);
+}
+
+function avgForCategory(data, groupId, months, isCouple) {
+  let total = 0, cnt = 0;
+  const cat = BUDGET_CATEGORIES[groupId];
+  if (!cat) return 0;
+  for (const m of months) {
+    let val = 0;
+    if (isCouple) {
+      const merged = mergeBudgetCouple(m);
+      val = (merged.byCat[groupId]?.mathis || 0) + (merged.byCat[groupId]?.conjointe || 0) + (merged.byCat[groupId]?.couple || 0);
+    } else {
+      const entries = data.budget.monthlyEntries[m] || {};
+      for (const sub of cat.sub) val += Number(entries[sub.id]) || 0;
+    }
+    if (val > 0) { total += val; cnt++; }
+  }
+  return cnt > 0 ? total / cnt : 0;
+}
+
+function renderBudgetReglages(root) {
+  const isCouple = APP.currentProfile === "couple";
+  if (isCouple) {
+    root.appendChild(el("div", { class: "empty", text: "Reglages disponibles uniquement par profil individuel." }));
+    return;
+  }
+  const data = p();
+  const card = el("div", { class: "card" });
+  card.appendChild(el("div", { class: "card-header" }, [
+    el("div", {}, [
+      el("div", { class: "card-title", text: "Reglages des categories" }),
+      el("div", { class: "card-subtitle", text: "Active/desactive les categories que tu n'utilises pas. Les categories desactivees disparaissent de la saisie." })
+    ])
+  ]));
+  for (const [groupId, cat] of Object.entries(BUDGET_CATEGORIES)) {
+    const sub = el("div", { class: "collapse-card", id: `rg-${groupId}` });
+    const head = el("div", { class: "collapse-header", onclick: () => sub.classList.toggle("open") }, [
+      el("div", { class: "collapse-title", text: cat.label }),
+      el("span", { class: "collapse-arrow", text: "▶" })
+    ]);
+    sub.appendChild(head);
+    const body = el("div", { class: "collapse-body" });
+    for (const s of cat.sub) {
+      const active = data.budget.categories[s.id]?.active !== false;
+      const row = el("label", { style: "display:flex; gap:10px; padding:6px 0; cursor:pointer; align-items:center;" }, [
+        el("input", { type: "checkbox", checked: active, onchange: (e) => { if (!data.budget.categories[s.id]) data.budget.categories[s.id] = { active: true, budget: 0 }; data.budget.categories[s.id].active = e.target.checked; scheduleSave(); } }),
+        el("span", { text: s.label }),
+        el("span", { class: "muted text-sm", style: "margin-left:auto;", text: s.id })
+      ]);
+      body.appendChild(row);
+    }
+    // Categories perso de ce groupe
+    const customs = (data.budget.customCategories || []).filter(c => c.group === groupId);
+    if (customs.length > 0) {
+      body.appendChild(el("div", { class: "muted text-sm mt-16", text: "Categories perso :" }));
+      for (const c of customs) {
+        const row = el("div", { style: "display:flex; gap:10px; padding:6px 0; align-items:center;" }, [
+          el("span", { text: c.label }),
+          el("button", { class: "btn btn-sm btn-danger", style: "margin-left:auto;", onclick: () => { data.budget.customCategories = data.budget.customCategories.filter(x => x.id !== c.id); scheduleSave(); renderBudget(); }, text: "Supprimer" })
+        ]);
+        body.appendChild(row);
+      }
+    }
+    sub.appendChild(body);
+    card.appendChild(sub);
+  }
+  root.appendChild(card);
+}
+
+function customFindCat(data, catId) {
+  const customs = data.budget.customCategories || [];
+  for (const c of customs) if (c.id === catId) return { group: c.group, groupLabel: c.groupLabel || c.group, groupType: c.type || "depense", sub: c };
+  return null;
+}
+
+function updateBudgetEntry(catId, value) {
+  setBudgetEntry(p(), _budgetMonth, catId, value);
+  scheduleSave();
+  // Petit refresh des KPIs uniquement pour pas perdre le focus
+  setTimeout(() => renderBudget(), 50);
+}
+function updateBudgetMontant(catId, value) {
+  setBudgetMensuel(p(), catId, value);
+  scheduleSave();
+}
+
+function copyBudgetFromPrevious() {
+  const prev = shiftMonth(_budgetMonth, -1);
+  const data = p();
+  const prevEntries = data.budget.monthlyEntries[prev];
+  if (!prevEntries) { showError(`Aucune donnee pour ${fmt.monthLabel(prev)}`); return; }
+  data.budget.monthlyEntries[_budgetMonth] = { ...prevEntries };
+  scheduleSave();
+  showSuccess("Mois precedent copie.");
+  renderBudget();
+}
+
+function shiftMonth(ym, delta) {
+  const [y, m] = ym.split("-").map(Number);
+  const d = new Date(y, m - 1 + delta, 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+function lastNMonths(refMonth, n) {
+  const out = [];
+  for (let i = 0; i < n; i++) out.push(shiftMonth(refMonth, -i));
+  return out;
+}
+
+function openCustomCategoryModal() {
+  promptModal("Nouvelle categorie perso", [
+    { label: "Nom de la categorie", name: "label", required: true },
+    { label: "Groupe parent", name: "group", type: "select", options: Object.entries(BUDGET_CATEGORIES).map(([k, v]) => ({ value: k, label: v.label })) },
+    { label: "Type", name: "type", type: "select", options: [{ value: "depense", label: "Depense" }, { value: "revenu", label: "Revenu" }, { value: "epargne", label: "Epargne" }] },
+    { label: "Budget mensuel ($, optionnel)", name: "budget", type: "number" }
+  ], (vals) => {
+    const data = p();
+    if (!data.budget.customCategories) data.budget.customCategories = [];
+    const id = "perso_" + uid();
+    data.budget.customCategories.push({ id, label: vals.label, group: vals.group, type: vals.type });
+    if (vals.budget) setBudgetMensuel(data, id, vals.budget);
+    closeModal();
+    showSuccess("Categorie ajoutee.");
+    scheduleSave();
+    renderBudget();
+  });
+}
+
+function addNoteToCategory(catId) {
+  const data = p();
+  if (!data.budget.monthlyNotes) data.budget.monthlyNotes = {};
+  if (!data.budget.monthlyNotes[_budgetMonth]) data.budget.monthlyNotes[_budgetMonth] = {};
+  const current = data.budget.monthlyNotes[_budgetMonth][catId] || "";
+  promptModal(`Note - ${fmt.monthLabel(_budgetMonth)}`, [
+    { label: "Note (commentaire libre)", name: "note", type: "textarea", value: current, full: true }
+  ], (vals) => {
+    if (vals.note?.trim()) data.budget.monthlyNotes[_budgetMonth][catId] = vals.note;
+    else delete data.budget.monthlyNotes[_budgetMonth][catId];
+    scheduleSave();
+    closeModal();
+    showSuccess("Note enregistree.");
+  });
+}
+
+function exportBudgetCsv() {
+  const data = p();
+  const months = Object.keys(data.budget.monthlyEntries).sort();
+  if (months.length === 0) { showError("Aucune donnee a exporter."); return; }
+  const allCatIds = new Set();
+  for (const m of months) for (const id of Object.keys(data.budget.monthlyEntries[m])) allCatIds.add(id);
+  const headers = ["Mois", ...Array.from(allCatIds)];
+  const rows = months.map(m => [m, ...Array.from(allCatIds).map(id => data.budget.monthlyEntries[m][id] || 0)]);
+  const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(",")).join("\n");
+  downloadFile(`budget-${APP.currentProfile}-${todayISO()}.csv`, csv, "text/csv");
+}
+
+/* ===========================================================================
+ * PAGE : RESEAU PRO (Section 17.9)
+ * =========================================================================== */
+function renderPros() {
+  const root = $("#main-content");
+  const data = p();
+  const isCouple = APP.currentProfile === "couple";
+
+  let pros;
+  if (isCouple) {
+    pros = [
+      ...(APP.data.profiles.mathis.pros || []).map(x => ({ ...x, _profil: "Mathis" })),
+      ...(APP.data.profiles.conjointe.pros || []).map(x => ({ ...x, _profil: "Conjointe" })),
+      ...(APP.data.profiles.couple.pros || []).map(x => ({ ...x, _profil: "Commun" }))
+    ];
+  } else {
+    pros = data.pros || [];
+  }
+
+  const header = el("div", { class: "page-header" }, [
+    el("div", {}, [
+      el("div", { class: "page-title", text: `Reseau professionnel - ${PROFILES[APP.currentProfile].name}` }),
+      el("div", { class: "page-subtitle", text: "Notaire, comptable, fiscaliste, courtiers, inspecteurs (Section 17.9 du plan)" })
+    ]),
+    !isCouple ? el("div", { class: "page-actions" }, [
+      el("button", { class: "btn btn-primary", onclick: () => openProModal(null), text: "+ Nouveau pro" })
+    ]) : null
+  ]);
+  root.appendChild(header);
+
+  if (pros.length === 0) {
+    root.appendChild(el("div", { class: "empty" }, [
+      el("div", { class: "empty-title", text: "Aucun professionnel" }),
+      el("div", { text: "Ajoute tes contacts (notaire, comptable, fiscaliste, courtier hypothecaire, etc.)" }),
+      !isCouple ? el("button", { class: "btn btn-primary mt-16", onclick: () => openProModal(null), text: "+ Ajouter" }) : null
+    ]));
+    return;
+  }
+
+  // Grouper par categorie
+  const byCat = { Routine: [], Critique: [], Autre: [] };
+  for (const pr of pros) {
+    if (pr.categorie === "Routine") byCat.Routine.push(pr);
+    else if (pr.categorie === "Critique") byCat.Critique.push(pr);
+    else byCat.Autre.push(pr);
+  }
+
+  for (const [catName, list] of Object.entries(byCat)) {
+    if (list.length === 0) continue;
+    const card = el("div", { class: "card" });
+    card.appendChild(el("div", { class: "card-header" }, [
+      el("div", {}, [
+        el("div", { class: "card-title" }, [
+          el("span", { class: `badge ${catName === "Critique" ? "badge-orange" : catName === "Routine" ? "badge-blue" : ""}`, text: catName }),
+          el("span", { style: "margin-left:8px;", text: `${list.length}` })
+        ])
+      ])
+    ]));
+    const tbl = el("div", { class: "table-wrap" });
+    const t = el("table");
+    t.innerHTML = `<thead><tr><th>Nom / Cabinet</th>${isCouple ? "<th>Profil</th>" : ""}<th>Role</th><th>Source</th><th>Eval</th><th>Dernier contact</th><th></th></tr></thead>`;
+    const tbody = el("tbody");
+    for (const pr of list) {
+      const evalAvg = ((Number(pr.evalPrix) + Number(pr.evalQualite) + Number(pr.evalChimie) + Number(pr.evalReseau)) / 4).toFixed(1);
+      const tr = el("tr");
+      tr.innerHTML = `<td><strong>${pr.nom || "-"}</strong>${pr.cabinet ? `<div class="muted text-sm">${pr.cabinet}</div>` : ""}</td>
+        ${isCouple ? `<td><span class="badge">${pr._profil}</span></td>` : ""}
+        <td>${pr.services || "-"}</td>
+        <td><span class="muted text-sm">${pr.source || "-"}</span></td>
+        <td>${evalAvg !== "0.0" ? `${evalAvg}/10` : "-"}</td>
+        <td class="text-sm muted">${fmt.date(pr.dateContact)}</td>
+        <td>${isCouple ? "" : `<button class="btn btn-sm" onclick="openProModal('${pr.id}')">Editer</button>`}</td>`;
+      tbody.appendChild(tr);
+    }
+    t.appendChild(tbody);
+    tbl.appendChild(t);
+    card.appendChild(tbl);
+    root.appendChild(card);
+  }
+}
+
+function openProModal(proId) {
+  const data = p();
+  const isNew = !proId;
+  const pr = isNew ? { id: uid(), nom: "", cabinet: "", categorie: "Routine", source: "", services: "", phone: "", email: "", tarification: "", dateContact: "", prochainContact: "", notes: "", evalPrix: 0, evalQualite: 0, evalChimie: 0, evalReseau: 0 } : data.pros.find(x => x.id === proId);
+  if (!pr) return;
+
+  let html = `<form id="pro-form" onsubmit="event.preventDefault(); saveProForm('${pr.id}');"><div class="form-grid">
+    <div class="form-row"><div class="form-label">Nom <span class="req">*</span></div><input class="form-input" name="nom" required value="${escapeHTML(pr.nom)}"></div>
+    <div class="form-row"><div class="form-label">Cabinet</div><input class="form-input" name="cabinet" value="${escapeHTML(pr.cabinet || "")}"></div>
+    <div class="form-row"><div class="form-label">Categorie</div><select class="form-select" name="categorie">
+      <option value="Routine" ${pr.categorie === "Routine" ? "selected" : ""}>Routine (reseau VMD familial)</option>
+      <option value="Critique" ${pr.categorie === "Critique" ? "selected" : ""}>Critique (independant top-tier)</option>
+      <option value="Autre" ${pr.categorie === "Autre" ? "selected" : ""}>Autre</option>
+    </select></div>
+    <div class="form-row"><div class="form-label">Source</div><input class="form-input" name="source" value="${escapeHTML(pr.source || "")}" placeholder="Reseau VMD familial / Recommandation parents / Recherche directe"></div>
+    <div class="form-row"><div class="form-label">Telephone</div><input class="form-input" type="tel" name="phone" value="${escapeHTML(pr.phone || "")}"></div>
+    <div class="form-row"><div class="form-label">Courriel</div><input class="form-input" type="email" name="email" value="${escapeHTML(pr.email || "")}"></div>
+    <div class="form-row full"><div class="form-label">Services rendus</div><textarea class="form-textarea" name="services">${escapeHTML(pr.services || "")}</textarea></div>
+    <div class="form-row full"><div class="form-label">Tarification</div><input class="form-input" name="tarification" value="${escapeHTML(pr.tarification || "")}" placeholder="Taux horaire / forfait / inclus VMD"></div>
+    <div class="form-row"><div class="form-label">Date dernier contact</div><input class="form-input" type="date" name="dateContact" value="${pr.dateContact || ""}"></div>
+    <div class="form-row"><div class="form-label">Prochain contact prevu</div><input class="form-input" type="date" name="prochainContact" value="${pr.prochainContact || ""}"></div>
+    <div class="form-row"><div class="form-label">Eval prix (0-10)</div><input class="form-input" type="number" min="0" max="10" name="evalPrix" value="${pr.evalPrix ?? 0}"></div>
+    <div class="form-row"><div class="form-label">Eval qualite (0-10)</div><input class="form-input" type="number" min="0" max="10" name="evalQualite" value="${pr.evalQualite ?? 0}"></div>
+    <div class="form-row"><div class="form-label">Eval chimie (0-10)</div><input class="form-input" type="number" min="0" max="10" name="evalChimie" value="${pr.evalChimie ?? 0}"></div>
+    <div class="form-row"><div class="form-label">Eval reseau (0-10)</div><input class="form-input" type="number" min="0" max="10" name="evalReseau" value="${pr.evalReseau ?? 0}"></div>
+    <div class="form-row full"><div class="form-label">Notes</div><textarea class="form-textarea" name="notes">${escapeHTML(pr.notes || "")}</textarea></div>
+  </div></form>`;
+
+  openModal(isNew ? "Nouveau pro" : "Editer", html, [
+    !isNew ? { label: "Supprimer", class: "btn-danger", onClick: () => deletePro(pr.id) } : null,
+    { label: "Annuler", onClick: closeModal },
+    { label: "Enregistrer", class: "btn-primary", onClick: () => saveProForm(pr.id) }
+  ].filter(Boolean));
+}
+
+function saveProForm(proId) {
+  const form = $("#pro-form");
+  const obj = {};
+  for (const e of form.elements) if (e.name) obj[e.name] = e.value;
+  const data = p();
+  if (!data.pros) data.pros = [];
+  const existing = data.pros.find(x => x.id === proId);
+  if (existing) Object.assign(existing, obj, { id: proId });
+  else data.pros.push({ id: proId, ...obj });
+  closeModal();
+  scheduleSave();
+  showSuccess("Pro enregistre.");
+  renderPros();
+}
+
+function deletePro(proId) {
+  confirmModal("Supprimer ce pro ?", "Cette action est irreversible.", () => {
+    const data = p();
+    data.pros = (data.pros || []).filter(x => x.id !== proId);
+    scheduleSave();
+    closeModal();
+    renderPros();
+  }, "Supprimer");
+}
+
+/* ===========================================================================
+ * PAGE : PARAMETRES
+ * =========================================================================== */
+function renderSettings() {
+  const root = $("#main-content");
+  root.appendChild(el("div", { class: "page-header" }, [
+    el("div", {}, [
+      el("div", { class: "page-title", text: "Parametres" }),
+      el("div", { class: "page-subtitle", text: "Configuration globale du systeme FinancePerso" })
+    ])
+  ]));
+
+  // Section 1 : Sync GitHub
+  const syncCfg = APP.data.meta.sync || {};
+  const cardSync = el("div", { class: "card" });
+  cardSync.appendChild(el("div", { class: "card-header" }, [
+    el("div", {}, [
+      el("div", { class: "card-title", text: "Synchronisation GitHub (multi-appareil)" }),
+      el("div", { class: "card-subtitle", text: "Sauvegarde automatique chiffree dans ton repo prive. Acces depuis iPhone + PC." })
+    ])
+  ]));
+  cardSync.appendChild(el("div", { class: "fs-info mb-16", html: `
+    <strong>Pourquoi configurer ?</strong> Sans sync, tes donnees vivent uniquement dans le navigateur de ce device. Si tu vides le cache, tout disparait.<br><br>
+    <strong>Comment ca marche :</strong> Le fichier chiffre <code>.financeperso-data.enc</code> est pousse vers ton repo prive GitHub a chaque modification. Sur ton autre device, tu cliques "Restaurer depuis GitHub" et tout revient.<br><br>
+    <strong>Setup en 2 minutes :</strong>
+    <ol style="margin-left:20px; margin-top:8px;">
+      <li>Va sur <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">github.com/settings/personal-access-tokens/new</a></li>
+      <li>Token name : "FinancePerso", Expiration : 1 an</li>
+      <li>Repository access : "Only select repositories" -> choisis <code>KBig/immobilier-plan</code></li>
+      <li>Permissions -> Repository permissions -> Contents : <strong>Read and write</strong></li>
+      <li>Generate token, copie-le, et colle-le ici (commence par <code>github_pat_</code>)</li>
+    </ol>
+  ` }));
+  cardSync.appendChild(el("div", { class: "form-grid" }, [
+    formField("Owner GitHub", "sync-owner", syncCfg.owner || "KBig"),
+    formField("Repo prive", "sync-repo", syncCfg.repo || "immobilier-plan"),
+    formField("Path du fichier", "sync-path", syncCfg.path || ".financeperso-data.enc"),
+    formField("Personal Access Token", "sync-token", syncCfg.token || "", "password", "Commence par github_pat_..."),
+    el("div", { class: "form-row" }, [
+      el("div", { class: "form-label", text: "Sync automatique" }),
+      el("label", { style: "display:flex; gap:8px; align-items:center;" }, [
+        el("input", { type: "checkbox", id: "sync-auto", checked: syncCfg.autoSync || false }),
+        el("span", { text: "Pousser automatiquement a chaque modification" })
+      ])
+    ])
+  ]));
+  cardSync.appendChild(el("div", { class: "page-actions mt-16" }, [
+    el("button", { class: "btn btn-primary", onclick: saveSyncConfig, text: "Enregistrer config" }),
+    el("button", { class: "btn", onclick: testSync, text: "Tester / Push maintenant" }),
+    el("button", { class: "btn", onclick: pullFromGithub, text: "Restaurer depuis GitHub" })
+  ]));
+  if (syncCfg.lastSync) {
+    cardSync.appendChild(el("div", { class: "muted text-sm mt-16", text: `Derniere synchronisation : ${new Date(syncCfg.lastSync).toLocaleString("fr-CA")}` }));
+  }
+  root.appendChild(cardSync);
+
+  // Section 2 : Backup local
+  const cardBackup = el("div", { class: "card" });
+  cardBackup.appendChild(el("div", { class: "card-header" }, [
+    el("div", {}, [
+      el("div", { class: "card-title", text: "Backup local" }),
+      el("div", { class: "card-subtitle", text: "Telecharge un fichier chiffre comme backup d'urgence." })
+    ])
+  ]));
+  cardBackup.appendChild(el("div", { class: "page-actions" }, [
+    el("button", { class: "btn", onclick: exportEncryptedBackup, text: "Exporter backup chiffre" }),
+    el("button", { class: "btn", onclick: () => $("#import-file").click(), text: "Importer backup" }),
+    el("input", { type: "file", id: "import-file", style: "display:none;", accept: ".enc,.txt", onchange: importEncryptedBackup })
+  ]));
+  root.appendChild(cardBackup);
+
+  // Section 3 : Securite / mot de passe
+  const cardSec = el("div", { class: "card" });
+  cardSec.appendChild(el("div", { class: "card-header" }, [
+    el("div", { class: "card-title", text: "Securite" })
+  ]));
+  cardSec.appendChild(el("div", { class: "page-actions" }, [
+    el("button", { class: "btn", onclick: changePassword, text: "Changer le mot de passe" }),
+    el("button", { class: "btn btn-danger", onclick: confirmEraseAll, text: "Effacer toutes les donnees" })
+  ]));
+  root.appendChild(cardSec);
+
+  // Section 4 : Affichage
+  const cardDisp = el("div", { class: "card" });
+  cardDisp.appendChild(el("div", { class: "card-header" }, [
+    el("div", { class: "card-title", text: "Affichage" })
+  ]));
+  cardDisp.appendChild(el("div", { class: "page-actions" }, [
+    el("button", { class: "btn", onclick: toggleTheme, text: "Basculer thème (clair/sombre)" })
+  ]));
+  root.appendChild(cardDisp);
+
+  // Section 5 : Profils
+  const cardProf = el("div", { class: "card" });
+  cardProf.appendChild(el("div", { class: "card-header" }, [
+    el("div", { class: "card-title", text: "Profils" })
+  ]));
+  for (const [k, v] of Object.entries(PROFILES)) {
+    const data = APP.data.profiles[k];
+    const row = el("div", { style: "padding:8px 0; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;" }, [
+      el("div", {}, [
+        el("strong", { text: v.name }),
+        el("div", { class: "muted text-sm", text: `${data.accounts.length} compte(s) - VN: ${fmt.money(valeurNette(data))}` })
+      ]),
+      el("div", { class: "page-actions" }, [
+        el("button", { class: "btn btn-sm", onclick: () => { selectProfile(k); }, text: "Ouvrir" }),
+        el("button", { class: "btn btn-sm btn-danger", onclick: () => resetProfile(k), text: "Reset profil" })
+      ])
+    ]);
+    cardProf.appendChild(row);
+  }
+  root.appendChild(cardProf);
+
+  // Section 6 : Infos systeme
+  const cardInfo = el("div", { class: "card" });
+  cardInfo.appendChild(el("div", { class: "card-header" }, [
+    el("div", { class: "card-title", text: "Informations systeme" })
+  ]));
+  cardInfo.appendChild(el("div", { html: `
+    <p class="muted text-sm">Version : ${APP.version}</p>
+    <p class="muted text-sm">Cree le : ${fmt.date(APP.data.meta.createdAt)}</p>
+    <p class="muted text-sm">Derniere modification : ${new Date(APP.data.meta.updatedAt).toLocaleString("fr-CA")}</p>
+    <p class="muted text-sm">Stockage : IndexedDB (navigateur) + GitHub prive (si configure)</p>
+    <p class="muted text-sm">Chiffrement : AES-256-GCM avec PBKDF2 (100 000 iterations SHA-256)</p>
+  ` }));
+  root.appendChild(cardInfo);
+}
+
+function formField(label, id, value, type = "text", placeholder = "") {
+  return el("div", { class: "form-row" }, [
+    el("div", { class: "form-label", text: label }),
+    el("input", { class: "form-input", id, type, value: value || "", placeholder })
+  ]);
+}
+
+function saveSyncConfig() {
+  APP.data.meta.sync = {
+    ...APP.data.meta.sync,
+    owner: $("#sync-owner").value.trim(),
+    repo: $("#sync-repo").value.trim(),
+    path: $("#sync-path").value.trim() || ".financeperso-data.enc",
+    token: $("#sync-token").value.trim(),
+    autoSync: $("#sync-auto").checked
+  };
+  scheduleSave();
+  showSuccess("Configuration enregistree.");
+}
+
+async function testSync() {
+  saveSyncConfig();
+  if (!APP.data.meta.sync.token) { showError("Token requis."); return; }
+  try {
+    const blob = await storage.save(APP.data, APP.password);
+    await sync.push(blob);
+    showSuccess("Sync OK ! Donnees poussees vers GitHub.");
+    renderSettings();
+  } catch (e) {
+    showError("Echec : " + e.message);
+  }
+}
+
+async function pullFromGithub() {
+  saveSyncConfig();
+  if (!APP.data.meta.sync.token) { showError("Token requis."); return; }
+  confirmModal("Restaurer depuis GitHub ?", "Cela ECRASERA les donnees locales actuelles avec celles du serveur. Continuer ?", async () => {
+    closeModal();
+    try {
+      const blob = await sync.pull();
+      const data = JSON.parse(await crypto_utils.decrypt(blob, APP.password));
+      APP.data = data;
+      await storage.save(data, APP.password);
+      showSuccess("Donnees restaurees depuis GitHub.");
+      navigate("dashboard");
+    } catch (e) {
+      showError("Echec restauration : " + e.message);
+    }
+  }, "Restaurer");
+}
+
+async function exportEncryptedBackup() {
+  const blob = await storage.save(APP.data, APP.password);
+  downloadFile(`financeperso-backup-${todayISO()}.enc`, blob, "text/plain");
+  showSuccess("Backup telecharge.");
+}
+
+function importEncryptedBackup(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    const blob = ev.target.result;
+    try {
+      const data = JSON.parse(await crypto_utils.decrypt(blob, APP.password));
+      confirmModal("Importer ce backup ?", "Cela ECRASERA toutes les donnees actuelles. Continuer ?", async () => {
+        APP.data = data;
+        await storage.save(data, APP.password);
+        closeModal();
+        showSuccess("Backup importe.");
+        navigate("dashboard");
+      }, "Importer");
+    } catch (err) {
+      showError("Mot de passe incorrect ou fichier corrompu : " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function changePassword() {
+  promptModal("Changer le mot de passe", [
+    { label: "Mot de passe actuel", name: "old", type: "password", required: true },
+    { label: "Nouveau mot de passe (min 8)", name: "new", type: "password", required: true },
+    { label: "Confirmer", name: "new2", type: "password", required: true }
+  ], async (vals) => {
+    if (vals.old !== APP.password) { showError("Mot de passe actuel incorrect."); return; }
+    if (vals.new.length < 8) { showError("Min 8 caracteres."); return; }
+    if (vals.new !== vals.new2) { showError("Les mots de passe ne correspondent pas."); return; }
+    APP.password = vals.new;
+    await storage.save(APP.data, vals.new);
+    closeModal();
+    showSuccess("Mot de passe change. Re-configure aussi le mot de passe sur ton autre appareil si applicable.");
+  });
+}
+
+function confirmEraseAll() {
+  confirmModal("EFFACER TOUTES LES DONNEES ?", "Cette action est <strong>irreversible</strong>. Elle efface IndexedDB local. La copie GitHub reste intacte sauf si tu pousses ensuite.", async () => {
+    await idb.clear();
+    closeModal();
+    APP.data = null;
+    APP.password = null;
+    showSuccess("Donnees effacees.");
+    showScreen("screen-setup");
+  }, "Tout effacer");
+}
+
+function resetProfile(profileId) {
+  confirmModal(`Reset le profil ${PROFILES[profileId].name} ?`, "Tous les comptes, budget et pros de ce profil seront supprimes. Les autres profils ne sont pas affectes.", () => {
+    APP.data.profiles[profileId] = emptyProfileData();
+    scheduleSave();
+    closeModal();
+    showSuccess("Profil reset.");
+    if (APP.currentProfile === profileId) navigate("dashboard");
+    else renderSettings();
+  }, "Reset");
+}
+
+</script>
+</body>
+</html>
