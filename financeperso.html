@@ -569,15 +569,146 @@ td.negative { color: var(--red); }
   font-size: 11px; color: var(--text-3); margin-top: 2px;
 }
 
-/* Affichage Mensuel/Annuel calcule (read-only) */
+/* Affichage Mensuel/Annuel calcule (read-only) - couleurs par type */
 .calc-display {
   font-variant-numeric: tabular-nums;
-  font-weight: 500;
+  font-weight: 600;
 }
+.calc-display.calc-revenu  { color: var(--green); }
+.calc-display.calc-depense { color: var(--red); }
+.calc-display.calc-epargne { color: var(--accent); }
 .calc-display .calc-unit {
   display: block; font-size: 10px;
   color: var(--text-3); font-weight: 400;
   text-transform: lowercase; letter-spacing: 0.02em;
+}
+
+/* PANNEAU SUMMARY STICKY (visible pendant la saisie) */
+.budget-summary {
+  position: sticky;
+  top: 52px;
+  z-index: 30;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+[data-theme="dark"] .budget-summary { box-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+
+.bs-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px; gap: 12px; flex-wrap: wrap;
+}
+.bs-header-title {
+  font-size: 12px; font-weight: 600;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.bs-collapse-btn {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-2); font-size: 11px; padding: 3px 10px;
+  border-radius: var(--radius); cursor: pointer;
+}
+.bs-collapse-btn:hover { background: var(--bg-3); color: var(--text); }
+
+.bs-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px; margin-bottom: 12px;
+}
+.bs-kpi-card {
+  padding: 6px 10px;
+  border-left: 3px solid var(--border);
+}
+.bs-kpi-card.kpi-rev   { border-left-color: var(--green); }
+.bs-kpi-card.kpi-dep   { border-left-color: var(--red); }
+.bs-kpi-card.kpi-epa   { border-left-color: var(--accent); }
+.bs-kpi-card.kpi-flux-pos { border-left-color: var(--green); }
+.bs-kpi-card.kpi-flux-neg { border-left-color: var(--red); }
+.bs-kpi-label {
+  font-size: 10px; font-weight: 600; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px;
+}
+.bs-kpi-value {
+  font-size: 18px; font-weight: 700; letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.bs-kpi-value.positive { color: var(--green); }
+.bs-kpi-value.negative { color: var(--red); }
+.bs-kpi-sub {
+  font-size: 11px; color: var(--text-3);
+  font-variant-numeric: tabular-nums; margin-top: 2px;
+}
+
+.bs-insights {
+  padding-top: 12px; border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.bs-insights-row {
+  display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+}
+.bs-insight {
+  font-size: 12px; display: flex; gap: 6px; align-items: center;
+}
+.bs-insight-label {
+  color: var(--text-3); text-transform: uppercase;
+  font-weight: 600; letter-spacing: 0.04em; font-size: 10px;
+}
+.bs-insight-value { font-weight: 700; font-variant-numeric: tabular-nums; }
+.bs-insight-value.good { color: var(--green); }
+.bs-insight-value.warn { color: var(--orange); }
+.bs-insight-value.bad  { color: var(--red); }
+
+.bs-allocation-wrap {
+  display: flex; flex-direction: column; gap: 4px;
+  flex: 1; min-width: 220px;
+}
+.bs-allocation-bar {
+  display: flex; height: 10px; border-radius: 5px;
+  overflow: hidden; background: var(--bg-3);
+  border: 1px solid var(--border);
+}
+.bs-alloc-segment {
+  height: 100%; transition: width 0.3s ease;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; color: white;
+  white-space: nowrap; overflow: hidden;
+}
+.bs-alloc-segment.dep   { background: var(--red); }
+.bs-alloc-segment.epa   { background: var(--accent); }
+.bs-alloc-segment.solde { background: var(--green); }
+.bs-allocation-legend {
+  display: flex; gap: 12px; font-size: 11px;
+  color: var(--text-3); flex-wrap: wrap;
+}
+.bs-allocation-legend strong { color: var(--text); font-weight: 600; }
+
+.bs-top-expenses {
+  font-size: 12px; color: var(--text-3); line-height: 1.6;
+}
+.bs-top-expenses strong { color: var(--text); font-weight: 600; }
+.bs-suggestion {
+  background: rgba(0,102,204,0.08);
+  border-left: 3px solid var(--accent);
+  padding: 8px 12px; border-radius: var(--radius);
+  font-size: 12px; color: var(--text-2);
+}
+.bs-suggestion strong { color: var(--accent); }
+
+.budget-summary.collapsed .bs-insights,
+.budget-summary.collapsed .bs-kpi-sub { display: none; }
+.budget-summary.collapsed { padding: 8px 14px; }
+.budget-summary.collapsed .bs-kpis { margin-bottom: 0; }
+.budget-summary.collapsed .bs-kpi-value { font-size: 15px; }
+
+@media (max-width: 700px) {
+  .budget-summary { padding: 10px 12px; }
+  .bs-kpis { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .bs-kpi-value { font-size: 15px; }
+  .bs-kpi-card { padding: 4px 8px; }
+  .bs-insights-row { gap: 10px; }
 }
 
 /* PROGRESS */
@@ -1558,10 +1689,10 @@ const MATHIS_BUDGET_DEFAULTS = [
   { id: "vc_loisirs_saison", monthly: 33,    unit: "year",  source: "400 $/an snow/ski/velo" },
   { id: "vc_outils_ccq",     monthly: 8,     unit: "year",  source: "100 $/an" },
 
-  // Epargne / investissement (SDV section 5)
+  // Epargne / investissement (SDV section 5) - le capital pret auto est deja
+  // dans vh_paiement (700 $/mois total), pas de double-comptage.
   { id: "ep_fhsa",           monthly: 667,   unit: "year",  source: "8 000 $/an MAX (cible)" },
-  { id: "ep_celi",           monthly: 433,   unit: "week",  source: "100 $/sem actuel (passe a 7 000 $/an post-Apprenti 2)" },
-  { id: "ep_capital_pret_auto", monthly: 600, unit: "month", source: "~600 $/mois capital sur 700 $/mois total (interets ~5 %)" }
+  { id: "ep_celi",           monthly: 433,   unit: "week",  source: "100 $/sem actuel (passe a 7 000 $/an post-Apprenti 2)" }
 ];
 
 /* Defauts budget Conjointe (mai 2026 - hypothese 100% identique en revenus
@@ -2672,24 +2803,123 @@ function updateBudgetKPIs() {
     }
   }
   const flux = totRev - totDep - totEpa;
-  const update = (id, val, klass) => {
-    const elem = document.getElementById(id);
-    if (!elem) return;
-    elem.textContent = fmt.money(val);
-    elem.className = "kpi-value" + (klass ? " " + klass : "");
+  // KPIs principaux
+  const updateVal = (id, val, klass) => {
+    const e = document.getElementById(id);
+    if (!e) return;
+    e.textContent = fmt.money(val);
+    if (klass !== undefined) {
+      e.className = "bs-kpi-value" + (klass ? " " + klass : "");
+      // Pour epargne on garde la couleur bleue inline
+      if (id === "kpi-epa") e.style.color = "var(--accent)";
+    }
   };
   const updateSub = (id, val) => {
-    const elem = document.getElementById(id);
-    if (elem) elem.textContent = fmt.money(val) + " / annee";
+    const e = document.getElementById(id);
+    if (e) e.textContent = fmt.money(val) + " / annee";
   };
-  update("kpi-rev", totRev, totRev > 0 ? "positive" : "");
-  update("kpi-dep", totDep, totDep > 0 ? "negative" : "");
-  update("kpi-epa", totEpa, totEpa > 0 ? "positive" : "");
-  update("kpi-flux", flux, flux >= 0 ? "positive" : "negative");
+  updateVal("kpi-rev", totRev, totRev > 0 ? "positive" : "");
+  updateVal("kpi-dep", totDep, totDep > 0 ? "negative" : "");
+  updateVal("kpi-epa", totEpa, "");  // bleu via inline style
+  updateVal("kpi-flux", flux, flux >= 0 ? "positive" : "negative");
+  const fluxCard = document.getElementById("kpi-flux-card");
+  if (fluxCard) fluxCard.className = "bs-kpi-card " + (flux >= 0 ? "kpi-flux-pos" : "kpi-flux-neg");
   updateSub("kpi-rev-an", totRev * 12);
   updateSub("kpi-dep-an", totDep * 12);
   updateSub("kpi-epa-an", totEpa * 12);
   updateSub("kpi-flux-an", flux * 12);
+  // Insights live
+  updateBudgetInsights(totRev, totDep, totEpa, flux);
+}
+
+function updateBudgetInsights(totRev, totDep, totEpa, flux) {
+  const data = p();
+  // 1. Taux d'epargne (epargne / revenus * 100)
+  const rateEl = document.getElementById("bs-rate");
+  if (rateEl) {
+    if (totRev <= 0) {
+      rateEl.textContent = "Definir un revenu d'abord";
+      rateEl.className = "bs-insight-value";
+    } else {
+      const rate = (totEpa / totRev) * 100;
+      rateEl.textContent = `${rate.toFixed(1)} %`;
+      rateEl.className = "bs-insight-value " + (rate >= 25 ? "good" : rate >= 10 ? "warn" : "bad");
+    }
+  }
+
+  // 2. Barre d'allocation : Depenses / Epargne / Solde libre
+  const allocEl = document.getElementById("bs-alloc");
+  const legEl = document.getElementById("bs-alloc-legend");
+  if (allocEl && legEl) {
+    if (totRev <= 0) {
+      allocEl.innerHTML = `<div class="bs-alloc-segment dep" style="width:100%;background:var(--bg-3);color:var(--text-3);">Definir un revenu pour voir la repartition</div>`;
+      legEl.innerHTML = "";
+    } else {
+      const pctDep = Math.min(100, (totDep / totRev) * 100);
+      const pctEpa = Math.min(100 - pctDep, (totEpa / totRev) * 100);
+      const pctSolde = Math.max(0, 100 - pctDep - pctEpa);
+      const pctOver = totDep + totEpa > totRev ? ((totDep + totEpa - totRev) / totRev) * 100 : 0;
+      allocEl.innerHTML = `
+        <div class="bs-alloc-segment dep" style="width:${pctDep.toFixed(1)}%;" title="Depenses ${pctDep.toFixed(1)}%">${pctDep > 12 ? pctDep.toFixed(0) + "%" : ""}</div>
+        <div class="bs-alloc-segment epa" style="width:${pctEpa.toFixed(1)}%;" title="Epargne ${pctEpa.toFixed(1)}%">${pctEpa > 12 ? pctEpa.toFixed(0) + "%" : ""}</div>
+        <div class="bs-alloc-segment solde" style="width:${pctSolde.toFixed(1)}%;" title="Solde libre ${pctSolde.toFixed(1)}%">${pctSolde > 12 ? pctSolde.toFixed(0) + "%" : ""}</div>
+      `;
+      legEl.innerHTML = `
+        <span><span style="display:inline-block;width:8px;height:8px;background:var(--red);border-radius:2px;vertical-align:middle;margin-right:4px;"></span>Depenses <strong>${pctDep.toFixed(1)} %</strong></span>
+        <span><span style="display:inline-block;width:8px;height:8px;background:var(--accent);border-radius:2px;vertical-align:middle;margin-right:4px;"></span>Epargne <strong>${pctEpa.toFixed(1)} %</strong></span>
+        <span><span style="display:inline-block;width:8px;height:8px;background:var(--green);border-radius:2px;vertical-align:middle;margin-right:4px;"></span>Solde libre <strong>${pctSolde.toFixed(1)} %</strong></span>
+        ${pctOver > 0 ? `<span style="color:var(--red);font-weight:600;">DEPASSEMENT ${pctOver.toFixed(1)} %</span>` : ""}
+      `;
+    }
+  }
+
+  // 3. Top 3 categories de depenses
+  const topEl = document.getElementById("bs-top");
+  if (topEl) {
+    const cats = getEffectiveCategories(data);
+    const expenses = [];
+    for (const [groupId, cat] of Object.entries(cats)) {
+      if (cat.type !== "depense") continue;
+      const total = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
+      if (total > 0) expenses.push({ label: cat.label, value: total, pct: totRev > 0 ? (total / totRev) * 100 : 0 });
+    }
+    expenses.sort((a, b) => b.value - a.value);
+    const top3 = expenses.slice(0, 3);
+    if (top3.length === 0) {
+      topEl.innerHTML = `<span class="muted">Top depenses : aucune depense definie</span>`;
+    } else {
+      topEl.innerHTML = `<strong>Top depenses :</strong> ` + top3.map(e =>
+        `${e.label} <strong>${fmt.money(e.value)}</strong>${e.pct > 0 ? ` <span class="muted">(${e.pct.toFixed(0)}%)</span>` : ""}`
+      ).join(" &middot; ");
+    }
+  }
+
+  // 4. Suggestion intelligente
+  const sugEl = document.getElementById("bs-suggestion");
+  if (sugEl) {
+    let msg = null;
+    if (totRev > 0) {
+      const rate = (totEpa / totRev) * 100;
+      if (totDep + totEpa > totRev) {
+        const deficit = (totDep + totEpa) - totRev;
+        msg = `<strong>Deficit de ${fmt.money(deficit)}/mois</strong> (${fmt.money(deficit * 12)}/annee). Reduis les depenses ou l'epargne pour equilibrer. Top categorie a auditer : verifie tes plus grosses depenses ci-dessus.`;
+      } else if (rate < 10 && totRev > 1000) {
+        msg = `<strong>Taux d'epargne faible (${rate.toFixed(1)} %)</strong>. Cible recommandee pour ton age : 20-30 % minimum. Si tu peux mettre ${fmt.money(totRev * 0.2 - totEpa)} de plus en epargne, tu atteins la cible 20 %.`;
+      } else if (rate >= 10 && rate < 20) {
+        msg = `Taux d'epargne <strong>${rate.toFixed(1)} %</strong> - bon depart. Cible 20-30 % pour accelerer le projet immobilier. Difference pour 25 % : ${fmt.money(totRev * 0.25 - totEpa)}/mois.`;
+      } else if (rate >= 25 && flux > 100) {
+        msg = `Excellent taux d'epargne <strong>${rate.toFixed(1)} %</strong>. Tu as encore ${fmt.money(flux)}/mois de solde libre - envisage d'augmenter les cotisations FHSA/CELI ou de constituer le fonds urgence.`;
+      } else if (rate >= 30) {
+        msg = `Taux d'epargne exceptionnel <strong>${rate.toFixed(1)} %</strong> - tu es sur la bonne trajectoire pour le 1er achat 2030. Maintien ce rythme.`;
+      }
+    }
+    if (msg) {
+      sugEl.innerHTML = msg;
+      sugEl.style.display = "block";
+    } else {
+      sugEl.style.display = "none";
+    }
+  }
 }
 
 function updateBudgetCalc(catId, monthlyValue) {
@@ -2789,30 +3019,51 @@ function renderBudgetSaisie(root) {
   }
   const flux = totRev - totDep - totEpa;
 
-  // KPIs : budget mensuel + annuel
-  const kpis = el("div", { class: "kpi-grid" }, [
-    el("div", { class: "kpi" }, [
-      el("div", { class: "kpi-label", text: "Revenus budget" }),
-      el("div", { class: "kpi-value " + (totRev > 0 ? "positive" : ""), id: "kpi-rev", text: fmt.money(totRev) }),
-      el("div", { class: "kpi-sub", id: "kpi-rev-an", text: fmt.money(totRev * 12) + " / annee" })
-    ]),
-    el("div", { class: "kpi" }, [
-      el("div", { class: "kpi-label", text: "Depenses budget" }),
-      el("div", { class: "kpi-value " + (totDep > 0 ? "negative" : ""), id: "kpi-dep", text: fmt.money(totDep) }),
-      el("div", { class: "kpi-sub", id: "kpi-dep-an", text: fmt.money(totDep * 12) + " / annee" })
-    ]),
-    el("div", { class: "kpi" }, [
-      el("div", { class: "kpi-label", text: "Epargne placee" }),
-      el("div", { class: "kpi-value " + (totEpa > 0 ? "positive" : ""), id: "kpi-epa", text: fmt.money(totEpa) }),
-      el("div", { class: "kpi-sub", id: "kpi-epa-an", text: fmt.money(totEpa * 12) + " / annee" })
-    ]),
-    el("div", { class: "kpi" }, [
-      el("div", { class: "kpi-label", text: "Solde net" }),
-      el("div", { class: "kpi-value " + (flux >= 0 ? "positive" : "negative"), id: "kpi-flux", text: fmt.money(flux) }),
-      el("div", { class: "kpi-sub", id: "kpi-flux-an", text: fmt.money(flux * 12) + " / annee" })
-    ])
-  ]);
-  root.appendChild(kpis);
+  // PANNEAU LIVE STICKY : KPIs + insights, toujours visible pendant la saisie
+  const summary = el("div", { class: "budget-summary", id: "budget-summary" });
+  summary.innerHTML = `
+    <div class="bs-header">
+      <div class="bs-header-title">Synthese en temps reel</div>
+      <button class="bs-collapse-btn" onclick="document.getElementById('budget-summary').classList.toggle('collapsed')">Compact / Etendu</button>
+    </div>
+    <div class="bs-kpis">
+      <div class="bs-kpi-card kpi-rev">
+        <div class="bs-kpi-label">Revenus</div>
+        <div class="bs-kpi-value positive" id="kpi-rev">${fmt.money(totRev)}</div>
+        <div class="bs-kpi-sub" id="kpi-rev-an">${fmt.money(totRev * 12)} / annee</div>
+      </div>
+      <div class="bs-kpi-card kpi-dep">
+        <div class="bs-kpi-label">Depenses</div>
+        <div class="bs-kpi-value negative" id="kpi-dep">${fmt.money(totDep)}</div>
+        <div class="bs-kpi-sub" id="kpi-dep-an">${fmt.money(totDep * 12)} / annee</div>
+      </div>
+      <div class="bs-kpi-card kpi-epa">
+        <div class="bs-kpi-label">Epargne</div>
+        <div class="bs-kpi-value" style="color:var(--accent);" id="kpi-epa">${fmt.money(totEpa)}</div>
+        <div class="bs-kpi-sub" id="kpi-epa-an">${fmt.money(totEpa * 12)} / annee</div>
+      </div>
+      <div class="bs-kpi-card ${flux >= 0 ? "kpi-flux-pos" : "kpi-flux-neg"}" id="kpi-flux-card">
+        <div class="bs-kpi-label">Solde libre</div>
+        <div class="bs-kpi-value ${flux >= 0 ? "positive" : "negative"}" id="kpi-flux">${fmt.money(flux)}</div>
+        <div class="bs-kpi-sub" id="kpi-flux-an">${fmt.money(flux * 12)} / annee</div>
+      </div>
+    </div>
+    <div class="bs-insights" id="bs-insights">
+      <div class="bs-insights-row">
+        <div class="bs-insight">
+          <span class="bs-insight-label">Taux d'epargne</span>
+          <span class="bs-insight-value" id="bs-rate">&mdash;</span>
+        </div>
+        <div class="bs-allocation-wrap">
+          <div class="bs-allocation-bar" id="bs-alloc"></div>
+          <div class="bs-allocation-legend" id="bs-alloc-legend"></div>
+        </div>
+      </div>
+      <div class="bs-top-expenses" id="bs-top">&mdash;</div>
+      <div class="bs-suggestion" id="bs-suggestion" style="display:none;"></div>
+    </div>
+  `;
+  root.appendChild(summary);
 
   // Saisie par categorie groupe
   for (const [groupId, cat] of Object.entries(cats)) {
@@ -2848,6 +3099,7 @@ function renderBudgetSaisie(root) {
       <th></th>
     </tr></thead>`;
     const tbody = el("tbody");
+    const calcClass = cat.type === "revenu" ? "calc-revenu" : cat.type === "epargne" ? "calc-epargne" : "calc-depense";
     for (const sub of cat.sub) {
       const budget = getBudgetMensuel(data, sub.id);
       const unit = getCategoryUnit(data, sub.id);
@@ -2857,8 +3109,8 @@ function renderBudgetSaisie(root) {
       const labelHTML = `<span class="cat-accent color-${groupColor}"></span><span class="cat-label">${sub.label}${source ? `<small class="cat-source">SDV: ${escapeHTML(source)}</small>` : ""}</span>`;
       tr.innerHTML = `<td><div style="display:flex;align-items:center;">${labelHTML}</div></td>
         <td class="num">${renderStepper(sub.id, "budget", budget, unit)}</td>
-        <td class="num"><span class="calc-display" id="mens-${sub.id}">${budget > 0 ? fmt.money(budget) : "&mdash;"}</span></td>
-        <td class="num"><span class="calc-display" id="annu-${sub.id}">${budget > 0 ? fmt.money(budget * 12) : "&mdash;"}</span></td>
+        <td class="num"><span class="calc-display ${calcClass}" data-type="${cat.type}" id="mens-${sub.id}">${budget > 0 ? fmt.money(budget) : "&mdash;"}</span></td>
+        <td class="num"><span class="calc-display ${calcClass}" data-type="${cat.type}" id="annu-${sub.id}">${budget > 0 ? fmt.money(budget * 12) : "&mdash;"}</span></td>
         <td><button class="btn-note ${note ? "has-note" : ""}" onclick="addNoteToCategory('${sub.id}')" title="${note ? escapeHTML(note) : "Ajouter une note"}">${note ? "Note*" : "Note"}</button></td>`;
       tbody.appendChild(tr);
     }
@@ -2874,6 +3126,9 @@ function renderBudgetSaisie(root) {
     <strong>Comment lire</strong> &mdash; tu entres ton budget dans l'unite qui te convient (/jour, /sem, /2sem, /mois, /annee). Les colonnes <strong>Mensuel</strong> et <strong>Annuel</strong> sont calculees automatiquement en temps reel. Exemple : 75 $/sem = 325 $/mois = 3 900 $/annee.<br><br>
     <strong>Donnees pre-remplies (mai 2026)</strong> &mdash; valeurs initiales depuis <code>SOURCE_DE_VERITE.md</code> sections 2 (revenus) et 4 (depenses). Restaure les defauts via <a href="javascript:_budgetView='reglages';renderBudget();">Reglages</a>.
   ` }));
+
+  // Initialiser les insights live au premier rendu (sinon la barre alloc est vide)
+  setTimeout(() => updateBudgetInsights(totRev, totDep, totEpa, flux), 0);
 }
 
 function renderBudgetSaisieCouple(root) {
