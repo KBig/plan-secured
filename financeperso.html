@@ -1865,6 +1865,7 @@ window.addEventListener("DOMContentLoaded", bootstrap);
 function renderDashboard() {
   const profile = APP.currentProfile;
   const root = $("#main-content");
+  root.innerHTML = "";
   const isCouple = profile === "couple";
 
   let actifs, dettes, vn, totalsGroupe, accountsForList;
@@ -2110,6 +2111,7 @@ let _accountsSort = { col: "solde", dir: "desc" };
 
 function renderAccounts() {
   const root = $("#main-content");
+  root.innerHTML = "";
   const isCouple = APP.currentProfile === "couple";
   let accountsForList;
   if (isCouple) {
@@ -2412,8 +2414,168 @@ function escapeHTML(s) {
 let _budgetView = "saisie"; // saisie | comparaison | annuel | tendances
 let _budgetMonth = currentMonth();
 
+/* ---- Unites de temps : stockage canonique en MENSUEL, affichage selon prefs user ---- */
+const UNIT_FACTOR = { day: 30.4375, week: 4.34524, biweek: 2.17262, month: 1, year: 1/12 };
+const UNIT_LABEL  = { day: "/jour", week: "/sem", biweek: "/2sem", month: "/mois", year: "/annee" };
+const UNIT_ORDER  = ["day", "week", "biweek", "month", "year"];
+
+function getCategoryUnit(profileData, catId) {
+  return profileData.budget.unit?.[catId] || "month";
+}
+function setCategoryUnit(profileData, catId, unit) {
+  if (!profileData.budget.unit) profileData.budget.unit = {};
+  profileData.budget.unit[catId] = unit;
+}
+function toMonthly(value, unit) {
+  return Number(value || 0) * (UNIT_FACTOR[unit || "month"]);
+}
+function fromMonthly(monthlyValue, unit) {
+  if (!monthlyValue) return 0;
+  return monthlyValue / (UNIT_FACTOR[unit || "month"]);
+}
+function formatStepperValue(v) {
+  if (v == null || v === 0) return "";
+  const n = Number(v);
+  if (Math.abs(n) >= 100) return n.toFixed(0);
+  if (Math.abs(n) >= 10)  return n.toFixed(1).replace(/\.0$/, "");
+  return n.toFixed(2).replace(/\.?0+$/, "");
+}
+
+/* ---- Composant stepper (- / + + selecteur d'unite) ---- */
+function renderStepper(catId, kind, monthlyValue, unit) {
+  const display = formatStepperValue(fromMonthly(monthlyValue, unit));
+  const opts = UNIT_ORDER.map(u => `<option value="${u}" ${u === unit ? "selected" : ""}>${UNIT_LABEL[u]}</option>`).join("");
+  return `<div class="num-stepper" data-cat="${catId}" data-kind="${kind}" data-unit="${unit}">
+    <button type="button" class="num-stepper-btn minus" onclick="stepperDelta(this,-1)" tabindex="-1">&minus;</button>
+    <input type="text" inputmode="decimal" class="num-stepper-input" value="${display}" placeholder="0" oninput="stepperLiveSync(this)" onchange="stepperChanged(this)" onfocus="this.select()">
+    <button type="button" class="num-stepper-btn plus" onclick="stepperDelta(this,1)" tabindex="-1">+</button>
+    <select class="num-stepper-unit" onchange="stepperUnitChanged(this)">${opts}</select>
+  </div>`;
+}
+
+function stepperDelta(btn, delta) {
+  const stepper = btn.closest(".num-stepper");
+  const input = stepper.querySelector(".num-stepper-input");
+  const unit = stepper.dataset.unit;
+  let v = parseFloat(input.value || "0") || 0;
+  // step adaptatif selon ordre de grandeur de la categorie
+  const step = unit === "year" ? 100 : unit === "month" ? 5 : unit === "biweek" ? 5 : unit === "week" ? 5 : 1;
+  v = Math.max(0, v + delta * step);
+  input.value = formatStepperValue(v);
+  stepperChanged(input);
+}
+
+function stepperLiveSync(input) {
+  // Pour l'instant, on attend onchange (blur) pour persister, mais on pourrait
+  // updater les KPIs en live ici si besoin
+}
+
+function stepperChanged(input) {
+  const stepper = input.closest(".num-stepper");
+  const catId = stepper.dataset.cat;
+  const kind = stepper.dataset.kind;
+  const unit = stepper.dataset.unit;
+  const raw = parseFloat(input.value || "0") || 0;
+  const monthly = toMonthly(raw, unit);
+  if (kind === "budget") {
+    setBudgetMensuel(p(), catId, monthly);
+  } else if (kind === "reel") {
+    setBudgetEntry(p(), _budgetMonth, catId, monthly);
+  }
+  setCategoryUnit(p(), catId, unit);
+  scheduleSave();
+  // Mettre a jour les KPIs et l'ecart en place sans tout re-rendre (preserve focus)
+  updateBudgetKPIs();
+  updateBudgetEcart(catId);
+  updateBudgetGroupTotals(catId);
+}
+
+function stepperUnitChanged(select) {
+  const stepper = select.closest(".num-stepper");
+  const newUnit = select.value;
+  const oldUnit = stepper.dataset.unit;
+  const input = stepper.querySelector(".num-stepper-input");
+  const oldRaw = parseFloat(input.value || "0") || 0;
+  const monthly = toMonthly(oldRaw, oldUnit);
+  const newRaw = fromMonthly(monthly, newUnit);
+  input.value = formatStepperValue(newRaw);
+  stepper.dataset.unit = newUnit;
+  // Sync l'autre stepper de la meme categorie a la meme unite (visuel coherent)
+  const catId = stepper.dataset.cat;
+  document.querySelectorAll(`.num-stepper[data-cat="${catId}"]`).forEach(other => {
+    if (other === stepper) return;
+    const otherKind = other.dataset.kind;
+    const otherSelect = other.querySelector(".num-stepper-unit");
+    const otherInput = other.querySelector(".num-stepper-input");
+    const otherOldRaw = parseFloat(otherInput.value || "0") || 0;
+    const otherOldUnit = other.dataset.unit;
+    const otherMonthly = toMonthly(otherOldRaw, otherOldUnit);
+    other.dataset.unit = newUnit;
+    otherSelect.value = newUnit;
+    otherInput.value = formatStepperValue(fromMonthly(otherMonthly, newUnit));
+  });
+  setCategoryUnit(p(), catId, newUnit);
+  scheduleSave();
+}
+
+function updateBudgetKPIs() {
+  const data = p();
+  const entries = data.budget.monthlyEntries[_budgetMonth] || {};
+  let totRev = 0, totDep = 0, totEpa = 0;
+  for (const [id, v] of Object.entries(entries)) {
+    const c = findCategorie(id) || customFindCat(data, id);
+    if (!c) continue;
+    if (c.groupType === "revenu") totRev += Number(v);
+    else if (c.groupType === "epargne") totEpa += Number(v);
+    else totDep += Number(v);
+  }
+  const flux = totRev - totDep - totEpa;
+  const update = (id, val, klass) => {
+    const elem = document.getElementById(id);
+    if (!elem) return;
+    elem.textContent = fmt.money(val);
+    elem.className = "kpi-value" + (klass ? " " + klass : "");
+  };
+  update("kpi-rev", totRev, totRev > 0 ? "positive" : "");
+  update("kpi-dep", totDep, totDep > 0 ? "negative" : "");
+  update("kpi-epa", totEpa, totEpa > 0 ? "positive" : "");
+  update("kpi-flux", flux, flux >= 0 ? "positive" : "negative");
+}
+
+function updateBudgetEcart(catId) {
+  const data = p();
+  const entries = data.budget.monthlyEntries[_budgetMonth] || {};
+  const reel = Number(entries[catId] || 0);
+  const budget = getBudgetMensuel(data, catId);
+  const ecart = reel - budget;
+  const cell = document.getElementById(`ecart-${catId}`);
+  if (!cell) return;
+  const c = findCategorie(catId) || customFindCat(data, catId);
+  const isDepense = c && c.groupType === "depense";
+  if (budget === 0 && reel === 0) { cell.innerHTML = "&mdash;"; return; }
+  const klass = ecart === 0 ? "" : ((ecart > 0 && isDepense) ? "negative" : (ecart < 0 && isDepense) ? "positive" : (ecart > 0 ? "positive" : "negative"));
+  cell.innerHTML = `<span class="${klass}">${ecart === 0 ? "&mdash;" : fmt.money(ecart)}</span>`;
+}
+
+function updateBudgetGroupTotals(catId) {
+  // Mettre a jour le sous-total du groupe parent
+  const data = p();
+  const c = findCategorie(catId) || customFindCat(data, catId);
+  if (!c) return;
+  const groupId = c.group;
+  const cats = getEffectiveCategories(data);
+  const cat = cats[groupId];
+  if (!cat) return;
+  const entries = data.budget.monthlyEntries[_budgetMonth] || {};
+  const subTotal = cat.sub.reduce((s, sub) => s + (Number(entries[sub.id]) || 0), 0);
+  const subBudget = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
+  const totEl = document.getElementById(`grp-tot-${groupId}`);
+  if (totEl) totEl.textContent = `Reel: ${fmt.money(subTotal)} / Budget: ${fmt.money(subBudget)}`;
+}
+
 function renderBudget() {
   const root = $("#main-content");
+  root.innerHTML = "";
   const isCouple = APP.currentProfile === "couple";
 
   // Header
@@ -2474,10 +2636,10 @@ function renderBudgetSaisie(root) {
   // Selecteur de mois
   const monthBar = el("div", { class: "card", style: "padding:12px 14px;" });
   const fbox = el("div", { style: "display:flex; gap:10px; align-items:center; flex-wrap:wrap;" });
-  fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = shiftMonth(_budgetMonth, -1); renderBudget(); }, text: "<" }));
+  fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = shiftMonth(_budgetMonth, -1); renderBudget(); }, text: "Mois precedent" }));
   const monthInp = el("input", { class: "form-input", type: "month", style: "max-width:160px;", value: _budgetMonth, onchange: (e) => { _budgetMonth = e.target.value; renderBudget(); } });
   fbox.appendChild(monthInp);
-  fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = shiftMonth(_budgetMonth, 1); renderBudget(); }, text: ">" }));
+  fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = shiftMonth(_budgetMonth, 1); renderBudget(); }, text: "Mois suivant" }));
   fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = currentMonth(); renderBudget(); }, text: "Aujourd'hui" }));
   monthBar.appendChild(fbox);
   root.appendChild(monthBar);
@@ -2491,7 +2653,7 @@ function renderBudgetSaisie(root) {
   const data = p();
   const cats = getEffectiveCategories(data);
 
-  // Totaux du mois
+  // Totaux du mois (canonique = mensuel)
   let totRev = 0, totDep = 0, totEpa = 0;
   const entries = data.budget.monthlyEntries[_budgetMonth] || {};
   for (const [id, v] of Object.entries(entries)) {
@@ -2503,12 +2665,26 @@ function renderBudgetSaisie(root) {
   }
   const flux = totRev - totDep - totEpa;
 
-  // KPIs du mois
+  // KPIs du mois (avec IDs pour MAJ live sans re-render complet)
   const kpis = el("div", { class: "kpi-grid" }, [
-    makeKPI("Revenus du mois", fmt.money(totRev), "positive", fmt.monthLabel(_budgetMonth)),
-    makeKPI("Depenses du mois", fmt.money(totDep), totDep > 0 ? "negative" : ""),
-    makeKPI("Epargne placee", fmt.money(totEpa), "positive"),
-    makeKPI("Flux net", fmt.money(flux), flux >= 0 ? "positive" : "negative", flux >= 0 ? "Surplus a allouer" : "Deficit - reduire depenses")
+    el("div", { class: "kpi" }, [
+      el("div", { class: "kpi-label", text: "Revenus du mois" }),
+      el("div", { class: "kpi-value " + (totRev > 0 ? "positive" : ""), id: "kpi-rev", text: fmt.money(totRev) }),
+      el("div", { class: "kpi-sub", text: fmt.monthLabel(_budgetMonth) })
+    ]),
+    el("div", { class: "kpi" }, [
+      el("div", { class: "kpi-label", text: "Depenses du mois" }),
+      el("div", { class: "kpi-value " + (totDep > 0 ? "negative" : ""), id: "kpi-dep", text: fmt.money(totDep) })
+    ]),
+    el("div", { class: "kpi" }, [
+      el("div", { class: "kpi-label", text: "Epargne placee" }),
+      el("div", { class: "kpi-value " + (totEpa > 0 ? "positive" : ""), id: "kpi-epa", text: fmt.money(totEpa) })
+    ]),
+    el("div", { class: "kpi" }, [
+      el("div", { class: "kpi-label", text: "Flux net" }),
+      el("div", { class: "kpi-value " + (flux >= 0 ? "positive" : "negative"), id: "kpi-flux", text: fmt.money(flux) }),
+      el("div", { class: "kpi-sub", text: flux >= 0 ? "Surplus a allouer" : "Deficit - reduire depenses" })
+    ])
   ]);
   root.appendChild(kpis);
 
@@ -2518,7 +2694,7 @@ function renderBudgetSaisie(root) {
     const subTotal = cat.sub.reduce((s, sub) => s + (Number(entries[sub.id]) || 0), 0);
     const subBudgetTotal = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
 
-    const head = el("div", { class: "collapse-header", onclick: (e) => { if (!e.target.matches("input,select,button,textarea")) card.classList.toggle("open"); } }, [
+    const head = el("div", { class: "collapse-header", onclick: (e) => { if (!e.target.matches("input,select,button,textarea") && !e.target.closest(".num-stepper")) card.classList.toggle("open"); } }, [
       el("div", {}, [
         el("div", { class: "collapse-title" }, [
           el("span", { class: `badge badge-${cat.color || (cat.type === "revenu" ? "green" : cat.type === "epargne" ? "blue" : "")}`, text: cat.label }),
@@ -2526,8 +2702,8 @@ function renderBudgetSaisie(root) {
         ])
       ]),
       el("div", { class: "flex gap-16 items-center" }, [
-        el("span", { class: "muted text-sm", text: `Reel: ${fmt.money(subTotal)} / Budget: ${fmt.money(subBudgetTotal)}` }),
-        el("span", { class: "collapse-arrow", text: "▶" })
+        el("span", { class: "muted text-sm", id: `grp-tot-${groupId}`, text: `Reel: ${fmt.money(subTotal)} / Budget: ${fmt.money(subBudgetTotal)}` }),
+        el("span", { class: "collapse-arrow", text: ">" })
       ])
     ]);
     card.appendChild(head);
@@ -2537,23 +2713,25 @@ function renderBudgetSaisie(root) {
     const t = el("table");
     t.innerHTML = `<thead><tr>
       <th>Categorie</th>
-      <th class="num">Budget</th>
+      <th class="num">Budget previsionnel</th>
       <th class="num">Reel ${fmt.monthLabel(_budgetMonth)}</th>
-      <th class="num">Ecart</th>
+      <th class="num">Ecart (mensuel)</th>
       <th></th>
     </tr></thead>`;
     const tbody = el("tbody");
     for (const sub of cat.sub) {
-      const reel = entries[sub.id] ?? "";
+      const reel = Number(entries[sub.id] || 0);
       const budget = getBudgetMensuel(data, sub.id);
-      const ecart = (Number(reel) || 0) - budget;
+      const unit = getCategoryUnit(data, sub.id);
+      const ecart = reel - budget;
       const tr = el("tr");
-      const ecartCell = budget === 0 && !reel ? "-" : `<span class="${ecart > 0 && cat.type === "depense" ? "negative" : ecart < 0 && cat.type === "depense" ? "positive" : ""}">${ecart === 0 ? "-" : fmt.money(ecart)}</span>`;
+      const note = data.budget.monthlyNotes?.[_budgetMonth]?.[sub.id];
+      const ecartCell = (budget === 0 && reel === 0) ? "&mdash;" : `<span class="${ecart > 0 && cat.type === "depense" ? "negative" : ecart < 0 && cat.type === "depense" ? "positive" : ""}">${ecart === 0 ? "&mdash;" : fmt.money(ecart)}</span>`;
       tr.innerHTML = `<td>${sub.label}</td>
-        <td class="num"><input class="form-input" type="number" step="0.01" style="max-width:110px; padding:4px 8px;" value="${budget || ""}" placeholder="0" onchange="updateBudgetMontant('${sub.id}', this.value)"></td>
-        <td class="num"><input class="form-input" type="number" step="0.01" style="max-width:110px; padding:4px 8px;" value="${reel}" placeholder="0" onchange="updateBudgetEntry('${sub.id}', this.value)"></td>
-        <td class="num">${ecartCell}</td>
-        <td><button class="btn btn-sm" onclick="addNoteToCategory('${sub.id}')" title="Ajouter une note">📝</button></td>`;
+        <td class="num">${renderStepper(sub.id, "budget", budget, unit)}</td>
+        <td class="num">${renderStepper(sub.id, "reel", reel, unit)}</td>
+        <td class="num" id="ecart-${sub.id}">${ecartCell}</td>
+        <td><button class="btn-note ${note ? "has-note" : ""}" onclick="addNoteToCategory('${sub.id}')" title="${note ? escapeHTML(note) : "Ajouter une note"}">${note ? "Note*" : "Note"}</button></td>`;
       tbody.appendChild(tr);
     }
     t.appendChild(tbody);
@@ -2564,7 +2742,7 @@ function renderBudgetSaisie(root) {
   }
 
   // Aide
-  root.appendChild(el("div", { class: "muted text-sm mt-16", html: "Astuce : entre simplement les totaux de chaque categorie pour le mois. Pas besoin de saisir transaction par transaction. Le budget est sauvegarde automatiquement." }));
+  root.appendChild(el("div", { class: "muted text-sm mt-16", html: "Astuce : entre les montants dans l'unite qui te convient (par jour, semaine, 2 semaines, mois ou annee). Le systeme convertit tout en mensuel pour les totaux. L'unite choisie est memorisee par categorie." }));
 }
 
 function renderBudgetSaisieCouple(root) {
@@ -2827,11 +3005,10 @@ function customFindCat(data, catId) {
   return null;
 }
 
+// (legacy - conserves au cas ou appeles depuis ancien code)
 function updateBudgetEntry(catId, value) {
   setBudgetEntry(p(), _budgetMonth, catId, value);
   scheduleSave();
-  // Petit refresh des KPIs uniquement pour pas perdre le focus
-  setTimeout(() => renderBudget(), 50);
 }
 function updateBudgetMontant(catId, value) {
   setBudgetMensuel(p(), catId, value);
@@ -2912,6 +3089,7 @@ function exportBudgetCsv() {
  * =========================================================================== */
 function renderPros() {
   const root = $("#main-content");
+  root.innerHTML = "";
   const data = p();
   const isCouple = APP.currentProfile === "couple";
 
@@ -3053,6 +3231,7 @@ function deletePro(proId) {
  * =========================================================================== */
 function renderSettings() {
   const root = $("#main-content");
+  root.innerHTML = "";
   root.appendChild(el("div", { class: "page-header" }, [
     el("div", {}, [
       el("div", { class: "page-title", text: "Parametres" }),
