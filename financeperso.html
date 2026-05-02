@@ -2772,19 +2772,7 @@ function getEffectiveCategories(profileData) {
 
 function renderBudgetSaisie(root) {
   const isCouple = APP.currentProfile === "couple";
-  // Selecteur de mois
-  const monthBar = el("div", { class: "card", style: "padding:12px 14px;" });
-  const fbox = el("div", { style: "display:flex; gap:10px; align-items:center; flex-wrap:wrap;" });
-  fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = shiftMonth(_budgetMonth, -1); renderBudget(); }, text: "Mois precedent" }));
-  const monthInp = el("input", { class: "form-input", type: "month", style: "max-width:160px;", value: _budgetMonth, onchange: (e) => { _budgetMonth = e.target.value; renderBudget(); } });
-  fbox.appendChild(monthInp);
-  fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = shiftMonth(_budgetMonth, 1); renderBudget(); }, text: "Mois suivant" }));
-  fbox.appendChild(el("button", { class: "btn btn-sm", onclick: () => { _budgetMonth = currentMonth(); renderBudget(); }, text: "Aujourd'hui" }));
-  monthBar.appendChild(fbox);
-  root.appendChild(monthBar);
-
   if (isCouple) {
-    // Vue couple = somme des entries des 3 profils
     renderBudgetSaisieCouple(root);
     return;
   }
@@ -2792,37 +2780,39 @@ function renderBudgetSaisie(root) {
   const data = p();
   const cats = getEffectiveCategories(data);
 
-  // Totaux du mois (canonique = mensuel)
+  // Totaux budget par type (canonique mensuel)
   let totRev = 0, totDep = 0, totEpa = 0;
-  const entries = data.budget.monthlyEntries[_budgetMonth] || {};
-  for (const [id, v] of Object.entries(entries)) {
-    const c = findCategorie(id) || customFindCat(data, id);
-    if (!c) continue;
-    if (c.groupType === "revenu") totRev += Number(v);
-    else if (c.groupType === "epargne") totEpa += Number(v);
-    else totDep += Number(v);
+  for (const [groupId, cat] of Object.entries(cats)) {
+    for (const sub of cat.sub) {
+      const m = getBudgetMensuel(data, sub.id);
+      if (cat.type === "revenu") totRev += m;
+      else if (cat.type === "epargne") totEpa += m;
+      else totDep += m;
+    }
   }
   const flux = totRev - totDep - totEpa;
 
-  // KPIs du mois (avec IDs pour MAJ live sans re-render complet)
+  // KPIs : budget mensuel + annuel
   const kpis = el("div", { class: "kpi-grid" }, [
     el("div", { class: "kpi" }, [
-      el("div", { class: "kpi-label", text: "Revenus du mois" }),
+      el("div", { class: "kpi-label", text: "Revenus budget" }),
       el("div", { class: "kpi-value " + (totRev > 0 ? "positive" : ""), id: "kpi-rev", text: fmt.money(totRev) }),
-      el("div", { class: "kpi-sub", text: fmt.monthLabel(_budgetMonth) })
+      el("div", { class: "kpi-sub", id: "kpi-rev-an", text: fmt.money(totRev * 12) + " / annee" })
     ]),
     el("div", { class: "kpi" }, [
-      el("div", { class: "kpi-label", text: "Depenses du mois" }),
-      el("div", { class: "kpi-value " + (totDep > 0 ? "negative" : ""), id: "kpi-dep", text: fmt.money(totDep) })
+      el("div", { class: "kpi-label", text: "Depenses budget" }),
+      el("div", { class: "kpi-value " + (totDep > 0 ? "negative" : ""), id: "kpi-dep", text: fmt.money(totDep) }),
+      el("div", { class: "kpi-sub", id: "kpi-dep-an", text: fmt.money(totDep * 12) + " / annee" })
     ]),
     el("div", { class: "kpi" }, [
       el("div", { class: "kpi-label", text: "Epargne placee" }),
-      el("div", { class: "kpi-value " + (totEpa > 0 ? "positive" : ""), id: "kpi-epa", text: fmt.money(totEpa) })
+      el("div", { class: "kpi-value " + (totEpa > 0 ? "positive" : ""), id: "kpi-epa", text: fmt.money(totEpa) }),
+      el("div", { class: "kpi-sub", id: "kpi-epa-an", text: fmt.money(totEpa * 12) + " / annee" })
     ]),
     el("div", { class: "kpi" }, [
-      el("div", { class: "kpi-label", text: "Flux net" }),
+      el("div", { class: "kpi-label", text: "Solde net" }),
       el("div", { class: "kpi-value " + (flux >= 0 ? "positive" : "negative"), id: "kpi-flux", text: fmt.money(flux) }),
-      el("div", { class: "kpi-sub", text: flux >= 0 ? "Surplus a allouer" : "Deficit - reduire depenses" })
+      el("div", { class: "kpi-sub", id: "kpi-flux-an", text: fmt.money(flux * 12) + " / annee" })
     ])
   ]);
   root.appendChild(kpis);
@@ -2830,18 +2820,21 @@ function renderBudgetSaisie(root) {
   // Saisie par categorie groupe
   for (const [groupId, cat] of Object.entries(cats)) {
     const card = el("div", { class: "collapse-card open", id: `cb-${groupId}` });
-    const subTotal = cat.sub.reduce((s, sub) => s + (Number(entries[sub.id]) || 0), 0);
     const subBudgetTotal = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
+    const groupColor = GROUP_COLORS[groupId] || cat.color || "muted";
 
     const head = el("div", { class: "collapse-header", onclick: (e) => { if (!e.target.matches("input,select,button,textarea") && !e.target.closest(".num-stepper")) card.classList.toggle("open"); } }, [
-      el("div", {}, [
-        el("div", { class: "collapse-title" }, [
-          el("span", { class: `badge badge-${cat.color || (cat.type === "revenu" ? "green" : cat.type === "epargne" ? "blue" : "")}`, text: cat.label }),
-          el("span", { style: "margin-left:8px;", class: "muted text-sm", text: `${cat.sub.length} categorie(s)` })
+      el("div", { class: "flex items-center" }, [
+        el("span", { class: `cat-accent color-${groupColor}` }),
+        el("div", {}, [
+          el("div", { class: "collapse-title" }, [
+            el("span", { class: `badge badge-${groupColor}`, text: cat.label }),
+            el("span", { style: "margin-left:8px;", class: "muted text-sm", text: `${cat.sub.length} categorie(s)` })
+          ])
         ])
       ]),
       el("div", { class: "flex gap-16 items-center" }, [
-        el("span", { class: "muted text-sm", id: `grp-tot-${groupId}`, text: `Reel: ${fmt.money(subTotal)} / Budget: ${fmt.money(subBudgetTotal)}` }),
+        el("span", { class: "muted text-sm", id: `grp-tot-${groupId}`, text: `${fmt.money(subBudgetTotal)} / mois - ${fmt.money(subBudgetTotal * 12)} / annee` }),
         el("span", { class: "collapse-arrow", text: ">" })
       ])
     ]);
@@ -2852,28 +2845,23 @@ function renderBudgetSaisie(root) {
     const t = el("table");
     t.innerHTML = `<thead><tr>
       <th>Categorie</th>
-      <th class="num">Budget previsionnel<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">choisis l'unite a droite</div></th>
-      <th class="num">Reel ${fmt.monthLabel(_budgetMonth)}<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">memes unites</div></th>
-      <th class="num">Ecart<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">$/mois canonique</div></th>
+      <th class="num">Budget<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">choisis l'unite a droite</div></th>
+      <th class="num">Mensuel<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">$ / mois</div></th>
+      <th class="num">Annuel<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">$ / annee</div></th>
       <th></th>
     </tr></thead>`;
     const tbody = el("tbody");
     for (const sub of cat.sub) {
-      const reel = Number(entries[sub.id] || 0);
       const budget = getBudgetMensuel(data, sub.id);
       const unit = getCategoryUnit(data, sub.id);
-      const ecart = reel - budget;
       const tr = el("tr");
       const note = data.budget.monthlyNotes?.[_budgetMonth]?.[sub.id];
       const source = data.budget.sources?.[sub.id];
-      const ecartCell = (budget === 0 && reel === 0) ? "&mdash;" : `<span class="${ecart > 0 && cat.type === "depense" ? "negative" : ecart < 0 && cat.type === "depense" ? "positive" : ""}">${ecart === 0 ? "&mdash;" : fmt.money(ecart)}</span>`;
-      const labelCell = source
-        ? `<td>${sub.label}<div class="muted text-sm" style="margin-top:2px;">SDV: ${escapeHTML(source)}</div></td>`
-        : `<td>${sub.label}</td>`;
-      tr.innerHTML = `${labelCell}
+      const labelHTML = `<span class="cat-accent color-${groupColor}"></span><span class="cat-label">${sub.label}${source ? `<small class="cat-source">SDV: ${escapeHTML(source)}</small>` : ""}</span>`;
+      tr.innerHTML = `<td><div style="display:flex;align-items:center;">${labelHTML}</div></td>
         <td class="num">${renderStepper(sub.id, "budget", budget, unit)}</td>
-        <td class="num">${renderStepper(sub.id, "reel", reel, unit)}</td>
-        <td class="num" id="ecart-${sub.id}">${ecartCell}</td>
+        <td class="num"><span class="calc-display" id="mens-${sub.id}">${budget > 0 ? fmt.money(budget) : "&mdash;"}</span></td>
+        <td class="num"><span class="calc-display" id="annu-${sub.id}">${budget > 0 ? fmt.money(budget * 12) : "&mdash;"}</span></td>
         <td><button class="btn-note ${note ? "has-note" : ""}" onclick="addNoteToCategory('${sub.id}')" title="${note ? escapeHTML(note) : "Ajouter une note"}">${note ? "Note*" : "Note"}</button></td>`;
       tbody.appendChild(tr);
     }
@@ -2886,60 +2874,126 @@ function renderBudgetSaisie(root) {
 
   // Aide
   root.appendChild(el("div", { class: "fs-info mt-16", html: `
-    <strong>Comment lire le tableau</strong> &mdash; les chiffres affiches sont dans <strong>l'unite que tu choisis</strong> a droite de chaque champ (/jour, /sem, /2sem, /mois, /annee). Tous les totaux et ecarts sont calcules en <strong>mensuel canonique</strong>. Exemple : 75 $/sem est equivalent a 325 $/mois (75 x 4,33). Change l'unite avec le menu deroulant et la valeur s'ajuste automatiquement.<br><br>
-    <strong>Pre-remplissage SDV mai 2026</strong> &mdash; les valeurs initiales viennent de <code>SOURCE_DE_VERITE.md</code> section 2 (revenus) et 4 (depenses). Si une ligne te semble fausse, edite-la directement, ou va dans <a href="javascript:_budgetView='reglages';renderBudget();">Reglages budget</a> pour restaurer les defauts.
+    <strong>Comment lire</strong> &mdash; tu entres ton budget dans l'unite qui te convient (/jour, /sem, /2sem, /mois, /annee). Les colonnes <strong>Mensuel</strong> et <strong>Annuel</strong> sont calculees automatiquement en temps reel. Exemple : 75 $/sem = 325 $/mois = 3 900 $/annee.<br><br>
+    <strong>Donnees pre-remplies (mai 2026)</strong> &mdash; valeurs initiales depuis <code>SOURCE_DE_VERITE.md</code> sections 2 (revenus) et 4 (depenses). Restaure les defauts via <a href="javascript:_budgetView='reglages';renderBudget();">Reglages</a>.
   ` }));
 }
 
 function renderBudgetSaisieCouple(root) {
-  const aggData = mergeBudgetCouple(_budgetMonth);
+  // Vue couple = AGREGATION du budget previsionnel des 3 profils (Mathis +
+  // Conjointe + Comptes communs). Chaque profil reste isole en saisie : on
+  // doit aller dans chaque profil pour modifier ses propres valeurs.
+  const agg = mergeBudgetCouple();
+
+  // KPIs couple
   const kpis = el("div", { class: "kpi-grid" }, [
-    makeKPI("Revenus couple", fmt.money(aggData.revenus), "positive", fmt.monthLabel(_budgetMonth)),
-    makeKPI("Depenses couple", fmt.money(aggData.depenses), aggData.depenses > 0 ? "negative" : ""),
-    makeKPI("Epargne couple", fmt.money(aggData.epargne), "positive"),
-    makeKPI("Flux net couple", fmt.money(aggData.flux), aggData.flux >= 0 ? "positive" : "negative")
+    el("div", { class: "kpi" }, [
+      el("div", { class: "kpi-label", text: "Revenus couple" }),
+      el("div", { class: "kpi-value " + (agg.revenus > 0 ? "positive" : ""), text: fmt.money(agg.revenus) }),
+      el("div", { class: "kpi-sub", text: fmt.money(agg.revenus * 12) + " / annee" })
+    ]),
+    el("div", { class: "kpi" }, [
+      el("div", { class: "kpi-label", text: "Depenses couple" }),
+      el("div", { class: "kpi-value " + (agg.depenses > 0 ? "negative" : ""), text: fmt.money(agg.depenses) }),
+      el("div", { class: "kpi-sub", text: fmt.money(agg.depenses * 12) + " / annee" })
+    ]),
+    el("div", { class: "kpi" }, [
+      el("div", { class: "kpi-label", text: "Epargne couple" }),
+      el("div", { class: "kpi-value " + (agg.epargne > 0 ? "positive" : ""), text: fmt.money(agg.epargne) }),
+      el("div", { class: "kpi-sub", text: fmt.money(agg.epargne * 12) + " / annee" })
+    ]),
+    el("div", { class: "kpi" }, [
+      el("div", { class: "kpi-label", text: "Solde couple" }),
+      el("div", { class: "kpi-value " + (agg.flux >= 0 ? "positive" : "negative"), text: fmt.money(agg.flux) }),
+      el("div", { class: "kpi-sub", text: fmt.money(agg.flux * 12) + " / annee" })
+    ])
   ]);
   root.appendChild(kpis);
 
-  const card = el("div", { class: "card" });
-  card.appendChild(el("div", { class: "card-header" }, [
-    el("div", { class: "card-title", text: "Repartition Mathis / Conjointe / Commun" })
-  ]));
-  const tbl = el("div", { class: "table-wrap" });
-  const t = el("table");
-  t.innerHTML = `<thead><tr><th>Categorie</th><th class="num">Mathis</th><th class="num">Conjointe</th><th class="num">Commun</th><th class="num">Total couple</th></tr></thead>`;
-  const tbody = el("tbody");
-  for (const [groupId, lines] of Object.entries(aggData.byCat)) {
-    const cat = BUDGET_CATEGORIES[groupId] || { label: groupId };
-    const tr = el("tr");
-    tr.innerHTML = `<td><strong>${cat.label}</strong></td>
-      <td class="num">${fmt.money(lines.mathis)}</td>
-      <td class="num">${fmt.money(lines.conjointe)}</td>
-      <td class="num">${fmt.money(lines.couple)}</td>
-      <td class="num"><strong>${fmt.money(lines.mathis + lines.conjointe + lines.couple)}</strong></td>`;
-    tbody.appendChild(tr);
-  }
-  t.appendChild(tbody);
-  tbl.appendChild(t);
-  card.appendChild(tbl);
-  root.appendChild(card);
+  // Detail par categorie groupe (lignes accordeon comme la vue solo)
+  for (const [groupId, cat] of Object.entries(BUDGET_CATEGORIES)) {
+    const groupLines = agg.byCat[groupId];
+    if (!groupLines) continue;
+    const totalGroup = groupLines.mathis + groupLines.conjointe + groupLines.couple;
+    if (totalGroup === 0) continue; // skip groupes vides
 
-  root.appendChild(el("div", { class: "muted text-sm mt-16", text: "La saisie individuelle se fait dans les profils Mathis et Conjointe." }));
+    const groupColor = GROUP_COLORS[groupId] || cat.color || "muted";
+    const card = el("div", { class: "collapse-card open" });
+    const head = el("div", { class: "collapse-header", onclick: (e) => { if (!e.target.matches("input,select,button,textarea")) card.classList.toggle("open"); } }, [
+      el("div", { class: "flex items-center" }, [
+        el("span", { class: `cat-accent color-${groupColor}` }),
+        el("div", { class: "collapse-title" }, [
+          el("span", { class: `badge badge-${groupColor}`, text: cat.label }),
+        ])
+      ]),
+      el("div", { class: "flex gap-16 items-center" }, [
+        el("span", { class: "muted text-sm", text: `${fmt.money(totalGroup)} / mois - ${fmt.money(totalGroup * 12)} / annee` }),
+        el("span", { class: "collapse-arrow", text: ">" })
+      ])
+    ]);
+    card.appendChild(head);
+
+    const body = el("div", { class: "collapse-body" });
+    const tbl = el("div", { class: "table-wrap" });
+    const t = el("table");
+    t.innerHTML = `<thead><tr>
+      <th>Sous-categorie</th>
+      <th class="num">Mathis</th>
+      <th class="num">Conjointe</th>
+      <th class="num">Commun</th>
+      <th class="num">Total mensuel</th>
+      <th class="num">Total annuel</th>
+    </tr></thead>`;
+    const tbody = el("tbody");
+    for (const sub of cat.sub) {
+      const m = agg.bySub.mathis[sub.id] || 0;
+      const c = agg.bySub.conjointe[sub.id] || 0;
+      const co = agg.bySub.couple[sub.id] || 0;
+      const tot = m + c + co;
+      if (tot === 0) continue;
+      const tr = el("tr");
+      tr.innerHTML = `<td><span class="cat-accent color-${groupColor}"></span>${sub.label}</td>
+        <td class="num">${m > 0 ? fmt.money(m) : "&mdash;"}</td>
+        <td class="num">${c > 0 ? fmt.money(c) : "&mdash;"}</td>
+        <td class="num">${co > 0 ? fmt.money(co) : "&mdash;"}</td>
+        <td class="num bold">${fmt.money(tot)}</td>
+        <td class="num">${fmt.money(tot * 12)}</td>`;
+      tbody.appendChild(tr);
+    }
+    t.appendChild(tbody);
+    tbl.appendChild(t);
+    body.appendChild(tbl);
+    card.appendChild(body);
+    root.appendChild(card);
+  }
+
+  root.appendChild(el("div", { class: "fs-info mt-16", html: `
+    <strong>Vue couple = lecture seule</strong> &mdash; cette vue agrege automatiquement les budgets de Mathis, Conjointe et des comptes communs. Pour modifier des valeurs, va dans le profil correspondant (changer de profil via le bouton en haut a gauche). Les chiffres sont stricts : aucune valeur Mathis n'est partagee avec Conjointe et vice-versa.
+  ` }));
 }
 
-function mergeBudgetCouple(month) {
-  const result = { revenus: 0, depenses: 0, epargne: 0, flux: 0, byCat: {} };
+function mergeBudgetCouple() {
+  // Aggrege les budgets MENSUELS PREVISIONNELS des 3 profils.
+  // Resultat: { revenus, depenses, epargne, flux, byCat: {groupId: {mathis,conjointe,couple}}, bySub: {profile: {catId: monthly}} }
+  const result = {
+    revenus: 0, depenses: 0, epargne: 0, flux: 0,
+    byCat: {},
+    bySub: { mathis: {}, conjointe: {}, couple: {} }
+  };
   for (const profileId of ["mathis", "conjointe", "couple"]) {
     const data = APP.data.profiles[profileId];
-    const entries = data.budget?.monthlyEntries?.[month] || {};
-    for (const [catId, val] of Object.entries(entries)) {
-      const c = findCategorie(catId);
+    if (!data || !data.budget?.categories) continue;
+    for (const [catId, entry] of Object.entries(data.budget.categories)) {
+      const monthly = Number(entry?.budget) || 0;
+      if (monthly === 0) continue;
+      const c = findCategorie(catId) || customFindCat(data, catId);
       if (!c) continue;
-      if (c.groupType === "revenu") result.revenus += val;
-      else if (c.groupType === "epargne") result.epargne += val;
-      else result.depenses += val;
+      result.bySub[profileId][catId] = monthly;
+      if (c.groupType === "revenu") result.revenus += monthly;
+      else if (c.groupType === "epargne") result.epargne += monthly;
+      else result.depenses += monthly;
       if (!result.byCat[c.group]) result.byCat[c.group] = { mathis: 0, conjointe: 0, couple: 0 };
-      result.byCat[c.group][profileId] += val;
+      result.byCat[c.group][profileId] += monthly;
     }
   }
   result.flux = result.revenus - result.depenses - result.epargne;
