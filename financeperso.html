@@ -463,16 +463,86 @@ td.negative { color: var(--red); }
 /* TABS */
 .tabs {
   display: flex; gap: 2px; border-bottom: 1px solid var(--border);
-  margin-bottom: 16px; overflow-x: auto;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 .tab {
   padding: 10px 14px; border: none; background: transparent;
   color: var(--text-2); font-size: 13px; font-weight: 500;
   border-bottom: 2px solid transparent; margin-bottom: -1px;
-  white-space: nowrap;
+  white-space: nowrap; flex: 0 1 auto;
 }
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 600; }
+@media (max-width: 600px) {
+  .tab { flex: 1 1 calc(50% - 2px); text-align: center; padding: 11px 6px; font-size: 12px; }
+}
+
+/* NUM STEPPER (custom number input avec + / - et selecteur d'unite) */
+.num-stepper {
+  display: inline-flex; align-items: stretch;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg); overflow: hidden;
+  height: 34px; font-size: 13px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.num-stepper:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0,102,204,0.15);
+}
+.num-stepper-btn {
+  width: 30px; min-width: 30px; border: none;
+  background: var(--bg-3); color: var(--text);
+  font-size: 16px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.1s;
+  user-select: none; -webkit-user-select: none;
+  padding: 0;
+}
+.num-stepper-btn:hover { background: var(--bg-4); }
+.num-stepper-btn:active { background: var(--text); color: var(--bg); }
+.num-stepper-btn.minus { border-right: 1px solid var(--border); }
+.num-stepper-btn.plus { border-left: 1px solid var(--border); }
+.num-stepper-input {
+  border: none; background: transparent; color: var(--text);
+  width: 70px; text-align: right; padding: 0 8px;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px; font-weight: 500;
+}
+.num-stepper-input::-webkit-outer-spin-button,
+.num-stepper-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.num-stepper-input { -moz-appearance: textfield; }
+.num-stepper-input:focus { outline: none; }
+.num-stepper-unit {
+  border: none; border-left: 1px solid var(--border);
+  background: var(--bg-2); color: var(--text-2);
+  padding: 0 18px 0 8px; font-size: 11px; font-weight: 500;
+  cursor: pointer; appearance: none; -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-3) 50%),
+                    linear-gradient(135deg, var(--text-3) 50%, transparent 50%);
+  background-position: calc(100% - 9px) 14px, calc(100% - 5px) 14px;
+  background-size: 4px 4px, 4px 4px;
+  background-repeat: no-repeat;
+}
+.num-stepper-unit:focus { outline: none; background-color: var(--bg-3); }
+.num-stepper-unit:hover { background-color: var(--bg-3); }
+@media (max-width: 600px) {
+  .num-stepper { height: 38px; }
+  .num-stepper-input { width: 56px; padding: 0 4px; font-size: 14px; }
+  .num-stepper-btn { width: 36px; min-width: 36px; font-size: 18px; }
+  .num-stepper-unit { font-size: 10px; padding: 0 14px 0 4px; background-position: calc(100% - 7px) 16px, calc(100% - 3px) 16px; }
+}
+
+/* Bouton Note (remplacement emoji) */
+.btn-note {
+  padding: 6px 10px; font-size: 11px;
+  background: var(--bg-2); color: var(--text-3);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  cursor: pointer; font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.btn-note:hover { background: var(--bg-3); color: var(--text); border-color: var(--border-2); }
+.btn-note.has-note { background: rgba(209,132,29,0.12); color: var(--orange); border-color: rgba(209,132,29,0.3); font-weight: 600; }
 
 /* PROGRESS */
 .progress {
@@ -624,7 +694,7 @@ td.negative { color: var(--red); }
     <div class="topbar-actions">
       <button class="topbar-btn icon" onclick="forceSync()" title="Sync GitHub" id="sync-btn">↻</button>
       <button class="topbar-btn icon" onclick="toggleTheme()" title="Thème" id="theme-btn">◐</button>
-      <button class="topbar-btn icon" onclick="logout()" title="Verrouiller">🔒</button>
+      <button class="topbar-btn" onclick="logout()" title="Verrouiller">Verr.</button>
     </div>
   </div>
 
