@@ -5,8 +5,8 @@ Document chiffré avec **AES-256-GCM + PBKDF2 (100 000 itérations)**.
 ## Accès
 
 **URL d'accès direct :**
-- Via raw.githack : https://raw.githack.com/KBig/plan-secured/master/plan_complet_secured.html
-- Via jsdelivr (plus rapide) : https://cdn.jsdelivr.net/gh/KBig/plan-secured@master/plan_complet_secured.html
+- Via raw.githack : https://raw.githack.com/KBig/plan-secured/main/plan_complet_secured.html
+- Via jsdelivr (plus rapide) : https://cdn.jsdelivr.net/gh/KBig/plan-secured@main/plan_complet_secured.html
 
 Le contenu est cryptographiquement inaccessible sans le mot de passe.
 
