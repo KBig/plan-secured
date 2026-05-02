@@ -2620,16 +2620,12 @@ function stepperChanged(input) {
   const unit = stepper.dataset.unit;
   const raw = parseFloat(input.value || "0") || 0;
   const monthly = toMonthly(raw, unit);
-  if (kind === "budget") {
-    setBudgetMensuel(p(), catId, monthly);
-  } else if (kind === "reel") {
-    setBudgetEntry(p(), _budgetMonth, catId, monthly);
-  }
+  if (kind === "budget") setBudgetMensuel(p(), catId, monthly);
   setCategoryUnit(p(), catId, unit);
   scheduleSave();
-  // Mettre a jour les KPIs et l'ecart en place sans tout re-rendre (preserve focus)
+  // MAJ live des cellules Mensuel/Annuel + KPIs + sous-total groupe (sans re-render)
+  updateBudgetCalc(catId, monthly);
   updateBudgetKPIs();
-  updateBudgetEcart(catId);
   updateBudgetGroupTotals(catId);
 }
 
@@ -2663,14 +2659,15 @@ function stepperUnitChanged(select) {
 
 function updateBudgetKPIs() {
   const data = p();
-  const entries = data.budget.monthlyEntries[_budgetMonth] || {};
+  const cats = getEffectiveCategories(data);
   let totRev = 0, totDep = 0, totEpa = 0;
-  for (const [id, v] of Object.entries(entries)) {
-    const c = findCategorie(id) || customFindCat(data, id);
-    if (!c) continue;
-    if (c.groupType === "revenu") totRev += Number(v);
-    else if (c.groupType === "epargne") totEpa += Number(v);
-    else totDep += Number(v);
+  for (const [groupId, cat] of Object.entries(cats)) {
+    for (const sub of cat.sub) {
+      const m = getBudgetMensuel(data, sub.id);
+      if (cat.type === "revenu") totRev += m;
+      else if (cat.type === "epargne") totEpa += m;
+      else totDep += m;
+    }
   }
   const flux = totRev - totDep - totEpa;
   const update = (id, val, klass) => {
@@ -2679,29 +2676,30 @@ function updateBudgetKPIs() {
     elem.textContent = fmt.money(val);
     elem.className = "kpi-value" + (klass ? " " + klass : "");
   };
+  const updateSub = (id, val) => {
+    const elem = document.getElementById(id);
+    if (elem) elem.textContent = fmt.money(val) + " / annee";
+  };
   update("kpi-rev", totRev, totRev > 0 ? "positive" : "");
   update("kpi-dep", totDep, totDep > 0 ? "negative" : "");
   update("kpi-epa", totEpa, totEpa > 0 ? "positive" : "");
   update("kpi-flux", flux, flux >= 0 ? "positive" : "negative");
+  updateSub("kpi-rev-an", totRev * 12);
+  updateSub("kpi-dep-an", totDep * 12);
+  updateSub("kpi-epa-an", totEpa * 12);
+  updateSub("kpi-flux-an", flux * 12);
 }
 
-function updateBudgetEcart(catId) {
-  const data = p();
-  const entries = data.budget.monthlyEntries[_budgetMonth] || {};
-  const reel = Number(entries[catId] || 0);
-  const budget = getBudgetMensuel(data, catId);
-  const ecart = reel - budget;
-  const cell = document.getElementById(`ecart-${catId}`);
-  if (!cell) return;
-  const c = findCategorie(catId) || customFindCat(data, catId);
-  const isDepense = c && c.groupType === "depense";
-  if (budget === 0 && reel === 0) { cell.innerHTML = "&mdash;"; return; }
-  const klass = ecart === 0 ? "" : ((ecart > 0 && isDepense) ? "negative" : (ecart < 0 && isDepense) ? "positive" : (ecart > 0 ? "positive" : "negative"));
-  cell.innerHTML = `<span class="${klass}">${ecart === 0 ? "&mdash;" : fmt.money(ecart)}</span>`;
+function updateBudgetCalc(catId, monthlyValue) {
+  // Met a jour les cellules Mensuel et Annuel d'une ligne
+  const mens = document.getElementById(`mens-${catId}`);
+  const annu = document.getElementById(`annu-${catId}`);
+  if (mens) mens.innerHTML = monthlyValue > 0 ? fmt.money(monthlyValue) : "&mdash;";
+  if (annu) annu.innerHTML = monthlyValue > 0 ? fmt.money(monthlyValue * 12) : "&mdash;";
 }
 
 function updateBudgetGroupTotals(catId) {
-  // Mettre a jour le sous-total du groupe parent
+  // Met a jour le sous-total mensuel + annuel du groupe parent
   const data = p();
   const c = findCategorie(catId) || customFindCat(data, catId);
   if (!c) return;
@@ -2709,11 +2707,9 @@ function updateBudgetGroupTotals(catId) {
   const cats = getEffectiveCategories(data);
   const cat = cats[groupId];
   if (!cat) return;
-  const entries = data.budget.monthlyEntries[_budgetMonth] || {};
-  const subTotal = cat.sub.reduce((s, sub) => s + (Number(entries[sub.id]) || 0), 0);
   const subBudget = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
   const totEl = document.getElementById(`grp-tot-${groupId}`);
-  if (totEl) totEl.textContent = `Reel: ${fmt.money(subTotal)} / Budget: ${fmt.money(subBudget)}`;
+  if (totEl) totEl.textContent = `${fmt.money(subBudget)} / mois - ${fmt.money(subBudget * 12)} / annee`;
 }
 
 function renderBudget() {
@@ -2725,11 +2721,10 @@ function renderBudget() {
   const header = el("div", { class: "page-header" }, [
     el("div", {}, [
       el("div", { class: "page-title", text: `Budget - ${PROFILES[APP.currentProfile].name}` }),
-      el("div", { class: "page-subtitle", text: isCouple ? "Vue couple consolidee (Mathis + Conjointe + Communs)" : "Saisie mensuelle simplifiee + budget previsionnel par categorie" })
+      el("div", { class: "page-subtitle", text: isCouple ? "Vue couple consolidee (Mathis + Conjointe + Communs) - lecture seule" : "Budget previsionnel par categorie. Profil isole : tes valeurs ne se melent pas a celles de la conjointe." })
     ]),
     el("div", { class: "page-actions" }, [
       el("button", { class: "btn", onclick: () => exportBudgetCsv(), text: "Exporter CSV" }),
-      !isCouple ? el("button", { class: "btn", onclick: () => copyBudgetFromPrevious(), text: "Copier mois precedent" }) : null,
       !isCouple ? el("button", { class: "btn btn-primary", onclick: () => openCustomCategoryModal(), text: "+ Categorie perso" }) : null
     ].filter(Boolean))
   ]);
