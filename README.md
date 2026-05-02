@@ -4,9 +4,11 @@ Document chiffré avec **AES-256-GCM + PBKDF2 (100 000 itérations)**.
 
 ## Accès
 
-**URL d'accès direct :**
-- Via raw.githack : https://raw.githack.com/KBig/plan-secured/main/plan_complet_secured.html
-- Via jsdelivr (plus rapide) : https://cdn.jsdelivr.net/gh/KBig/plan-secured@main/plan_complet_secured.html
+**URL d'accès direct (à utiliser) :**
+- https://raw.githack.com/KBig/plan-secured/main/index.html
+- https://raw.githack.com/KBig/plan-secured/main/plan_complet_secured.html
+
+⚠️ **NE PAS utiliser jsdelivr** (`cdn.jsdelivr.net`) : il sert les fichiers HTML comme `text/plain` (pour des raisons de sécurité), donc le navigateur affiche le code source au lieu de la page rendue. Utiliser raw.githack qui sert avec le bon MIME type `text/html`.
 
 Le contenu est cryptographiquement inaccessible sans le mot de passe.
 
