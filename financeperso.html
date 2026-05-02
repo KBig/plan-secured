@@ -1474,6 +1474,91 @@ function emptyStore() {
 /* ===========================================================================
  * PRECHARGEMENT DES DONNEES MAI 2026 (depuis SOURCE_DE_VERITE.md)
  * =========================================================================== */
+/* Defauts budget Mathis (mai 2026, depuis SOURCE_DE_VERITE.md section 4)
+   Stockage canonique en MENSUEL. L'unite affichee est celle d'origine SDV. */
+const MATHIS_BUDGET_DEFAULTS = [
+  // Revenus (SDV section 2)
+  { id: "rev_salaire",       monthly: 2740,  unit: "week",  source: "632 $/sem net Apprenti 1 (24,19 $/h x 35 h)" },
+  { id: "rev_vacances_ccq",  monthly: 417,   unit: "year",  source: "~5 000 $/an vacances CCQ" },
+  { id: "rev_remb_impot",    monthly: 167,   unit: "year",  source: "~2 000 $/an remboursement impot" },
+
+  // Logement
+  { id: "log_youtube",       monthly: 15,    unit: "month", source: "YouTube partage avec pere" },
+
+  // Vehicule (SDV section 4)
+  { id: "vh_paiement",       monthly: 700,   unit: "month", source: "Pret Mazda 3 2021" },
+  { id: "vh_assurance",      monthly: 195,   unit: "month" },
+  { id: "vh_essence",        monthly: 280,   unit: "week",  source: "~65 $/sem" },
+  { id: "vh_entretien",      monthly: 42,    unit: "year",  source: "500 $/an" },
+  { id: "vh_lavages",        monthly: 8,     unit: "year",  source: "100 $/an" },
+  { id: "vh_immatriculation",monthly: 28,    unit: "year",  source: "340 $/an" },
+  { id: "vh_permis",         monthly: 13,    unit: "year",  source: "155 $/an SAAQ classes 3-5-6" },
+
+  // Moto
+  { id: "mt_plaque",         monthly: 33,    unit: "year",  source: "400 $/an" },
+  { id: "mt_assurance",      monthly: 4,     unit: "year",  source: "50 $/an" },
+  { id: "mt_essence",        monthly: 25,    unit: "month", source: "~25 $/mois saisonnier" },
+  { id: "mt_entretien",      monthly: 25,    unit: "year",  source: "300 $/an" },
+
+  // Communication
+  { id: "co_cellulaire",     monthly: 40,    unit: "month", source: "Fizz / Public Mobile" },
+
+  // Sante
+  { id: "sa_gym",            monthly: 30,    unit: "month", source: "Gym economique" },
+  { id: "sa_autre",          monthly: 17,    unit: "year",  source: "200 $/an hors couverture" },
+
+  // Abonnements numeriques
+  { id: "ab_ia",             monthly: 50,    unit: "month", source: "Claude / ChatGPT - investissement strategique" },
+  { id: "ab_gaming",         monthly: 8,     unit: "year",  source: "100 $/an" },
+
+  // Sorties
+  { id: "so_activites",      monthly: 325,   unit: "week",  source: "75 $/sem (cinema, sorties, etc.)" },
+
+  // Vie courante
+  { id: "vc_vetements",      monthly: 25,    unit: "year",  source: "300 $/an" },
+  { id: "vc_coiffure",       monthly: 27,    unit: "year",  source: "325 $/an" },
+  { id: "vc_cadeaux",        monthly: 13,    unit: "year",  source: "150 $/an" },
+  { id: "vc_loisirs_saison", monthly: 33,    unit: "year",  source: "400 $/an snow/ski/velo" },
+  { id: "vc_outils_ccq",     monthly: 8,     unit: "year",  source: "100 $/an" },
+
+  // Epargne / investissement (SDV section 5)
+  { id: "ep_fhsa",           monthly: 667,   unit: "year",  source: "8 000 $/an MAX (cible)" },
+  { id: "ep_celi",           monthly: 433,   unit: "week",  source: "100 $/sem actuel (passe a 7 000 $/an post-Apprenti 2)" },
+  { id: "ep_capital_pret_auto", monthly: 600, unit: "month", source: "~600 $/mois capital sur 700 $/mois total (interets ~5 %)" }
+];
+
+/* Defauts budget Conjointe (mai 2026 - hypothese 100% identique en revenus
+   et depenses, sauf logement (gratuit chez parents) et pret auto (82 $/sem)) */
+const CONJOINTE_BUDGET_DEFAULTS = [
+  { id: "rev_salaire",       monthly: 2740,  unit: "week",  source: "Hypothese 100 % identique a Mathis" },
+  { id: "rev_vacances_ccq",  monthly: 417,   unit: "year" },
+  { id: "rev_remb_impot",    monthly: 167,   unit: "year" },
+  { id: "vh_paiement",       monthly: 355,   unit: "week",  source: "82 $/sem" },
+  { id: "vh_assurance",      monthly: 195,   unit: "month" },
+  { id: "vh_essence",        monthly: 280,   unit: "week" },
+  { id: "vh_entretien",      monthly: 42,    unit: "year" },
+  { id: "co_cellulaire",     monthly: 40,    unit: "month" },
+  { id: "sa_gym",            monthly: 30,    unit: "month" },
+  { id: "so_activites",      monthly: 325,   unit: "week" },
+  { id: "ep_fhsa",           monthly: 125,   unit: "month", source: "1 500 $/an premier an (ramp-up)" }
+];
+
+function applyBudgetDefaults(profileData, defaults, force = false) {
+  if (!profileData.budget.categories) profileData.budget.categories = {};
+  if (!profileData.budget.unit) profileData.budget.unit = {};
+  if (!profileData.budget.sources) profileData.budget.sources = {};
+  let added = 0;
+  for (const d of defaults) {
+    const existing = profileData.budget.categories[d.id]?.budget;
+    if (!force && existing != null && existing > 0) continue;
+    profileData.budget.categories[d.id] = { budget: d.monthly, active: true };
+    profileData.budget.unit[d.id] = d.unit;
+    if (d.source) profileData.budget.sources[d.id] = d.source;
+    added++;
+  }
+  return added;
+}
+
 function preloadMathis(data) {
   const today = "2026-05-02";
   const accs = [
@@ -1489,21 +1574,14 @@ function preloadMathis(data) {
   ];
   data.accounts = accs;
   data.accountSnapshots = accs.map(a => ({ id: uid(), accountId: a.id, date: today, balance: a.solde }));
-  // Budget mensuel reel
-  const monthEntries = {};
-  for (const cat of Object.values(BUDGET_CATEGORIES)) {
-    for (const sub of cat.sub) {
-      if (sub.defaut && (sub.defautProfile === "mathis" || !sub.defautProfile)) {
-        // pre-remplir mai 2026
-      }
-    }
-  }
-  // Cotes credit + scoreCible (stockes en metadata pour tableau de bord)
+  // Budget previsionnel mensuel + unite preferee (depuis SDV)
+  applyBudgetDefaults(data, MATHIS_BUDGET_DEFAULTS, true);
+  // Cotes credit
   data.scoresCredit = {
     equifax: { actuel: 758, cible2030: 780, dateMaj: today },
     transunion: { actuel: 720, cible2030: 770, dateMaj: today }
   };
-  // Pros recommandes (vides au depart, l'user remplira)
+  // Pros recommandes
   data.pros = [
     { id: uid(), nom: "Conseiller VMD familial", cabinet: "Desjardins / VMD", categorie: "Routine", source: "Reseau VMD familial", phone: "", email: "", services: "Plan financier, allocation FHSA/CELI/REER", tarification: "Inclus dans services VMD familial", dateContact: "", prochainContact: "2026-09-01", evalPrix: 0, evalQualite: 0, evalChimie: 0, evalReseau: 0, notes: "Acces via pere. RV initial planifie automne 2026." }
   ];
@@ -1520,6 +1598,7 @@ function preloadConjointe(data) {
   ];
   data.accounts = accs;
   data.accountSnapshots = accs.map(a => ({ id: uid(), accountId: a.id, date: today, balance: a.solde }));
+  applyBudgetDefaults(data, CONJOINTE_BUDGET_DEFAULTS, true);
   data.pros = [];
   return data;
 }
@@ -1702,6 +1781,17 @@ function enterApp() {
   // Appliquer le theme
   const theme = APP.data.meta.theme || "light";
   document.body.setAttribute("data-theme", theme);
+  // Migration: si le profil Mathis n'a pas de defauts budget, les ajouter (sans ecraser
+  // les valeurs deja saisies). Idem conjointe. Permet aux comptes existants de profiter
+  // du nouveau preload sans avoir a tout reset.
+  if (APP.data.profiles?.mathis) {
+    const added = applyBudgetDefaults(APP.data.profiles.mathis, MATHIS_BUDGET_DEFAULTS, false);
+    if (added > 0) { scheduleSave(); console.log(`[FP] ${added} defaut(s) budget Mathis ajoute(s)`); }
+  }
+  if (APP.data.profiles?.conjointe) {
+    const added = applyBudgetDefaults(APP.data.profiles.conjointe, CONJOINTE_BUDGET_DEFAULTS, false);
+    if (added > 0) { scheduleSave(); console.log(`[FP] ${added} defaut(s) budget Conjointe ajoute(s)`); }
+  }
   // Choisir le profil
   const last = APP.data.meta.lastProfile || "mathis";
   if (last && PROFILES[last]) {
@@ -2713,9 +2803,9 @@ function renderBudgetSaisie(root) {
     const t = el("table");
     t.innerHTML = `<thead><tr>
       <th>Categorie</th>
-      <th class="num">Budget previsionnel</th>
-      <th class="num">Reel ${fmt.monthLabel(_budgetMonth)}</th>
-      <th class="num">Ecart (mensuel)</th>
+      <th class="num">Budget previsionnel<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">choisis l'unite a droite</div></th>
+      <th class="num">Reel ${fmt.monthLabel(_budgetMonth)}<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">memes unites</div></th>
+      <th class="num">Ecart<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">$/mois canonique</div></th>
       <th></th>
     </tr></thead>`;
     const tbody = el("tbody");
@@ -2726,8 +2816,12 @@ function renderBudgetSaisie(root) {
       const ecart = reel - budget;
       const tr = el("tr");
       const note = data.budget.monthlyNotes?.[_budgetMonth]?.[sub.id];
+      const source = data.budget.sources?.[sub.id];
       const ecartCell = (budget === 0 && reel === 0) ? "&mdash;" : `<span class="${ecart > 0 && cat.type === "depense" ? "negative" : ecart < 0 && cat.type === "depense" ? "positive" : ""}">${ecart === 0 ? "&mdash;" : fmt.money(ecart)}</span>`;
-      tr.innerHTML = `<td>${sub.label}</td>
+      const labelCell = source
+        ? `<td>${sub.label}<div class="muted text-sm" style="margin-top:2px;">SDV: ${escapeHTML(source)}</div></td>`
+        : `<td>${sub.label}</td>`;
+      tr.innerHTML = `${labelCell}
         <td class="num">${renderStepper(sub.id, "budget", budget, unit)}</td>
         <td class="num">${renderStepper(sub.id, "reel", reel, unit)}</td>
         <td class="num" id="ecart-${sub.id}">${ecartCell}</td>
@@ -2742,7 +2836,10 @@ function renderBudgetSaisie(root) {
   }
 
   // Aide
-  root.appendChild(el("div", { class: "muted text-sm mt-16", html: "Astuce : entre les montants dans l'unite qui te convient (par jour, semaine, 2 semaines, mois ou annee). Le systeme convertit tout en mensuel pour les totaux. L'unite choisie est memorisee par categorie." }));
+  root.appendChild(el("div", { class: "fs-info mt-16", html: `
+    <strong>Comment lire le tableau</strong> &mdash; les chiffres affiches sont dans <strong>l'unite que tu choisis</strong> a droite de chaque champ (/jour, /sem, /2sem, /mois, /annee). Tous les totaux et ecarts sont calcules en <strong>mensuel canonique</strong>. Exemple : 75 $/sem est equivalent a 325 $/mois (75 x 4,33). Change l'unite avec le menu deroulant et la valeur s'ajuste automatiquement.<br><br>
+    <strong>Pre-remplissage SDV mai 2026</strong> &mdash; les valeurs initiales viennent de <code>SOURCE_DE_VERITE.md</code> section 2 (revenus) et 4 (depenses). Si une ligne te semble fausse, edite-la directement, ou va dans <a href="javascript:_budgetView='reglages';renderBudget();">Reglages budget</a> pour restaurer les defauts.
+  ` }));
 }
 
 function renderBudgetSaisieCouple(root) {
@@ -2957,6 +3054,35 @@ function renderBudgetReglages(root) {
     return;
   }
   const data = p();
+
+  // Bouton restaurer defauts SDV mai 2026
+  const cardRestore = el("div", { class: "card" });
+  cardRestore.appendChild(el("div", { class: "card-header" }, [
+    el("div", {}, [
+      el("div", { class: "card-title", text: "Restaurer defauts mai 2026 (depuis SOURCE_DE_VERITE.md)" }),
+      el("div", { class: "card-subtitle", text: APP.currentProfile === "mathis" ? "Recharge les budgets Mathis depuis le plan : revenus 632 $/sem, vehicule, sorties 75 $/sem, etc." : "Recharge les budgets conjointe : hypothese 100 % identique a Mathis (revenus + depenses similaires)." })
+    ])
+  ]));
+  const defaults = APP.currentProfile === "mathis" ? MATHIS_BUDGET_DEFAULTS : CONJOINTE_BUDGET_DEFAULTS;
+  cardRestore.appendChild(el("div", { class: "page-actions" }, [
+    el("button", { class: "btn", onclick: () => {
+      const added = applyBudgetDefaults(data, defaults, false);
+      scheduleSave();
+      showSuccess(`${added} categorie(s) remplie(s) (sans ecraser tes valeurs).`);
+      _budgetView = "saisie"; renderBudget();
+    }, text: "Remplir categories vides seulement (recommande)" }),
+    el("button", { class: "btn btn-danger", onclick: () => {
+      confirmModal("Ecraser tes valeurs ?", "Tous les budgets previsionnels ET les unites preferees seront remplaces par les defauts SDV mai 2026. Tes <strong>saisies reelles</strong> mensuelles ne sont PAS touchees.", () => {
+        const added = applyBudgetDefaults(data, defaults, true);
+        scheduleSave();
+        closeModal();
+        showSuccess(`${added} categorie(s) ecrasee(s).`);
+        _budgetView = "saisie"; renderBudget();
+      }, "Ecraser");
+    }, text: "Ecraser tout (force)" })
+  ]));
+  root.appendChild(cardRestore);
+
   const card = el("div", { class: "card" });
   card.appendChild(el("div", { class: "card-header" }, [
     el("div", {}, [
