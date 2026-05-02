@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d0d0d">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Dashboard — Plan immobilier</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-title" content="Dashboard">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg: #ffffff;
+  --bg-2: #fafafa;
+  --bg-3: #f0f0f0;
+  --bg-4: #e8e8e8;
+  --text: #111111;
+  --text-2: #444444;
+  --text-3: #777777;
+  --border: #e0e0e0;
+  --border-2: #c8c8c8;
+  --accent: #0066cc;
+  --accent-2: #003d7a;
+  --green: #1a7f37;
+  --red: #cf222e;
+  --orange: #d1841d;
+  --purple: #6639ba;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --radius: 6px;
+  --radius-lg: 10px;
+}
+[data-theme="dark"] {
+  --bg: #0d0d0d;
+  --bg-2: #1a1a1a;
+  --bg-3: #222222;
+  --bg-4: #2a2a2a;
+  --text: #e8e8e8;
+  --text-2: #b8b8b8;
+  --text-3: #888888;
+  --border: #333333;
+  --border-2: #444444;
+  --accent: #66b3ff;
+  --accent-2: #99ccff;
+  --green: #3fb950;
+  --red: #f85149;
+  --orange: #f0883e;
+  --purple: #a371f7;
+  --shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOPBAR */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.topbar h1 {
+  font-size: 15px;
+  font-weight: 600;
+  flex: 1;
+  letter-spacing: -0.01em;
+}
+.btn-text {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-text:hover, .btn-text:active {
+  background: var(--bg-3);
+  border-color: var(--border-2);
+  color: var(--text);
+}
+
+/* TABS */
+.tabs {
+  position: sticky;
+  top: 53px;
+  z-index: 90;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex: 0 0 auto;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-3);
+  padding: 14px 18px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.tab:hover, .tab:active { color: var(--text); }
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+/* MAIN */
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+}
+
+.tool { display: none; }
+.tool.active { display: block; animation: fade 0.2s; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+.tool h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: -0.015em;
+}
+.tool .desc {
+  color: var(--text-2);
+  font-size: 13px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 14px;
+}
+
+.field { margin-bottom: 12px; }
+.field:last-child { margin-bottom: 0; }
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+.field .help {
+  display: block;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+.field input, .field select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field input:focus, .field select:focus {
+  border-color: var(--accent);
+}
+
+/* COMPARISON ROWS */
+.cmp-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.cmp-row:last-child { border-bottom: none; }
+.cmp-row .cmp-label {
+  font-size: 13px;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.cmp-row .cmp-val {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.cmp-row .cmp-target {
+  font-size: 13px;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.cmp-status {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cmp-status.good { background: var(--green); }
+.cmp-status.warn { background: var(--orange); }
+.cmp-status.bad { background: var(--red); }
+.cmp-status.empty { background: var(--text-3); opacity: 0.3; }
+
+@media (max-width: 600px) {
+  .cmp-row {
+    grid-template-columns: 1fr 1fr auto;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .cmp-row .cmp-target { display: none; }
+}
+
+/* GRAPHIQUE */
+.chart-container {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 400px;
+  display: block;
+}
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+}
+.chart-legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-2); }
+.chart-legend-color { width: 14px; height: 3px; border-radius: 1px; }
+.chart-legend-color.dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* HEADER STAT */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  text-align: center;
+}
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+.stat.good .stat-value { color: var(--green); }
+.stat.warn .stat-value { color: var(--orange); }
+.stat.bad .stat-value { color: var(--red); }
+
+.note {
+  background: var(--bg-3);
+  border-left: 3px solid var(--accent);
+  padding: 12px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-top: 16px;
+}
+.note strong { color: var(--text); }
+
+button.action {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-right: 8px;
+}
+button.action:hover { background: var(--accent-2); }
+button.action.secondary {
+  background: var(--bg-3);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+button.action.secondary:hover { background: var(--bg-4); }
+
+.path-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.path-btn {
+  flex: 1;
+  background: var(--bg-2);
+  border: 2px solid var(--border);
+  color: var(--text-2);
+  padding: 12px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+.path-btn.active {
+  border-color: var(--accent);
+  background: var(--bg-3);
+  color: var(--text);
+}
+.path-btn .path-name { font-weight: 600; display: block; margin-bottom: 4px; }
+.path-btn .path-target { font-size: 11px; color: var(--text-3); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Dashboard &mdash; Plan vs Réalité</h1>
+  <button class="btn-text" onclick="toggleTheme()" id="theme-btn">Sombre</button>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTool('saisie')">Mes chiffres</button>
+  <button class="tab" onclick="showTool('comparaison')">Comparaison vs cibles</button>
+  <button class="tab" onclick="showTool('graphique')">Graphique 21-50 ans</button>
+</div>
+
+<main>
+
+<!-- =================== SAISIE =================== -->
+<div class="tool active" id="tool-saisie">
+  <h2>Mes chiffres réels</h2>
+  <p class="desc">Saisis tes chiffres actuels. Ils sont sauvegardés localement (jamais envoyés en ligne) et utilisés pour la comparaison vs plan et le graphique.</p>
+
+  <div class="card">
+    <div class="card-title">Date de référence</div>
+    <div class="field">
+      <label>Date du snapshot</label>
+      <input type="date" id="r-date" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>Mon âge</label>
+      <input type="number" id="r-age" placeholder="21" min="18" max="80" oninput="saveData()">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Placements et cash</div>
+    <div class="field">
+      <label>FHSA / CELIAPP ($)</label>
+      <input type="number" id="r-fhsa" placeholder="10000" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>CELI ($)</label>
+      <input type="number" id="r-celi" placeholder="2600" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>REER ($)</label>
+      <input type="number" id="r-reer" placeholder="0" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>Cash + fonds urgence ($)</label>
+      <input type="number" id="r-cash" placeholder="5000" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>Compte non-enregistré ($)</label>
+      <input type="number" id="r-nonreg" placeholder="0" oninput="saveData()">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Revenu et dettes</div>
+    <div class="field">
+      <label>Revenu net annuel (toi seul) ($)</label>
+      <input type="number" id="r-revenu" placeholder="39900" oninput="saveData()">
+      <span class="help">T4 + vacances CCQ + remb impôt = revenu net total</span>
+    </div>
+    <div class="field">
+      <label>Dette consommation (auto, cartes) ($)</label>
+      <input type="number" id="r-dette" placeholder="18900" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>Cote de crédit (Equifax)</label>
+      <input type="number" id="r-credit" placeholder="758" min="300" max="900" oninput="saveData()">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Immobilier</div>
+    <div class="field">
+      <label>Nombre de portes (logements détenus)</label>
+      <input type="number" id="r-portes" placeholder="0" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>Équité immobilière totale ($)</label>
+      <input type="number" id="r-equity" placeholder="0" oninput="saveData()">
+      <span class="help">Valeur des immeubles - hypothèques restantes</span>
+    </div>
+    <div class="field">
+      <label>Cashflow mensuel net ($/mois)</label>
+      <input type="number" id="r-cashflow" placeholder="0" oninput="saveData()">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Choix de path (Section 24)</div>
+    <div class="path-selector">
+      <button class="path-btn active" data-path="A" onclick="selectPath('A')">
+        <span class="path-name">Path A</span>
+        <span class="path-target">Avec maison perso 28-30 ans &mdash; cible 30-38M$</span>
+      </button>
+      <button class="path-btn" data-path="B" onclick="selectPath('B')">
+        <span class="path-name">Path B</span>
+        <span class="path-target">Sans maison perso &mdash; cible 38-42M$</span>
+      </button>
+    </div>
+  </div>
+
+  <button class="action" onclick="exportData()">Exporter mes données</button>
+  <button class="action secondary" onclick="importData()">Importer</button>
+  <button class="action secondary" onclick="resetData()">Réinitialiser</button>
+</div>
+
+<!-- =================== COMPARAISON =================== -->
+<div class="tool" id="tool-comparaison">
+  <h2>Comparaison Réalité vs Cibles plan</h2>
+  <p class="desc">Compare tes chiffres saisis avec les cibles du plan pour ton âge. Indicateurs vert/jaune/rouge.</p>
+
+  <div class="stat-grid" id="cmp-stats"></div>
+
+  <div class="card">
+    <div class="card-title">Détails ligne par ligne</div>
+    <div id="cmp-rows"></div>
+  </div>
+
+  <div class="note">
+    <strong>Légende :</strong>
+    <br>&bull; <span style="color:var(--green); font-weight:600;">Vert</span> &mdash; au-dessus ou a la cible
+    <br>&bull; <span style="color:var(--orange); font-weight:600;">Orange</span> &mdash; entre 70-99% de la cible (rattrapable)
+    <br>&bull; <span style="color:var(--red); font-weight:600;">Rouge</span> &mdash; sous 70% de la cible (action requise)
+  </div>
+</div>
+
+<!-- =================== GRAPHIQUE =================== -->
+<div class="tool" id="tool-graphique">
+  <h2>Trajectoire patrimoine 21-50 ans</h2>
+  <p class="desc">Visualise les courbes de patrimoine (couple) prévues par le plan, avec ta progression réelle annotée.</p>
+
+  <div class="chart-container">
+    <canvas id="chart" width="900" height="420"></canvas>
+    <div class="chart-legend">
+      <div class="chart-legend-item">
+        <span class="chart-legend-color" style="background:#6db3f2;"></span>
+        Path B (max patrimoine)
+      </div>
+      <div class="chart-legend-item">
+        <span class="chart-legend-color" style="background:#a371f7;"></span>
+        Path A (avec maison)
+      </div>
+      <div class="chart-legend-item">
+        <span class="chart-legend-color" style="background:#3fb950;"></span>
+        Plancher robuste 95%+
+      </div>
+      <div class="chart-legend-item">
+        <span class="chart-legend-color dot" style="background:#f0883e;"></span>
+        Ta réalité
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Données du plan (couple, $K)</div>
+    <div id="chart-table"></div>
+  </div>
+
+  <div class="note">
+    <strong>Source :</strong> Section 24 (les 2 paths) + SOURCE_DE_VERITE.md. Les cibles sont en milliers de dollars (k$). Patrimoine couple = ta part x 2 (Mode B 50/50).
+  </div>
+</div>
+
+</main>
+
+<script>
+// ============== DATA MODEL ==============
+// Cibles patrimoine couple (k$) selon path, par âge
+// Source: Section 24 + SDV
+const CIBLES = {
+  // Path A (avec maison perso 350-400k$)
+  A: [
+    {age: 21, value: 35},     // 17,6k toi + 17,6k conjointe = 35k$ couple (approximation)
+    {age: 25, value: 60},     // 1er achat quadruplex
+    {age: 28, value: 150},    // post-maison
+    {age: 30, value: 350},    // post-quintuplex
+    {age: 35, value: 1750},   // 5+ immeubles
+    {age: 40, value: 6000},   // 10+ immeubles
+    {age: 45, value: 17500},
+    {age: 50, value: 34000},  // cible Path A: 30-38M$
+  ],
+  // Path B (sans maison perso)
+  B: [
+    {age: 21, value: 35},
+    {age: 25, value: 60},
+    {age: 28, value: 200},    // sans maison, plus de cash
+    {age: 30, value: 500},    // post-quintuplex précoce
+    {age: 35, value: 2250},
+    {age: 40, value: 8000},
+    {age: 45, value: 22500},
+    {age: 50, value: 40000},  // cible Path B: 38-42M$
+  ],
+  // Plancher robuste (95%+ probabilité, peu importe path)
+  PLANCHER: [
+    {age: 21, value: 35},
+    {age: 25, value: 50},
+    {age: 28, value: 100},
+    {age: 30, value: 200},
+    {age: 35, value: 1000},
+    {age: 40, value: 3500},
+    {age: 45, value: 12000},
+    {age: 50, value: 26000},  // plancher 22-30M$
+  ]
+};
+
+// Cibles individuelles par âge (toi seul, à comparer avec les chiffres saisis)
+function getCiblesParAge(age, path) {
+  // Cible patrimoine TOI = patrimoine couple / 2 (Mode B 50/50)
+  const courbe = CIBLES[path] || CIBLES.A;
+  // Interpolation linéaire entre points
+  let prev = courbe[0], next = courbe[courbe.length - 1];
+  for (let i = 0; i < courbe.length - 1; i++) {
+    if (age >= courbe[i].age && age <= courbe[i+1].age) {
+      prev = courbe[i]; next = courbe[i+1]; break;
+    }
+  }
+  const ratio = (age - prev.age) / (next.age - prev.age || 1);
+  const valueCouple = prev.value + (next.value - prev.value) * ratio;
+  return {
+    patrimoineCouple_k: valueCouple,
+    patrimoineToi_k: valueCouple / 2,
+  };
+}
+
+// Cibles spécifiques par âge (toi seul) issues du plan détaillé
+const CIBLES_DETAIL = {
+  21: { fhsa: 10000, celi: 2600, reer: 0, cash: 5000, total: 17600, revenu: 39900, dette: 18900, credit: 720, portes: 0, equity: 0 },
+  22: { fhsa: 18500, celi: 8100, reer: 0, cash: 6500, total: 33100, revenu: 47000, dette: 14000, credit: 730, portes: 0, equity: 0 },
+  23: { fhsa: 26500, celi: 15100, reer: 1500, cash: 12500, total: 55600, revenu: 56000, dette: 8000, credit: 745, portes: 0, equity: 0 },
+  24: { fhsa: 34500, celi: 22100, reer: 6500, cash: 24500, total: 87600, revenu: 70000, dette: 0, credit: 760, portes: 0, equity: 0 },
+  25: { fhsa: 40000, celi: 29100, reer: 17000, cash: 38500, total: 124600, revenu: 85000, dette: 0, credit: 770, portes: 0, equity: 0 },
+  26: { fhsa: 0, celi: 30000, reer: 5000, cash: 15000, total: 50000, revenu: 95000, dette: 0, credit: 770, portes: 4, equity: 30000 },
+  27: { fhsa: 0, celi: 38000, reer: 7000, cash: 25000, total: 70000, revenu: 100000, dette: 0, credit: 775, portes: 4, equity: 60000 },
+  28: { fhsa: 0, celi: 47000, reer: 12000, cash: 35000, total: 94000, revenu: 105000, dette: 0, credit: 775, portes: 4, equity: 90000 },
+  30: { fhsa: 0, celi: 65000, reer: 20000, cash: 40000, total: 125000, revenu: 110000, dette: 0, credit: 780, portes: 9, equity: 175000 },
+  35: { fhsa: 0, celi: 100000, reer: 50000, cash: 100000, total: 250000, revenu: 130000, dette: 0, credit: 800, portes: 25, equity: 875000 },
+  40: { fhsa: 0, celi: 200000, reer: 120000, cash: 200000, total: 520000, revenu: 150000, dette: 0, credit: 800, portes: 60, equity: 3000000 },
+  45: { fhsa: 0, celi: 400000, reer: 250000, cash: 500000, total: 1150000, revenu: 200000, dette: 0, credit: 800, portes: 130, equity: 8750000 },
+  50: { fhsa: 0, celi: 800000, reer: 500000, cash: 1500000, total: 2800000, revenu: 250000, dette: 0, credit: 800, portes: 250, equity: 17000000 },
+};
+
+function ciblesPourAge(age) {
+  if (CIBLES_DETAIL[age]) return CIBLES_DETAIL[age];
+  // Interpolation entre les âges les plus proches
+  const ages = Object.keys(CIBLES_DETAIL).map(Number).sort((a,b)=>a-b);
+  let lower = ages[0], upper = ages[ages.length-1];
+  for (let i = 0; i < ages.length-1; i++) {
+    if (age >= ages[i] && age <= ages[i+1]) { lower = ages[i]; upper = ages[i+1]; break; }
+  }
+  const cl = CIBLES_DETAIL[lower];
+  const cu = CIBLES_DETAIL[upper];
+  const ratio = (age - lower) / ((upper - lower) || 1);
+  const result = {};
+  Object.keys(cl).forEach(k => {
+    result[k] = cl[k] + (cu[k] - cl[k]) * ratio;
+  });
+  return result;
+}
+
+// ============== STORAGE ==============
+const STORAGE_KEY = 'dashboard_data_v2';
+let userData = null;
+let selectedPath = 'A';
+
+function loadData() {
+  try {
+    userData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  } catch(e) { userData = {}; }
+  selectedPath = localStorage.getItem('dashboard_path') || 'A';
+  // Restaurer les inputs
+  Object.keys(userData).forEach(k => {
+    const el = document.getElementById('r-' + k);
+    if (el && userData[k] !== undefined && userData[k] !== '') el.value = userData[k];
+  });
+  // Restaurer le path
+  document.querySelectorAll('.path-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.path === selectedPath);
+  });
+}
+
+function saveData() {
+  userData = {};
+  ['date','age','fhsa','celi','reer','cash','nonreg','revenu','dette','credit','portes','equity','cashflow'].forEach(k => {
+    const el = document.getElementById('r-' + k);
+    if (el) userData[k] = el.value;
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+  // Refresh comparaison + graphique si visibles
+  renderComparaison();
+  drawChart();
+}
+
+function selectPath(p) {
+  selectedPath = p;
+  localStorage.setItem('dashboard_path', p);
+  document.querySelectorAll('.path-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.path === p);
+  });
+  renderComparaison();
+  drawChart();
+}
+
+function exportData() {
+  const blob = JSON.stringify({data: userData, path: selectedPath}, null, 2);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(blob).then(() => {
+      alert('Données copiées dans le presse-papier. Garde-les en sécurité (texte clair).');
+    }).catch(() => {
+      prompt('Copie ces données :', blob);
+    });
+  } else {
+    prompt('Copie ces données :', blob);
+  }
+}
+
+function importData() {
+  const txt = prompt('Colle les données exportées :');
+  if (!txt) return;
+  try {
+    const obj = JSON.parse(txt);
+    if (obj.data) {
+      userData = obj.data;
+      selectedPath = obj.path || 'A';
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+      localStorage.setItem('dashboard_path', selectedPath);
+      loadData();
+      renderComparaison();
+      drawChart();
+      alert('Données importées.');
+    }
+  } catch(e) {
+    alert('Format invalide.');
+  }
+}
+
+function resetData() {
+  if (!confirm('Effacer toutes tes données saisies ? Cette action est irréversible.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  document.querySelectorAll('input').forEach(i => i.value = '');
+  userData = {};
+  renderComparaison();
+  drawChart();
+}
+
+// ============== COMPARAISON ==============
+function renderComparaison() {
+  const age = +userData.age || 21;
+  const cibles = ciblesPourAge(age);
+
+  const reel = {
+    fhsa: +userData.fhsa || 0,
+    celi: +userData.celi || 0,
+    reer: +userData.reer || 0,
+    cash: +userData.cash || 0,
+    total: (+userData.fhsa || 0) + (+userData.celi || 0) + (+userData.reer || 0) + (+userData.cash || 0) + (+userData.nonreg || 0),
+    revenu: +userData.revenu || 0,
+    dette: +userData.dette || 0,
+    credit: +userData.credit || 0,
+    portes: +userData.portes || 0,
+    equity: +userData.equity || 0,
+  };
+
+  // Stats top
+  const totalEcart = cibles.total > 0 ? (reel.total / cibles.total - 1) * 100 : 0;
+  const statClass = (pct) => pct >= 0 ? 'good' : pct >= -30 ? 'warn' : 'bad';
+  document.getElementById('cmp-stats').innerHTML = `
+    <div class="stat ${statClass(totalEcart)}">
+      <div class="stat-value">${totalEcart >= 0 ? '+' : ''}${totalEcart.toFixed(0)}%</div>
+      <div class="stat-label">Vs cible total liquide</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">${age}</div>
+      <div class="stat-label">Âge actuel</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">$${(reel.total/1000).toFixed(1)}k</div>
+      <div class="stat-label">Total liquide</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">$${(reel.equity/1000).toFixed(0)}k</div>
+      <div class="stat-label">Équité immo</div>
+    </div>
+  `;
+
+  // Lignes comparées
+  const rows = [
+    {label: 'FHSA / CELIAPP', reel: reel.fhsa, cible: cibles.fhsa, fmt: '$', dir: 'max'},
+    {label: 'CELI', reel: reel.celi, cible: cibles.celi, fmt: '$', dir: 'max'},
+    {label: 'REER', reel: reel.reer, cible: cibles.reer, fmt: '$', dir: 'max'},
+    {label: 'Cash + urgence', reel: reel.cash, cible: cibles.cash, fmt: '$', dir: 'max'},
+    {label: 'Total liquide', reel: reel.total, cible: cibles.total, fmt: '$', dir: 'max', bold: true},
+    {label: 'Revenu annuel net', reel: reel.revenu, cible: cibles.revenu, fmt: '$', dir: 'max'},
+    {label: 'Dette consommation', reel: reel.dette, cible: cibles.dette, fmt: '$', dir: 'min'},
+    {label: 'Cote de crédit', reel: reel.credit, cible: cibles.credit, fmt: 'pts', dir: 'max'},
+    {label: 'Portes (logements)', reel: reel.portes, cible: cibles.portes, fmt: 'log', dir: 'max'},
+    {label: 'Équité immobilière', reel: reel.equity, cible: cibles.equity, fmt: '$', dir: 'max'},
+  ];
+
+  const fmtVal = (n, type) => {
+    if (n === 0) return type === '$' ? '$0' : '0' + (type === 'pts' ? '' : type === 'log' ? '' : '');
+    if (type === '$') return '$' + (n >= 1000 ? (n/1000).toFixed(1) + 'k' : n.toFixed(0));
+    if (type === 'pts') return n + ' pts';
+    if (type === 'log') return n + ' log';
+    return n;
+  };
+
+  let html = '';
+  rows.forEach(r => {
+    let status = 'empty';
+    if (r.reel > 0 || r.cible > 0) {
+      if (r.dir === 'max') {
+        const pct = r.cible > 0 ? r.reel / r.cible : (r.reel > 0 ? 1 : 0);
+        status = pct >= 1 ? 'good' : pct >= 0.7 ? 'warn' : 'bad';
+      } else {
+        // dir = min : moins c'est mieux (ex: dette)
+        if (r.cible === 0) status = r.reel === 0 ? 'good' : 'warn';
+        else status = r.reel <= r.cible ? 'good' : r.reel <= r.cible * 1.3 ? 'warn' : 'bad';
+      }
+    }
+    html += `
+      <div class="cmp-row">
+        <div class="cmp-label" style="${r.bold ? 'font-weight:700; color:var(--text);' : ''}">${r.label}</div>
+        <div class="cmp-val">${fmtVal(r.reel, r.fmt)}</div>
+        <div class="cmp-target">cible: ${fmtVal(r.cible, r.fmt)}</div>
+        <div class="cmp-status ${status}" title="${status}"></div>
+      </div>
+    `;
+  });
+  document.getElementById('cmp-rows').innerHTML = html;
+}
+
+// ============== GRAPHIQUE (Canvas natif, pas de lib) ==============
+function drawChart() {
+  const canvas = document.getElementById('chart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  // Resize for crispness
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.parentElement.clientWidth - 40;
+  const cssHeight = 380;
+  canvas.style.width = cssWidth + 'px';
+  canvas.style.height = cssHeight + 'px';
+  canvas.width = cssWidth * dpr;
+  canvas.height = cssHeight * dpr;
+  ctx.scale(dpr, dpr);
+
+  const W = cssWidth;
+  const H = cssHeight;
+  const PAD_L = 60, PAD_R = 16, PAD_T = 20, PAD_B = 40;
+  const plotW = W - PAD_L - PAD_R;
+  const plotH = H - PAD_T - PAD_B;
+
+  const ageMin = 21, ageMax = 50;
+  // Échelle log pour mieux voir les phases début
+  const valMin = 30;       // 30k$ couple
+  const valMax = 45000;    // 45M$ couple
+
+  // Couleurs (depuis les CSS vars)
+  const styles = getComputedStyle(document.body);
+  const colorBg = styles.getPropertyValue('--bg-2').trim() || '#1a1a1a';
+  const colorBorder = styles.getPropertyValue('--border').trim() || '#333';
+  const colorText = styles.getPropertyValue('--text').trim() || '#e8e8e8';
+  const colorText2 = styles.getPropertyValue('--text-2').trim() || '#b8b8b8';
+  const isLight = !document.body.getAttribute('data-theme') || document.body.getAttribute('data-theme') === 'light';
+
+  // Clear
+  ctx.fillStyle = isLight ? '#ffffff' : '#1a1a1a';
+  ctx.fillRect(0, 0, W, H);
+
+  // Helpers
+  const xPos = age => PAD_L + ((age - ageMin) / (ageMax - ageMin)) * plotW;
+  const yPos = val => {
+    // log scale
+    const lv = Math.log10(Math.max(val, 1));
+    const lmin = Math.log10(valMin);
+    const lmax = Math.log10(valMax);
+    return PAD_T + plotH - ((lv - lmin) / (lmax - lmin)) * plotH;
+  };
+
+  // Grille
+  ctx.strokeStyle = colorBorder;
+  ctx.lineWidth = 1;
+  ctx.fillStyle = colorText2;
+  ctx.font = '11px -apple-system, sans-serif';
+
+  // Lignes Y (valeurs k$ en log)
+  const yTicks = [50, 100, 500, 1000, 5000, 10000, 40000];
+  yTicks.forEach(v => {
+    const y = yPos(v);
+    ctx.beginPath();
+    ctx.moveTo(PAD_L, y);
+    ctx.lineTo(W - PAD_R, y);
+    ctx.stroke();
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    const label = v >= 1000 ? '$' + (v/1000) + 'M' : '$' + v + 'k';
+    ctx.fillText(label, PAD_L - 6, y);
+  });
+
+  // Lignes X (ages tous les 5 ans)
+  for (let age = ageMin; age <= ageMax; age += 5) {
+    const x = xPos(age);
+    ctx.beginPath();
+    ctx.moveTo(x, PAD_T);
+    ctx.lineTo(x, H - PAD_B);
+    ctx.stroke();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(age + ' ans', x, H - PAD_B + 6);
+  }
+
+  // Tracer une courbe
+  function drawCurve(points, color, dashed) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.setLineDash(dashed ? [6, 4] : []);
+    ctx.beginPath();
+    points.forEach((p, i) => {
+      const x = xPos(p.age);
+      const y = yPos(p.value);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Path B (max, en bleu)
+  drawCurve(CIBLES.B, '#6db3f2', false);
+  // Path A (avec maison, en violet)
+  drawCurve(CIBLES.A, '#a371f7', false);
+  // Plancher (en vert pointillé)
+  drawCurve(CIBLES.PLANCHER, '#3fb950', true);
+
+  // Point réalité (si données saisies)
+  const age = +userData.age || 0;
+  const equity = +userData.equity || 0;
+  const liquidite = (+userData.fhsa||0) + (+userData.celi||0) + (+userData.reer||0) + (+userData.cash||0) + (+userData.nonreg||0);
+  const patrimoineToi_k = (liquidite + equity) / 1000;
+  const patrimoineCouple_k = patrimoineToi_k * 2; // approximation Mode B
+
+  if (age >= ageMin && age <= ageMax && patrimoineCouple_k > 0) {
+    const x = xPos(age);
+    const y = yPos(patrimoineCouple_k);
+    // Point
+    ctx.fillStyle = '#f0883e';
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = isLight ? '#fff' : '#1a1a1a';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Label
+    ctx.fillStyle = '#f0883e';
+    ctx.font = 'bold 12px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    const label = `Toi (${age} ans) : ${patrimoineCouple_k >= 1000 ? '$' + (patrimoineCouple_k/1000).toFixed(1) + 'M' : '$' + patrimoineCouple_k.toFixed(0) + 'k'} couple`;
+    // Position label intelligemment
+    if (x < W / 2) ctx.fillText(label, x + 12, y);
+    else { ctx.textAlign = 'right'; ctx.fillText(label, x - 12, y); }
+  }
+
+  // Titre axes
+  ctx.fillStyle = colorText2;
+  ctx.font = '12px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Âge', W / 2, H - 8);
+  ctx.save();
+  ctx.translate(15, H / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Patrimoine couple (échelle log)', 0, 0);
+  ctx.restore();
+
+  // Tableau données sous le graphique
+  let tableHtml = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr>';
+  tableHtml += '<th style="text-align:left; padding:6px; border-bottom:1px solid var(--border); color:var(--text-2);">Âge</th>';
+  CIBLES.A.forEach(p => tableHtml += `<th style="text-align:right; padding:6px; border-bottom:1px solid var(--border); color:var(--text-2);">${p.age}</th>`);
+  tableHtml += '</tr></thead><tbody>';
+  ['Path A', 'Path B', 'Plancher'].forEach(name => {
+    const key = name === 'Path A' ? 'A' : name === 'Path B' ? 'B' : 'PLANCHER';
+    const color = name === 'Path A' ? '#a371f7' : name === 'Path B' ? '#6db3f2' : '#3fb950';
+    tableHtml += `<tr><td style="padding:6px; color:${color}; font-weight:600;">${name}</td>`;
+    CIBLES[key].forEach(p => tableHtml += `<td style="padding:6px; text-align:right; font-variant-numeric:tabular-nums;">${p.value >= 1000 ? '$' + (p.value/1000).toFixed(1) + 'M' : '$' + p.value + 'k'}</td>`);
+    tableHtml += '</tr>';
+  });
+  tableHtml += '</tbody></table>';
+  document.getElementById('chart-table').innerHTML = tableHtml;
+}
+
+// ============== TABS ==============
+function showTool(id) {
+  document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tool-' + id).classList.add('active');
+  event.target.classList.add('active');
+  localStorage.setItem('dashboard_last_tab', id);
+  if (id === 'graphique') setTimeout(drawChart, 50);
+  if (id === 'comparaison') renderComparaison();
+}
+
+// ============== THEME ==============
+function toggleTheme() {
+  const cur = document.body.getAttribute('data-theme') || 'light';
+  const next = cur === 'light' ? 'dark' : 'light';
+  document.body.setAttribute('data-theme', next);
+  document.getElementById('theme-btn').textContent = next === 'light' ? 'Sombre' : 'Clair';
+  localStorage.setItem('dashboard_theme', next);
+  drawChart();
+}
+const savedTheme = localStorage.getItem('dashboard_theme') || 'dark';
+document.body.setAttribute('data-theme', savedTheme);
+
+// ============== INIT ==============
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('theme-btn').textContent = savedTheme === 'light' ? 'Sombre' : 'Clair';
+  // Date par défaut = aujourd'hui
+  if (!document.getElementById('r-date').value) {
+    document.getElementById('r-date').value = new Date().toISOString().slice(0, 10);
+  }
+  loadData();
+  renderComparaison();
+  // Restaurer dernier tab
+  const last = localStorage.getItem('dashboard_last_tab');
+  if (last && document.getElementById('tool-' + last)) {
+    document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tool-' + last).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => {
+      if (t.getAttribute('onclick').includes("'" + last + "'")) t.classList.add('active');
+    });
+    if (last === 'graphique') setTimeout(drawChart, 100);
+  }
+});
+
+// Redraw chart on resize
+window.addEventListener('resize', () => {
+  if (document.getElementById('tool-graphique').classList.contains('active')) {
+    drawChart();
+  }
+});
+</script>
+</body>
+</html>
