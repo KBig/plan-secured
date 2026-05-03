@@ -1440,7 +1440,7 @@ const BUDGET_CATEGORIES = {
     sub: [
       { id: "rev_salaire", label: "Salaire net (CCQ / T4)", defaut: 2740, defautProfile: "mathis" },
       { id: "rev_vacances_ccq", label: "Vacances CCQ (paye 2x/an)", defaut: 417, defautProfile: "mathis" },
-      { id: "rev_remb_impot", label: "Remboursement d'impot", defaut: 167, defautProfile: "mathis" },
+      { id: "rev_remb_impot", label: "Remboursement d'impot (FHSA + autres)", defaut: 333, defautProfile: "mathis" },
       { id: "rev_heures_supp", label: "Heures supplementaires" },
       { id: "rev_bonus", label: "Bonus / primes" },
       { id: "rev_loyers", label: "Loyers locatifs (post-2030)" },
@@ -1836,7 +1836,7 @@ const MATHIS_BUDGET_DEFAULTS = [
   // Revenus (SDV section 2)
   { id: "rev_salaire",       monthly: 2740,  unit: "week",  source: "632 $/sem net Apprenti 1 (24,19 $/h x 35 h)" },
   { id: "rev_vacances_ccq",  monthly: 417,   unit: "year",  source: "~5 000 $/an vacances CCQ" },
-  { id: "rev_remb_impot",    monthly: 167,   unit: "year",  source: "~2 000 $/an remboursement impot" },
+  { id: "rev_remb_impot",    monthly: 333,   unit: "year",  source: "~4 000 $/an : ~2k$ FHSA 8k x 25% + ~2k$ over-withholding paye" },
 
   // Logement
   { id: "log_youtube",       monthly: 15,    unit: "month", source: "YouTube partage avec pere" },
@@ -1888,7 +1888,7 @@ const MATHIS_BUDGET_DEFAULTS = [
 const CONJOINTE_BUDGET_DEFAULTS = [
   { id: "rev_salaire",       monthly: 2740,  unit: "week",  source: "Hypothese 100 % identique a Mathis" },
   { id: "rev_vacances_ccq",  monthly: 417,   unit: "year" },
-  { id: "rev_remb_impot",    monthly: 167,   unit: "year" },
+  { id: "rev_remb_impot",    monthly: 333,   unit: "year" },
   { id: "vh_paiement",       monthly: 355,   unit: "week",  source: "82 $/sem" },
   { id: "vh_assurance",      monthly: 195,   unit: "month" },
   { id: "vh_essence",        monthly: 280,   unit: "week" },
@@ -3030,46 +3030,67 @@ function toggleBudgetSummary() {
   }
 }
 
-// Detecte quel groupe est actuellement visible en haut et l'affiche dans le panneau
-let _budgetGroupObserver = null;
+// Detecte quel groupe est actuellement en haut de la zone visible (sous le panneau)
+// et l'affiche dans le badge. Approche: scroll listener avec rAF debouncing -
+// plus fiable que IntersectionObserver pour determiner le "groupe courant".
+let _scrollHandler = null;
+let _scrollRaf = null;
 function setupCurrentGroupObserver() {
-  // Cleanup ancien observer
-  if (_budgetGroupObserver) { _budgetGroupObserver.disconnect(); _budgetGroupObserver = null; }
+  // Cleanup precedent
+  if (_scrollHandler) {
+    window.removeEventListener('scroll', _scrollHandler);
+    _scrollHandler = null;
+  }
+  if (_scrollRaf) { cancelAnimationFrame(_scrollRaf); _scrollRaf = null; }
+
   const badge = document.getElementById("bs-current-group");
   if (!badge) return;
   badge.classList.remove("show");
   badge.textContent = "";
 
-  // Tracker pour savoir quels groupes sont actuellement visibles
-  const visibleGroups = new Set();
-  const groupOrder = [];
-  document.querySelectorAll('.collapse-card[id^="cb-"]').forEach(c => groupOrder.push(c.id));
+  function updateBadge() {
+    const stickyBottom = 145; // bas approximatif du panneau compact
+    const cards = Array.from(document.querySelectorAll('.collapse-card[id^="cb-"]'));
+    if (cards.length === 0) { badge.classList.remove("show"); return; }
 
-  _budgetGroupObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) visibleGroups.add(entry.target.id);
-      else visibleGroups.delete(entry.target.id);
+    // Card courante = celle dont le top est <= ligne sticky ET le bottom est > ligne sticky
+    let current = cards.find(c => {
+      const r = c.getBoundingClientRect();
+      return r.top <= stickyBottom && r.bottom > stickyBottom;
     });
-    // Premier groupe visible dans l'ordre du DOM
-    const firstVisible = groupOrder.find(id => visibleGroups.has(id));
-    if (firstVisible) {
-      const card = document.getElementById(firstVisible);
-      const titleEl = card?.querySelector('.collapse-title .badge');
-      const label = titleEl?.textContent?.trim() || "";
-      if (label) {
-        badge.textContent = label;
-        badge.classList.add("show");
-      }
-    } else {
-      badge.classList.remove("show");
-    }
-  }, {
-    // Trigger quand un groupe entre/sort de la zone juste sous le panneau (top 100-200px)
-    rootMargin: "-130px 0px -50% 0px",
-    threshold: 0
-  });
 
-  document.querySelectorAll('.collapse-card[id^="cb-"]').forEach(c => _budgetGroupObserver.observe(c));
+    // Fallback : si on est dans un gap entre 2 cards, prendre la derniere card dont le top est au-dessus
+    if (!current) {
+      const above = cards.filter(c => c.getBoundingClientRect().top <= stickyBottom);
+      if (above.length > 0) current = above[above.length - 1];
+    }
+
+    // Si on est tout en haut (avant la 1ere card), pas de badge
+    if (!current) {
+      badge.classList.remove("show");
+      return;
+    }
+
+    const titleEl = current.querySelector('.collapse-title .badge');
+    const label = titleEl?.textContent?.trim() || "";
+    if (label) {
+      // Eviter MAJ inutile (pas de flicker)
+      if (badge.textContent !== label.toUpperCase()) badge.textContent = label.toUpperCase();
+      badge.classList.add("show");
+    }
+  }
+
+  _scrollHandler = () => {
+    if (_scrollRaf) return;
+    _scrollRaf = requestAnimationFrame(() => {
+      updateBadge();
+      _scrollRaf = null;
+    });
+  };
+  window.addEventListener('scroll', _scrollHandler, { passive: true });
+
+  // Premier appel pour init
+  updateBadge();
 }
 
 function updateBudgetInsights(totRev, totDep, totEpa, flux) {
