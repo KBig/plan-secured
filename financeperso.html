@@ -583,11 +583,11 @@ td.negative { color: var(--red); }
   text-transform: lowercase; letter-spacing: 0.02em;
 }
 
-/* PANNEAU SUMMARY STICKY - design pro propre */
+/* PANNEAU SUMMARY - sticky UNIQUEMENT en mode compact (panneau petit, OK).
+   En mode etendu, le panneau scroll avec la page (sinon il cacherait la
+   moitie de l'ecran). */
 .budget-summary {
-  position: sticky;
-  top: 52px;
-  z-index: 30;
+  position: relative;
   background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -596,6 +596,12 @@ td.negative { color: var(--red); }
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
 }
 [data-theme="dark"] .budget-summary { box-shadow: 0 2px 16px rgba(0,0,0,0.5); }
+
+.budget-summary.collapsed {
+  position: sticky;
+  top: 52px;
+  z-index: 30;
+}
 
 .bs-header {
   display: flex; justify-content: space-between; align-items: center;
