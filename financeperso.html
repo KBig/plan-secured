@@ -583,9 +583,9 @@ td.negative { color: var(--red); }
   text-transform: lowercase; letter-spacing: 0.02em;
 }
 
-/* PANNEAU SUMMARY - sticky UNIQUEMENT en mode compact (panneau petit, OK).
-   En mode etendu, le panneau scroll avec la page (sinon il cacherait la
-   moitie de l'ecran). */
+/* PANNEAU SUMMARY - completement statique dans les 2 modes.
+   Scroll avec la page, jamais sticky -> aucun overlap avec les titres
+   de groupe ni les rangees. Pour consulter les totaux, scroll up. */
 .budget-summary {
   position: relative;
   background: var(--bg-2);
@@ -596,12 +596,6 @@ td.negative { color: var(--red); }
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
 }
 [data-theme="dark"] .budget-summary { box-shadow: 0 2px 16px rgba(0,0,0,0.5); }
-
-.budget-summary.collapsed {
-  position: sticky;
-  top: 52px;
-  z-index: 30;
-}
 
 .bs-header {
   display: flex; justify-content: space-between; align-items: center;
@@ -3549,7 +3543,13 @@ function renderBudgetSaisie(root) {
   // Initialiser les insights live au premier rendu (sinon la barre alloc est vide)
   setTimeout(() => {
     updateBudgetInsights(totRev, totDep, totEpa, flux);
-    setupCurrentGroupObserver();
+    // Cleanup observer si encore actif (panneau plus sticky -> badge inutile)
+    if (typeof _scrollHandler !== "undefined" && _scrollHandler) {
+      window.removeEventListener('scroll', _scrollHandler);
+      _scrollHandler = null;
+    }
+    const badge = document.getElementById("bs-current-group");
+    if (badge) badge.classList.remove("show");
   }, 0);
 }
 
