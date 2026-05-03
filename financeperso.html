@@ -858,6 +858,45 @@ td.negative { color: var(--red); }
 }
 .budget-summary.collapsed .bs-toggle-floating { display: inline-block; }
 
+/* Toggle Mensuel / Annuel pour le panneau compact */
+.bs-period-toggle {
+  position: absolute;
+  top: 50%; left: 14px;
+  transform: translateY(-50%);
+  display: none;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px;
+  font-size: 11px;
+  z-index: 5;
+}
+.bs-period-toggle button {
+  background: transparent; border: none;
+  color: var(--text-3);
+  padding: 4px 12px; border-radius: 999px;
+  cursor: pointer; font-weight: 600;
+  letter-spacing: 0.03em; text-transform: uppercase;
+  font-size: 10px;
+}
+.bs-period-toggle button.active {
+  background: var(--text); color: var(--bg);
+}
+.bs-period-toggle button:not(.active):hover { color: var(--text); }
+.budget-summary.collapsed .bs-period-toggle { display: inline-flex; }
+.budget-summary.collapsed .bs-kpis { padding-left: 130px; padding-right: 90px; }
+@media (max-width: 700px) {
+  .budget-summary.collapsed .bs-period-toggle {
+    position: static; transform: none;
+    display: inline-flex; margin-bottom: 6px;
+  }
+  .budget-summary.collapsed .bs-kpis { padding-left: 0; padding-right: 0; padding-top: 6px; }
+  .budget-summary.collapsed .bs-toggle-floating {
+    position: absolute; top: 8px; right: 12px;
+    transform: none;
+  }
+}
+
 /* Badge groupe courant : visible uniquement en mode compact, suit le scroll */
 .budget-summary.collapsed .bs-current-group.show {
   position: absolute;
@@ -3110,32 +3149,37 @@ function updateBudgetKPIs() {
     }
   }
   const flux = totRev - totDep - totEpa;
-  // KPIs principaux
-  const updateVal = (id, val, klass) => {
+
+  // Periode courante (compact: respecte choix user; calcule en mensuel canonique)
+  const period = APP.data.meta.budgetCompactPeriod || "month";
+  const mainMult = period === "year" ? 12 : 1;
+  const subMult  = period === "year" ? 1 : 12;
+  const subLabel = period === "year" ? "/ mois" : "/ annee";
+
+  const updateVal = (id, monthlyVal, klass) => {
     const e = document.getElementById(id);
     if (!e) return;
-    e.textContent = fmt.money(val);
+    e.textContent = fmt.money(monthlyVal * mainMult);
     if (klass !== undefined) {
       e.className = "bs-kpi-value" + (klass ? " " + klass : "");
-      // Pour epargne on garde la couleur bleue inline
       if (id === "kpi-epa") e.style.color = "var(--accent)";
     }
   };
-  const updateSub = (id, val) => {
+  const updateSub = (id, monthlyVal) => {
     const e = document.getElementById(id);
-    if (e) e.textContent = fmt.money(val) + " / annee";
+    if (e) e.textContent = fmt.money(monthlyVal * subMult) + " " + subLabel;
   };
   updateVal("kpi-rev", totRev, totRev > 0 ? "positive" : "");
   updateVal("kpi-dep", totDep, totDep > 0 ? "negative" : "");
-  updateVal("kpi-epa", totEpa, "");  // bleu via inline style
+  updateVal("kpi-epa", totEpa, "");
   updateVal("kpi-flux", flux, flux >= 0 ? "positive" : "negative");
   const fluxCard = document.getElementById("kpi-flux-card");
   if (fluxCard) fluxCard.className = "bs-kpi-card " + (flux >= 0 ? "kpi-flux-pos" : "kpi-flux-neg");
-  updateSub("kpi-rev-an", totRev * 12);
-  updateSub("kpi-dep-an", totDep * 12);
-  updateSub("kpi-epa-an", totEpa * 12);
-  updateSub("kpi-flux-an", flux * 12);
-  // Insights live
+  updateSub("kpi-rev-an", totRev);
+  updateSub("kpi-dep-an", totDep);
+  updateSub("kpi-epa-an", totEpa);
+  updateSub("kpi-flux-an", flux);
+  // Insights live (toujours calcules en mensuel canonique - independants du toggle)
   updateBudgetInsights(totRev, totDep, totEpa, flux);
 }
 
@@ -3147,6 +3191,20 @@ function toggleBudgetSummary() {
     APP.data.meta.budgetPanelCollapsed = el.classList.contains("collapsed");
     scheduleSave();
   }
+}
+
+function setBudgetCompactPeriod(period) {
+  if (!["month", "year"].includes(period)) return;
+  if (APP.data) {
+    APP.data.meta.budgetCompactPeriod = period;
+    scheduleSave();
+  }
+  // MAJ toggle visuel
+  document.querySelectorAll('.bs-period-toggle button').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().toLowerCase().startsWith(period === "year" ? "ann" : "moi"));
+  });
+  // Re-render les KPIs avec la nouvelle periode
+  updateBudgetKPIs();
 }
 
 // Detecte quel groupe est actuellement en haut de la zone visible (sous le panneau)
@@ -3420,11 +3478,19 @@ function renderBudgetSaisie(root) {
   }
   const flux = totRev - totDep - totEpa;
 
-  // PANNEAU LIVE STICKY : compact par defaut (1 ligne fine), expandable
+  // PANNEAU LIVE : compact par defaut (1 ligne fine), expandable
   const startCollapsed = APP.data.meta.budgetPanelCollapsed !== false; // default: true
+  const period = APP.data.meta.budgetCompactPeriod || "month";
+  const mainMult = period === "year" ? 12 : 1;
+  const subMult  = period === "year" ? 1 : 12;
+  const subLabel = period === "year" ? "/ mois" : "/ annee";
   const summary = el("div", { class: "budget-summary" + (startCollapsed ? " collapsed" : ""), id: "budget-summary" });
   summary.innerHTML = `
     <span class="bs-current-group" id="bs-current-group"></span>
+    <div class="bs-period-toggle">
+      <button class="${(APP.data.meta.budgetCompactPeriod || "month") === "month" ? "active" : ""}" onclick="setBudgetCompactPeriod('month')">Mois</button>
+      <button class="${APP.data.meta.budgetCompactPeriod === "year" ? "active" : ""}" onclick="setBudgetCompactPeriod('year')">Annee</button>
+    </div>
     <button class="bs-toggle-floating" onclick="toggleBudgetSummary()">Details</button>
     <div class="bs-header">
       <div class="bs-header-title">Synthese en temps reel</div>
@@ -3434,23 +3500,23 @@ function renderBudgetSaisie(root) {
     <div class="bs-kpis">
       <div class="bs-kpi-card kpi-rev">
         <div class="bs-kpi-label">Revenus</div>
-        <div class="bs-kpi-value positive" id="kpi-rev">${fmt.money(totRev)}</div>
-        <div class="bs-kpi-sub" id="kpi-rev-an">${fmt.money(totRev * 12)} / annee</div>
+        <div class="bs-kpi-value positive" id="kpi-rev">${fmt.money(totRev * mainMult)}</div>
+        <div class="bs-kpi-sub" id="kpi-rev-an">${fmt.money(totRev * subMult)} ${subLabel}</div>
       </div>
       <div class="bs-kpi-card kpi-dep">
         <div class="bs-kpi-label">Depenses</div>
-        <div class="bs-kpi-value negative" id="kpi-dep">${fmt.money(totDep)}</div>
-        <div class="bs-kpi-sub" id="kpi-dep-an">${fmt.money(totDep * 12)} / annee</div>
+        <div class="bs-kpi-value negative" id="kpi-dep">${fmt.money(totDep * mainMult)}</div>
+        <div class="bs-kpi-sub" id="kpi-dep-an">${fmt.money(totDep * subMult)} ${subLabel}</div>
       </div>
       <div class="bs-kpi-card kpi-epa">
         <div class="bs-kpi-label">Epargne</div>
-        <div class="bs-kpi-value" style="color:var(--accent);" id="kpi-epa">${fmt.money(totEpa)}</div>
-        <div class="bs-kpi-sub" id="kpi-epa-an">${fmt.money(totEpa * 12)} / annee</div>
+        <div class="bs-kpi-value" style="color:var(--accent);" id="kpi-epa">${fmt.money(totEpa * mainMult)}</div>
+        <div class="bs-kpi-sub" id="kpi-epa-an">${fmt.money(totEpa * subMult)} ${subLabel}</div>
       </div>
       <div class="bs-kpi-card ${flux >= 0 ? "kpi-flux-pos" : "kpi-flux-neg"}" id="kpi-flux-card">
         <div class="bs-kpi-label">Solde libre</div>
-        <div class="bs-kpi-value ${flux >= 0 ? "positive" : "negative"}" id="kpi-flux">${fmt.money(flux)}</div>
-        <div class="bs-kpi-sub" id="kpi-flux-an">${fmt.money(flux * 12)} / annee</div>
+        <div class="bs-kpi-value ${flux >= 0 ? "positive" : "negative"}" id="kpi-flux">${fmt.money(flux * mainMult)}</div>
+        <div class="bs-kpi-sub" id="kpi-flux-an">${fmt.money(flux * subMult)} ${subLabel}</div>
       </div>
     </div>
 
