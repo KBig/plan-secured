@@ -2144,10 +2144,118 @@ function logout() {
   showScreen("screen-login");
 }
 
+// ============================================================
+// MIGRATIONS AUTO INTELLIGENTES
+// ============================================================
+// Système qui détecte les valeurs canoniques périmées et les corrige
+// SANS écraser les customisations user. Chaque migration a un tag
+// stocké dans meta.appliedMigrations[]. Une migration ne tourne qu'une fois.
+//
+// Pour ajouter une migration, append à MIGRATIONS:
+//   { id: "tag-unique-YYYYMMDD-N", apply: (data) => { ... return changesCount; } }
+// La fonction reçoit data complète et doit retourner le nombre de changements
+// (utilisé pour décider si scheduleSave est nécessaire).
+const MIGRATIONS = [
+  {
+    id: "2026-05-02-fix-double-count-pret-auto",
+    desc: "Supprime ep_capital_pret_auto (double-comptait avec vh_paiement)",
+    apply: (data) => {
+      let changes = 0;
+      for (const profileId of ["mathis", "conjointe", "couple"]) {
+        const p = data.profiles?.[profileId];
+        if (!p?.budget?.categories) continue;
+        if (p.budget.categories.ep_capital_pret_auto) {
+          delete p.budget.categories.ep_capital_pret_auto;
+          delete p.budget.unit?.ep_capital_pret_auto;
+          delete p.budget.sources?.ep_capital_pret_auto;
+          changes++;
+          console.log(`[FP migration] Supprime ep_capital_pret_auto profil ${profileId}`);
+        }
+      }
+      return changes;
+    }
+  },
+  {
+    id: "2026-05-02-fix-fhsa-celi-canonical",
+    desc: "Met a jour ep_fhsa et ep_celi aux valeurs canoniques SDV (8000/an et 5200/an)",
+    apply: (data) => {
+      let changes = 0;
+      const m = data.profiles?.mathis;
+      if (m?.budget?.categories) {
+        // Si valeur ancienne (154 ou moins) -> mettre canonical 667
+        const fhsa = m.budget.categories.ep_fhsa;
+        if (fhsa && fhsa.budget && fhsa.budget < 600) {
+          m.budget.categories.ep_fhsa.budget = 667;
+          changes++;
+        }
+        // Si valeur ancienne (100 ou moins) -> mettre canonical 433
+        const celi = m.budget.categories.ep_celi;
+        if (celi && celi.budget && celi.budget < 400) {
+          m.budget.categories.ep_celi.budget = 433;
+          changes++;
+        }
+      }
+      if (changes > 0) console.log(`[FP migration] ${changes} valeur(s) FHSA/CELI mises au canonique`);
+      return changes;
+    }
+  },
+  {
+    id: "2026-05-02-fix-remb-impot-4000",
+    desc: "Met a jour rev_remb_impot a 333$/mois (4000$/an : FHSA 2k + over-withholding 2k)",
+    apply: (data) => {
+      let changes = 0;
+      for (const profileId of ["mathis", "conjointe"]) {
+        const p = data.profiles?.[profileId];
+        if (!p?.budget?.categories) continue;
+        const remb = p.budget.categories.rev_remb_impot;
+        // Si valeur ancienne (167 ou proche) -> mettre canonical 333
+        if (remb && remb.budget && remb.budget > 0 && remb.budget < 250) {
+          p.budget.categories.rev_remb_impot.budget = 333;
+          changes++;
+          console.log(`[FP migration] rev_remb_impot ${profileId}: ${remb.budget} -> 333`);
+        }
+      }
+      return changes;
+    }
+  }
+];
+
+function runAutoMigrations(data) {
+  if (!data.meta) data.meta = {};
+  if (!Array.isArray(data.meta.appliedMigrations)) data.meta.appliedMigrations = [];
+  let totalChanges = 0;
+  let migrationsRun = 0;
+  for (const mig of MIGRATIONS) {
+    if (data.meta.appliedMigrations.includes(mig.id)) continue;
+    try {
+      const changes = mig.apply(data);
+      data.meta.appliedMigrations.push(mig.id);
+      totalChanges += changes || 0;
+      migrationsRun++;
+      console.log(`[FP migration] OK ${mig.id} : ${changes} changement(s)`);
+    } catch (e) {
+      console.error(`[FP migration] ERREUR ${mig.id}:`, e);
+    }
+  }
+  if (totalChanges > 0 || migrationsRun > 0) {
+    scheduleSave();
+    if (totalChanges > 0) {
+      console.log(`[FP] ${migrationsRun} migration(s) appliquees, ${totalChanges} changement(s) total`);
+    }
+  }
+}
+
 function enterApp() {
   // Appliquer le theme
   const theme = APP.data.meta.theme || "light";
   document.body.setAttribute("data-theme", theme);
+
+  // ============= MIGRATIONS AUTO INTELLIGENTES =============
+  // Système versionné qui corrige les valeurs canoniques périmées (FHSA cap,
+  // doubles-comptes, retour d'impôt) SANS toucher aux customisations user.
+  // Chaque migration tag est run UNE seule fois par device (suivi via meta.appliedMigrations).
+  runAutoMigrations(APP.data);
+
   // Migration: si le profil Mathis n'a pas de defauts budget, les ajouter (sans ecraser
   // les valeurs deja saisies). Idem conjointe. Permet aux comptes existants de profiter
   // du nouveau preload sans avoir a tout reset.
