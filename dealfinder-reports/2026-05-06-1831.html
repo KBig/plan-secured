@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d0d0d">
+<title>Scan Dealfinder — 2026-05-06-1831</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root { --bg:#fff; --bg-2:#fafafa; --bg-3:#f0f0f0; --text:#111; --text-2:#444; --text-3:#777; --border:#e0e0e0; --border-2:#c8c8c8; --accent:#0066cc; --accent-2:#003d7a; --green:#1a7f37; --green-bg:#ddf4e1; --red:#cf222e; --red-bg:#ffe5e5; --orange:#d1841d; --orange-bg:#fff3dc; --radius:6px; --radius-lg:10px; }
+[data-theme="dark"] { --bg:#0d0d0d; --bg-2:#1a1a1a; --bg-3:#222; --text:#e8e8e8; --text-2:#b8b8b8; --text-3:#888; --border:#333; --border-2:#444; --accent:#66b3ff; --accent-2:#99ccff; --green:#3fb950; --green-bg:#14301c; --red:#f85149; --red-bg:#3a1414; --orange:#f0883e; --orange-bg:#3a2a14; }
+html, body { background:var(--bg); color:var(--text); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; font-size:14px; line-height:1.5; min-height:100vh; }
+.topbar { position:sticky; top:0; z-index:100; background:var(--bg-2); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px; }
+.topbar h1 { font-size:15px; font-weight:600; flex:1; }
+.btn-text { background:transparent; border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; text-decoration:none; }
+.btn-text:hover { background:var(--bg-3); border-color:var(--border-2); color:var(--text); }
+main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
+.summary { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:12px; }
+.summary .stat { text-align:center; }
+.summary .stat-value { font-size:24px; font-weight:700; letter-spacing:-0.02em; }
+.summary .stat-label { font-size:11px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
+.deal { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:14px; }
+.deal-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
+.deal-header .info { flex:1; min-width:0; }
+.deal-header h2 { font-size:16px; font-weight:600; line-height:1.3; margin-bottom:4px; }
+.deal-header .meta { font-size:12px; color:var(--text-3); }
+.deal-header .badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+.badge { font-size:11px; font-weight:600; padding:3px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em; }
+.badge.new { background:var(--green-bg); color:var(--green); }
+.badge.changed { background:var(--orange-bg); color:var(--orange); }
+.badge.priority { background:var(--accent); color:#fff; opacity:0.9; }
+.score-pill { flex-shrink:0; width:64px; height:64px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; }
+.score-pill.green { background:var(--green-bg); color:var(--green); }
+.score-pill.orange { background:var(--orange-bg); color:var(--orange); }
+.score-pill.red { background:var(--red-bg); color:var(--red); }
+.score-pill .num { font-size:22px; line-height:1; }
+.score-pill .lbl { font-size:9px; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; opacity:0.8; }
+.metrics { display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; margin:10px 0; }
+.metric { background:var(--bg-3); border-radius:var(--radius); padding:8px 10px; }
+.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; }
+.metric-value { font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; }
+.metric.good .metric-value { color:var(--green); }
+.metric.bad .metric-value { color:var(--red); }
+.metric.warn .metric-value { color:var(--orange); }
+.deal-actions { display:flex; gap:8px; margin-top:10px; }
+.deal-actions a { background:var(--accent); color:white; padding:8px 14px; border-radius:var(--radius); text-decoration:none; font-size:13px; font-weight:500; }
+.deal-actions a.secondary { background:transparent; color:var(--text); border:1px solid var(--border-2); }
+.deal-details { display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); font-size:13px; }
+.deal.open .deal-details { display:block; }
+.toggle { cursor:pointer; user-select:none; font-size:12px; color:var(--accent); margin-top:8px; }
+.crit-list { list-style:none; display:flex; flex-direction:column; gap:4px; margin-top:8px; }
+.crit-list li { padding:6px 8px; background:var(--bg-3); border-radius:var(--radius); display:flex; gap:6px; font-size:12px; }
+.crit-list .marker { font-weight:700; flex-shrink:0; width:18px; }
+.crit-list .marker.pass { color:var(--green); }
+.crit-list .marker.fail { color:var(--red); }
+.crit-list .marker.warn { color:var(--orange); }
+.empty { text-align:center; color:var(--text-3); padding:40px; font-size:14px; }
+.filter-bar { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+.filter-bar button { background:var(--bg-2); border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; }
+.filter-bar button.active { background:var(--accent); color:white; border-color:var(--accent); }
+.notes { font-size:12px; color:var(--text-3); margin-top:14px; padding:10px 12px; background:var(--bg-2); border-left:3px solid var(--text-3); border-radius:var(--radius); }
+</style>
+</head>
+<body>
+<div class="topbar">
+<a href="index.html" class="btn-text">&larr; Plan</a>
+<a href="dealfinder.html" class="btn-text">Analyseur manuel</a>
+<h1>Scan auto — 06 May 2026, 18h31</h1>
+<button class="btn-text" id="theme-toggle">Sombre</button>
+</div>
+<main>
+<div class="summary">
+<div class="stat"><div class="stat-value">7</div><div class="stat-label">Annonces vues</div></div>
+<div class="stat"><div class="stat-value" style="color:var(--green)">7</div><div class="stat-label">Nouvelles</div></div>
+<div class="stat"><div class="stat-value" style="color:var(--orange)">0</div><div class="stat-label">Prix modifié</div></div>
+<div class="stat"><div class="stat-value">—</div><div class="stat-label">Filtrées (hors critères)</div></div>
+<div class="stat"><div class="stat-value">7</div><div class="stat-label">Retenues</div></div>
+</div>
+
+<div class="filter-bar">
+<button class="active" data-filter="all">Toutes (7)</button>
+<button data-filter="green">Visite prioritaire</button>
+<button data-filter="orange">À surveiller</button>
+<button data-filter="new">Nouvelles uniquement</button>
+<button data-filter="changed">Prix modifié</button>
+</div>
+
+<div id="deals">
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>4184, Route des Rivières, Lévis (Les Chutes-de-la-Chaudière-Ouest)</h2>
+      <div class="meta">Levis Les Chutes De La Chaudiere Ouest • Lévis / St-Romuald / Charny • 3 unités • 1978</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">46</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">539 000$</div></div>
+    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.43%</div></div>
+    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.20</div></div>
+    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">14.1</div></div>
+    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−2 628$</div></div>
+    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">54 240$</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~levis-les-chutes-de-la-chaudiere-ouest/24222982" target="_blank" rel="noopener">Voir l'annonce →</a>
+    <span class="toggle btn-text">Détails ▾</span>
+  </div>
+  <div class="deal-details">
+    <div style="margin-bottom:8px"><strong>Revenus :</strong> 38 280$/an (actuels (scrapés))</div>
+    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 270$/mois (P&I, prêt 532 532$ à 5.5% sur 25 ans)</div>
+    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
+?
+Style de vie
+Utilisation de la propriété
+Résidentielle
+Style de bâtiment
+Détaché
+Année de construction
+1978
+Superficie habitable
+1 075 pc
+Superficie du terrain
+9 272 pc
+Stationnement total
+Allée (6)
+Nombre d’unités
+Résidentiel (3)
+Unités résidentielles
+1 x 2 ½, 1 x 4 ½, 1 x 5 ½
+Un…</div>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 539,000$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 1.43% sous cible 6.00% — déficit 4.57 pts</li><li><span class="marker fail">X</span>DCR 0.20 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 87% du marché — marge de hausse aux renouvellements</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 14.1 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>14, Rue Odesse, Lévis (Desjardins)</h2>
+      <div class="meta">Levis Desjardins • Lévis / St-Romuald / Charny • 4 unités • 1968</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">46</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">599 900$</div></div>
+    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.96%</div></div>
+    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.27</div></div>
+    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">12.4</div></div>
+    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−2 662$</div></div>
+    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">59 598$</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~levis-desjardins/10472210" target="_blank" rel="noopener">Voir l'annonce →</a>
+    <span class="toggle btn-text">Détails ▾</span>
+  </div>
+  <div class="deal-details">
+    <div style="margin-bottom:8px"><strong>Revenus :</strong> 48 360$/an (actuels (scrapés))</div>
+    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 640$/mois (P&I, prêt 592 701$ à 5.5% sur 25 ans)</div>
+    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
+?
+Style de vie
+Utilisation de la propriété
+Résidentielle
+Style de bâtiment
+Détaché
+Année de construction
+1968
+Superficie du terrain
+9 571 pc
+Stationnement total
+Allée (8)
+Nombre d’unités
+Résidentiel (4)
+Unités résidentielles
+2 x 4 ½, 2 x 5 ½
+Unité principale
+5 pièces, 3 chambres, 1 …</div>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 599,900$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 1.96% sous cible 6.00% — déficit 4.04 pts</li><li><span class="marker fail">X</span>DCR 0.27 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 83% du marché — marge de hausse aux renouvellements</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 12.4 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>27 - 27A, Rue Saint-Gilbert, Lévis (Desjardins)</h2>
+      <div class="meta">Levis Desjardins • Lévis / St-Romuald / Charny • 3 unités • 1964</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">46</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">549 900$</div></div>
+    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.81%</div></div>
+    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.11</div></div>
+    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">15.2</div></div>
+    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−2 966$</div></div>
+    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">55 109$</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~levis-desjardins/19215069" target="_blank" rel="noopener">Voir l'annonce →</a>
+    <span class="toggle btn-text">Détails ▾</span>
+  </div>
+  <div class="deal-details">
+    <div style="margin-bottom:8px"><strong>Revenus :</strong> 36 180$/an (actuels (scrapés))</div>
+    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 336$/mois (P&I, prêt 543 301$ à 5.5% sur 25 ans)</div>
+    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
+?
+Style de vie
+Utilisation de la propriété
+Résidentielle
+Style de bâtiment
+Détaché
+Année de construction
+1964
+Superficie du bâtiment (au sol)
+2 226 pc
+Superficie du terrain
+5 600 pc
+Stationnement total
+Allée (3)
+Nombre d’unités
+Résidentiel (3)
+Unités résidentielles
+1 x 4 ½, 2 x 5 ½
+…</div>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 549,900$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 0.81% sous cible 6.00% — déficit 5.19 pts</li><li><span class="marker fail">X</span>DCR 0.11 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 82% du marché — marge de hausse aux renouvellements</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 15.2 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>1331 - 1335, boulevard La Morille, Québec (Les Rivières)</h2>
+      <div class="meta">Quebec Les Rivieres • La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • 1990</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">46</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">795 000$</div></div>
+    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.53%</div></div>
+    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.07</div></div>
+    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">18.0</div></div>
+    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−4 469$</div></div>
+    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">72 666$</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-les-rivieres/27054613" target="_blank" rel="noopener">Voir l'annonce →</a>
+    <span class="toggle btn-text">Détails ▾</span>
+  </div>
+  <div class="deal-details">
+    <div style="margin-bottom:8px"><strong>Revenus :</strong> 44 100$/an (actuels (scrapés))</div>
+    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 4 823$/mois (P&I, prêt 785 460$ à 5.5% sur 25 ans)</div>
+    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
+?
+Style de vie
+Utilisation de la propriété
+Résidentielle
+Style de bâtiment
+En rangée
+Année de construction
+1990
+Superficie habitable
+2 060 pc
+Superficie du terrain
+4 706 pc
+Stationnement total
+Abri d&#x27;auto (2), Allée (3)
+Nombre d’unités
+Résidentiel (3)
+Unités résidentielles
+3 x 4 ½
+U…</div>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 795,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker fail">X</span>TGA 0.53% sous cible 4.50% — déficit 3.97 pts</li><li><span class="marker fail">X</span>DCR 0.07 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 98% du marché — peu de marge de hausse</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire dans le plan</li><li><span class="marker fail">X</span>MRB 18.0 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>70, Avenue Bégin, Lévis (Desjardins)</h2>
+      <div class="meta">Levis Desjardins • Lévis / St-Romuald / Charny • 4 unités • 1965</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">42</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">599 000$</div></div>
+    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.43%</div></div>
+    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.06</div></div>
+    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">15.3</div></div>
+    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−3 420$</div></div>
+    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">59 527$</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~levis-desjardins/19410146" target="_blank" rel="noopener">Voir l'annonce →</a>
+    <span class="toggle btn-text">Détails ▾</span>
+  </div>
+  <div class="deal-details">
+    <div style="margin-bottom:8px"><strong>Revenus :</strong> 39 252$/an (actuels (scrapés))</div>
+    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 634$/mois (P&I, prêt 591 812$ à 5.5% sur 25 ans)</div>
+    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
+?
+Style de vie
+Utilisation de la propriété
+Résidentielle, Commerciale
+Style de bâtiment
+Détaché
+Année de construction
+1965
+Superficie commerciale disponible
+680 pc
+Superficie habitable
+3 020 pc
+Superficie du terrain
+3 510 pc
+Stationnement total
+Allée (7)
+Nombre d’unités
+Résidentiel …</div>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 599,000$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 0.43% sous cible 6.00% — déficit 5.57 pts</li><li><span class="marker fail">X</span>DCR 0.06 — appoint mensuel très lourd</li><li><span class="marker warn">~</span>Loyers à 67% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 15.3 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>863 - 865, Rue des Prunelles, Lévis (Les Chutes-de-la-Chaudière-Est)</h2>
+      <div class="meta">Levis Les Chutes De La Chaudiere Est • Lévis / St-Romuald / Charny • 4 unités • 1986</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">42</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">785 000$</div></div>
+    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.55%</div></div>
+    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.07</div></div>
+    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">17.4</div></div>
+    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−4 406$</div></div>
+    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">72 368$</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~levis-les-chutes-de-la-chaudiere-est/28681662" target="_blank" rel="noopener">Voir l'annonce →</a>
+    <span class="toggle btn-text">Détails ▾</span>
+  </div>
+  <div class="deal-details">
+    <div style="margin-bottom:8px"><strong>Revenus :</strong> 45 132$/an (actuels (scrapés))</div>
+    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 4 763$/mois (P&I, prêt 775 580$ à 5.5% sur 25 ans)</div>
+    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
+?
+Style de vie
+Utilisation de la propriété
+Résidentielle
+Style de bâtiment
+Détaché
+Année de construction
+1986
+Superficie du terrain
+8 536 pc
+Stationnement total
+Abri d&#x27;auto (8)
+Nombre d’unités
+Résidentiel (4)
+Unités résidentielles
+4 x 4 ½
+Unité principale
+4 pièces, 2 chambres, 1 sal…</div>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 785,000$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 0.55% sous cible 6.00% — déficit 5.45 pts</li><li><span class="marker fail">X</span>DCR 0.07 — appoint mensuel très lourd</li><li><span class="marker warn">~</span>Loyers à 77% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 17.4 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>7311 - 7317, Avenue des Belles-Amours, Lévis (Les Chutes-de-la-Chaudière-Est)</h2>
+      <div class="meta">Levis Les Chutes De La Chaudiere Est • Lévis / St-Romuald / Charny • 4 unités • 1986</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">42</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">800 000$</div></div>
+    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.41%</div></div>
+    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.06</div></div>
+    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">17.7</div></div>
+    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−4 580$</div></div>
+    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">73 565$</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~levis-les-chutes-de-la-chaudiere-est/12965116" target="_blank" rel="noopener">Voir l'annonce →</a>
+    <span class="toggle btn-text">Détails ▾</span>
+  </div>
+  <div class="deal-details">
+    <div style="margin-bottom:8px"><strong>Revenus :</strong> 45 324$/an (actuels (scrapés))</div>
+    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 4 854$/mois (P&I, prêt 790 400$ à 5.5% sur 25 ans)</div>
+    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
+?
+Style de vie
+Utilisation de la propriété
+Résidentielle
+Style de bâtiment
+Détaché
+Année de construction
+1986
+Superficie du terrain
+12 098 pc
+Nombre d’unités
+Résidentiel (4)
+Unités résidentielles
+4 x 4 ½
+Unité principale
+4 pièces, 2 chambres, 1 salle de bain
+Revenus bruts potentiels…</div>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 800,000$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 0.41% sous cible 6.00% — déficit 5.59 pts</li><li><span class="marker fail">X</span>DCR 0.06 — appoint mensuel très lourd</li><li><span class="marker warn">~</span>Loyers à 77% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 17.7 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
+  </div>
+</div>
+
+</div>
+
+<div class="notes">
+Scan effectué le 2026-05-06 18:31:55 • Source : Centris (triplex/quadruplex) • Critères config : prix max 800 000$, 3-4 unités, 1.5h max de Québec.<br>
+Les ratios financiers (TGA / DCR / MRB / cashflow) sont calculés selon les hypothèses du plan (Section 9 SDV + Section 18). Vacance, dépenses opérationnelles et frais d'acquisition sont estimés — à valider sur place.
+</div>
+</main>
+<script>
+(function() {
+  document.querySelectorAll('.toggle').forEach(function(t) {
+    t.addEventListener('click', function() { t.closest('.deal').classList.toggle('open'); });
+  });
+  var btns = document.querySelectorAll('.filter-bar button');
+  btns.forEach(function(b) {
+    b.addEventListener('click', function() {
+      btns.forEach(function(x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      var f = b.dataset.filter;
+      document.querySelectorAll('.deal').forEach(function(d) {
+        var show = f === 'all' || d.classList.contains('verdict-' + f) || d.classList.contains('flag-' + f);
+        d.style.display = show ? '' : 'none';
+      });
+    });
+  });
+  var theme = localStorage.getItem('dealfinder_theme');
+  if (!theme) theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-toggle').textContent = theme === 'dark' ? 'Clair' : 'Sombre';
+  document.getElementById('theme-toggle').addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = cur === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('dealfinder_theme', next);
+    document.documentElement.setAttribute('data-theme', next);
+    this.textContent = next === 'dark' ? 'Clair' : 'Sombre';
+  });
+})();
+</script>
+</body>
+</html>
