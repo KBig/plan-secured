@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d0d0d">
+<title>Dealfinder</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+:root { --bg:#fff; --bg-2:#fafafa; --bg-3:#f0f0f0; --text:#111; --text-2:#444; --text-3:#777; --border:#e0e0e0; --border-2:#c8c8c8; --accent:#0066cc; --accent-2:#003d7a; --green:#1a7f37; --green-bg:#ddf4e1; --red:#cf222e; --red-bg:#ffe5e5; --orange:#d1841d; --orange-bg:#fff3dc; --radius:6px; --radius-lg:10px; }
+[data-theme="dark"] { --bg:#0d0d0d; --bg-2:#1a1a1a; --bg-3:#222; --text:#e8e8e8; --text-2:#b8b8b8; --text-3:#888; --border:#333; --border-2:#444; --accent:#66b3ff; --accent-2:#99ccff; --green:#3fb950; --green-bg:#14301c; --red:#f85149; --red-bg:#3a1414; --orange:#f0883e; --orange-bg:#3a2a14; }
+html, body { background:var(--bg); color:var(--text); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; font-size:14px; line-height:1.5; min-height:100vh; }
+.topbar { position:sticky; top:0; z-index:100; background:var(--bg-2); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px; }
+.topbar h1 { font-size:15px; font-weight:600; flex:1; letter-spacing:-0.01em; }
+.btn-text { background:transparent; border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; text-decoration:none; }
+.btn-text:hover { background:var(--bg-3); border-color:var(--border-2); color:var(--text); }
+main { max-width:820px; margin:0 auto; padding:20px 16px 100px; }
+.intro { font-size:13px; color:var(--text-2); background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px; margin-bottom:20px; }
+.card { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:18px 16px; margin-bottom:18px; }
+.card h2 { font-size:15px; font-weight:600; margin-bottom:14px; letter-spacing:-0.01em; }
+.card h3 { font-size:13px; font-weight:600; color:var(--text-2); margin-top:16px; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.04em; }
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+@media (max-width:540px) { .field-row { grid-template-columns:1fr; } }
+.field { display:flex; flex-direction:column; gap:4px; }
+.field label { font-size:11.5px; font-weight:500; color:var(--text-2); text-transform:uppercase; letter-spacing:0.04em; }
+.field input, .field select, .field textarea { background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:var(--radius); padding:9px 11px; font-family:inherit; font-size:13.5px; outline:none; width:100%; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color:var(--accent); }
+.units-table { width:100%; border-collapse:separate; border-spacing:0; font-size:13px; margin-bottom:10px; }
+.units-table th { text-align:left; font-size:11px; font-weight:500; color:var(--text-3); padding:6px 4px; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid var(--border); }
+.units-table td { padding:4px; }
+.units-table input, .units-table select { background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:var(--radius); padding:7px 9px; font-family:inherit; font-size:13px; width:100%; outline:none; }
+.btn-icon { background:transparent; border:1px solid var(--border); color:var(--text-3); width:28px; height:28px; border-radius:var(--radius); cursor:pointer; font-size:16px; line-height:1; }
+.btn-icon:hover { background:var(--bg-3); color:var(--red); border-color:var(--red); }
+.btn-primary { background:var(--accent); color:white; border:none; padding:11px 20px; border-radius:var(--radius); font-family:inherit; font-size:14px; font-weight:600; cursor:pointer; width:100%; }
+.btn-primary:hover { background:var(--accent-2); }
+.btn-secondary { background:transparent; color:var(--text); border:1px solid var(--border-2); padding:9px 16px; border-radius:var(--radius); font-family:inherit; font-size:13px; font-weight:500; cursor:pointer; }
+.btn-secondary:hover { background:var(--bg-3); }
+.btn-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.score-banner { display:flex; align-items:center; gap:16px; padding:16px; border-radius:var(--radius-lg); margin-bottom:16px; }
+.score-banner .score-num { font-size:42px; font-weight:700; line-height:1; letter-spacing:-0.03em; }
+.score-banner .score-label { font-size:12px; opacity:0.85; text-transform:uppercase; letter-spacing:0.05em; }
+.score-banner .verdict { font-size:17px; font-weight:600; letter-spacing:-0.01em; }
+.score-banner.green { background:var(--green-bg); color:var(--green); }
+.score-banner.orange { background:var(--orange-bg); color:var(--orange); }
+.score-banner.red { background:var(--red-bg); color:var(--red); }
+.metrics-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:14px; }
+.metric { background:var(--bg-3); border-radius:var(--radius); padding:12px 14px; }
+.metric-label { font-size:11px; font-weight:500; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
+.metric-value { font-size:18px; font-weight:600; letter-spacing:-0.01em; }
+.metric-sub { font-size:11px; color:var(--text-3); margin-top:2px; }
+.metric.good .metric-value { color:var(--green); }
+.metric.bad .metric-value { color:var(--red); }
+.metric.warn .metric-value { color:var(--orange); }
+.criteria-list { list-style:none; display:flex; flex-direction:column; gap:6px; font-size:13px; }
+.criteria-list li { display:flex; align-items:flex-start; gap:8px; padding:8px 10px; background:var(--bg-3); border-radius:var(--radius); }
+.criteria-list .marker { font-weight:700; font-size:12px; line-height:1.5; flex-shrink:0; width:18px; }
+.criteria-list .marker.pass { color:var(--green); }
+.criteria-list .marker.fail { color:var(--red); }
+.criteria-list .marker.warn { color:var(--orange); }
+.criteria-list .crit-text { flex:1; }
+.breakdown { width:100%; border-collapse:collapse; font-size:13px; }
+.breakdown td { padding:7px 10px; border-bottom:1px solid var(--border); }
+.breakdown td:last-child { text-align:right; font-variant-numeric:tabular-nums; }
+.breakdown tr.total td { font-weight:600; border-bottom:2px solid var(--border-2); border-top:1px solid var(--border-2); }
+.breakdown tr.subtle td { color:var(--text-3); }
+.breakdown tr.neg td:last-child { color:var(--red); }
+.breakdown tr.pos td:last-child { color:var(--green); }
+.deals-list { width:100%; border-collapse:collapse; font-size:13px; }
+.deals-list th { text-align:left; font-size:11px; font-weight:500; color:var(--text-3); padding:8px 6px; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid var(--border); }
+.deals-list td { padding:10px 6px; border-bottom:1px solid var(--border); vertical-align:middle; }
+.deals-list tr.row-clickable { cursor:pointer; }
+.deals-list tr.row-clickable:hover { background:var(--bg-3); }
+.deals-list .num { font-variant-numeric:tabular-nums; }
+.deals-list .pill { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:600; }
+.deals-list .pill.green { background:var(--green-bg); color:var(--green); }
+.deals-list .pill.orange { background:var(--orange-bg); color:var(--orange); }
+.deals-list .pill.red { background:var(--red-bg); color:var(--red); }
+.empty-state { text-align:center; color:var(--text-3); font-size:13px; padding:24px; }
+.notes-block { font-size:12px; color:var(--text-2); background:var(--bg-3); border-left:3px solid var(--accent); padding:10px 12px; border-radius:var(--radius); margin-top:12px; line-height:1.55; }
+.notes-block strong { color:var(--text); }
+.collapsible-toggle { cursor:pointer; user-select:none; display:flex; align-items:center; gap:6px; font-size:13px; font-weight:500; color:var(--text-2); margin-top:14px; margin-bottom:8px; }
+.collapsible-toggle::before { content:"\25B8"; font-size:11px; transition:transform 0.15s; }
+.collapsible-toggle.open::before { transform:rotate(90deg); }
+.collapsible-content { display:none; }
+.collapsible-content.open { display:block; }
+</style>
+</head>
+<body>
+<div class="topbar">
+<a href="index.html" class="btn-text">&larr; Plan</a>
+<h1>Dealfinder</h1>
+<button class="btn-text" id="theme-toggle">Sombre</button>
+</div>
+<main>
+<div class="intro">
+Saisis les informations dune annonce (Centris, DuProprio, Kijiji, etc.). Loutil calcule les ratios financiers (MRB, TGA, DCR, cashflow), estime les frais dacquisition, verifie les criteres du secteur cible (Section 14.4 du plan) et produit un score 0-100 avec verdict. Les chiffres restent localement dans ton navigateur.
+</div>
+<div class="card" id="form-card">
+<h2>Saisie du deal</h2>
+<h3>Localisation</h3>
+<div class="field-row">
+<div class="field"><label for="f-adresse">Adresse</label><input type="text" id="f-adresse" placeholder="123 rue Exemple, Pont-Rouge"></div>
+<div class="field"><label for="f-secteur">Secteur cible</label><select id="f-secteur"></select></div>
+</div>
+<h3>Immeuble</h3>
+<div class="field-row">
+<div class="field"><label for="f-prix">Prix demande ($)</label><input type="number" id="f-prix" placeholder="700000" min="0" step="1000"></div>
+<div class="field"><label for="f-annee">Annee construction</label><input type="number" id="f-annee" placeholder="1985" min="1850" max="2030"></div>
+</div>
+<div class="field-row">
+<div class="field"><label for="f-occupation">Mode dachat</label><select id="f-occupation"><option value="proprio">Proprietaire-occupant (mise 5%)</option><option value="investisseur">Investisseur (mise 20%)</option></select></div>
+<div class="field"><label for="f-amortissement">Amortissement (ans)</label><select id="f-amortissement"><option value="30">30 ans</option><option value="25" selected>25 ans</option><option value="20">20 ans</option></select></div>
+</div>
+<div class="field-row">
+<div class="field"><label for="f-taux">Taux hypothecaire (%)</label><input type="number" id="f-taux" placeholder="5.5" min="0" max="20" step="0.05" value="5.5"></div>
+<div class="field"><label for="f-taxes">Taxes muni+scol annuelles ($, optionnel)</label><input type="number" id="f-taxes" placeholder="estime si vide" min="0" step="100"></div>
+</div>
+<h3>Unites locatives</h3>
+<table class="units-table" id="units-table">
+<thead><tr><th style="width:30%">Type</th><th style="width:30%">Loyer ($/mois)</th><th style="width:25%">Statut</th><th style="width:15%"></th></tr></thead>
+<tbody id="units-body"></tbody>
+</table>
+<button type="button" class="btn-secondary" id="add-unit">+ Ajouter une unite</button>
+<h3>Lien et notes</h3>
+<div class="field"><label for="f-url">URL annonce (optionnel)</label><input type="url" id="f-url" placeholder="https://www.centris.ca/..."></div>
+<div class="field" style="margin-top:10px"><label for="f-notes">Notes libres</label><textarea id="f-notes" rows="2" placeholder="Drapeaux rouges, observations..."></textarea></div>
+<div class="btn-row" style="margin-top:18px">
+<button type="button" class="btn-primary" id="analyze-btn" style="flex:1">Analyser le deal</button>
+<button type="button" class="btn-secondary" id="reset-form-btn">Reinitialiser</button>
+</div>
+</div>
+<div class="card" id="result-card" style="display:none">
+<h2>Resultat de lanalyse</h2>
+<div id="result-body"></div>
+<div class="btn-row">
+<button type="button" class="btn-primary" id="save-btn" style="flex:1">Sauvegarder ce deal</button>
+<button type="button" class="btn-secondary" id="copy-json-btn">Copier JSON</button>
+</div>
+</div>
+<div class="card">
+<h2>Deals analyses <span id="deals-count" style="color:var(--text-3);font-weight:400;font-size:13px"></span></h2>
+<div id="deals-container"></div>
+<div class="btn-row">
+<button type="button" class="btn-secondary" id="export-all-btn">Exporter tout (JSON)</button>
+<button type="button" class="btn-secondary" id="clear-all-btn">Tout effacer</button>
+</div>
+</div>
+</main><script>
+"use strict";
+var SECTEURS = {
+  "Lac-Sergent / Portneuf (Pont-Rouge, St-Basile)": { prix_min:350000, prix_max:750000, loyer_3_5:980, loyer_4_5:1180, loyer_5_5:1380, loyer_6_5:1500, tga_cible:0.065, priorite:9, notes:"Sous-evalue + proche de chez toi. Cible top pour 1er achat." },
+  "Val-Belair / Loretteville / Neufchatel": { prix_min:400000, prix_max:850000, loyer_3_5:1100, loyer_4_5:1300, loyer_5_5:1500, loyer_6_5:1620, tga_cible:0.060, priorite:10, notes:"CIBLE TOP - Boom Valcartier en cours. Demande locative forte." },
+  "Shannon / St-Gabriel-de-Valcartier": { prix_min:300000, prix_max:700000, loyer_3_5:1100, loyer_4_5:1300, loyer_5_5:1500, loyer_6_5:1620, tga_cible:0.062, priorite:9, notes:"Boom Valcartier proche, demande militaire." },
+  "Stoneham / Tewkesbury / Lac-Beauport": { prix_min:400000, prix_max:750000, loyer_3_5:1080, loyer_4_5:1280, loyer_5_5:1480, loyer_6_5:1600, tga_cible:0.055, priorite:8, notes:"Boom Valcartier." },
+  "Beauport": { prix_min:400000, prix_max:850000, loyer_3_5:1080, loyer_4_5:1280, loyer_5_5:1480, loyer_6_5:1600, tga_cible:0.055, priorite:8, notes:"" },
+  "Charlesbourg": { prix_min:450000, prix_max:950000, loyer_3_5:1120, loyer_4_5:1320, loyer_5_5:1520, loyer_6_5:1640, tga_cible:0.052, priorite:7, notes:"" },
+  "Levis / St-Romuald / Charny": { prix_min:380000, prix_max:800000, loyer_3_5:1020, loyer_4_5:1220, loyer_5_5:1420, loyer_6_5:1540, tga_cible:0.060, priorite:7, notes:"" },
+  "St-Raymond / Donnacona": { prix_min:320000, prix_max:650000, loyer_3_5:920, loyer_4_5:1120, loyer_5_5:1320, loyer_6_5:1440, tga_cible:0.070, priorite:7, notes:"" },
+  "La Cite / Limoilou / Vieux-Quebec / St-Roch": { prix_min:400000, prix_max:900000, loyer_3_5:1050, loyer_4_5:1250, loyer_5_5:1450, loyer_6_5:1570, tga_cible:0.045, priorite:6, notes:"" },
+  "Trois-Rivieres / Cap-de-la-Madeleine": { prix_min:280000, prix_max:600000, loyer_3_5:880, loyer_4_5:1050, loyer_5_5:1250, loyer_6_5:1370, tga_cible:0.075, priorite:6, notes:"Phase 3 (post-2027), plus loin." },
+  "Drummondville / Victoriaville": { prix_min:280000, prix_max:600000, loyer_3_5:880, loyer_4_5:1050, loyer_5_5:1250, loyer_6_5:1370, tga_cible:0.072, priorite:5, notes:"Phase 3 (post-2027), plus loin." },
+  "Sainte-Foy / Sillery / Cap-Rouge": { prix_min:500000, prix_max:1300000, loyer_3_5:1180, loyer_4_5:1380, loyer_5_5:1580, loyer_6_5:1700, tga_cible:0.038, priorite:4, notes:"Plus-value mais TGA bas - cashflow negatif probable." },
+  "Autre / non liste": { prix_min:0, prix_max:5000000, loyer_3_5:1000, loyer_4_5:1200, loyer_5_5:1400, loyer_6_5:1520, tga_cible:0.060, priorite:5, notes:"Pas de criteres de reference - analyse strictement financiere." }
+};
+var UNIT_TYPES = ["3.5", "4.5", "5.5", "6.5"];
+var DEFAULT_UNITS = [
+  { type:"5.5", loyer:0, statut:"occupe" },
+  { type:"4.5", loyer:0, statut:"occupe" },
+  { type:"4.5", loyer:0, statut:"occupe" },
+  { type:"4.5", loyer:0, statut:"occupe" }
+];
+var STORAGE_KEY = "dealfinder_deals_v1";
+var THEME_KEY = "dealfinder_theme";
+
+function paiementHypoMensuel(principal, tauxAnnuel, ans) {
+  var r = (tauxAnnuel / 100) / 12;
+  var n = ans * 12;
+  if (r === 0) return principal / n;
+  return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+}
+function primeSCHL(misePct) {
+  if (misePct >= 20) return 0;
+  if (misePct >= 15) return 0.028;
+  if (misePct >= 10) return 0.0310;
+  if (misePct >= 5)  return 0.0400;
+  return 0.0450;
+}
+function droitsMutation(prix) {
+  var tranches = [
+    { jusqua:58900, taux:0.005 },
+    { jusqua:294600, taux:0.010 },
+    { jusqua:500000, taux:0.015 },
+    { jusqua:1000000, taux:0.020 },
+    { jusqua:2000000, taux:0.025 },
+    { jusqua:Infinity, taux:0.030 }
+  ];
+  var total = 0; var prev = 0;
+  for (var i = 0; i < tranches.length; i++) {
+    var t = tranches[i];
+    if (prix <= prev) break;
+    var tranchePrix = Math.min(prix, t.jusqua) - prev;
+    total += tranchePrix * t.taux;
+    prev = t.jusqua;
+  }
+  return total;
+}
+function fraisAcquisition(prix, nbUnites, anneeConstruction, primeSCHLMontant) {
+  var tvqSurPrime = primeSCHLMontant * 0.09975;
+  var notaire = 3000;
+  var mutation = droitsMutation(prix);
+  var inspection = 500 * Math.max(1, nbUnites);
+  var phase1 = (anneeConstruction && anneeConstruction < 1985) ? 2000 : 0;
+  var certif = 1000;
+  var ajustements = 3000;
+  var assurance1 = Math.round(prix * 0.006);
+  var coussin = 5000;
+  return {
+    tvqSurPrime: Math.round(tvqSurPrime), notaire,
+    mutation: Math.round(mutation), inspection: Math.round(inspection),
+    phase1, certif, ajustements, assurance1, coussin,
+    total: Math.round(tvqSurPrime + notaire + mutation + inspection + phase1 + certif + ajustements + assurance1 + coussin)
+  };
+}
+function depensesOpAnnuelles(prix, revenuBrut, nbUnites, taxesConnues) {
+  var taxes = (taxesConnues && taxesConnues > 0) ? taxesConnues : Math.round(prix * 0.0137);
+  var assurances = Math.round(prix * 0.006);
+  var hydroEau = 800 + (nbUnites * 300);
+  var deneigementTerrain = 2000 + (nbUnites * 200);
+  var entretienRepa = Math.round(revenuBrut * 0.080);
+  var fondsReserve = Math.round(prix * 0.012);
+  var adminCompta = 1500 + (nbUnites * 300);
+  var pertesLoyers = Math.round(revenuBrut * 0.025);
+  var ameliorations = Math.round(prix * 0.007);
+  return {
+    taxes, assurances, hydroEau, deneigementTerrain,
+    entretienRepa, fondsReserve, adminCompta, pertesLoyers, ameliorations,
+    total: taxes + assurances + hydroEau + deneigementTerrain + entretienRepa + fondsReserve + adminCompta + pertesLoyers + ameliorations
+  };
+}
+function tauxVacance(prio) {
+  if (prio >= 9) return 0.03;
+  if (prio >= 7) return 0.05;
+  return 0.07;
+}
+function loyerEstimePourType(secteur, type) {
+  if (type === "3.5") return secteur.loyer_3_5;
+  if (type === "4.5") return secteur.loyer_4_5;
+  if (type === "5.5") return secteur.loyer_5_5;
+  if (type === "6.5") return secteur.loyer_6_5;
+  return secteur.loyer_4_5;
+}
+
+function analyserDeal(input) {
+  var secteur = SECTEURS[input.secteur];
+  var prix = Number(input.prix) || 0;
+  var annee = Number(input.annee) || null;
+  var taxesConnues = Number(input.taxes) || 0;
+  var taux = Number(input.taux) || 5.5;
+  var ans = Number(input.amortissement) || 25;
+  var occupation = input.occupation || "proprio";
+  var units = input.units || [];
+  var nbUnites = units.length;
+  var misePct = (occupation === "proprio") ? 5 : 20;
+  var miseFonds = Math.round(prix * misePct / 100);
+  var pretBrut = prix - miseFonds;
+  var primePct = primeSCHL(misePct);
+  var primeMontant = Math.round(pretBrut * primePct);
+  var pretAvecPrime = pretBrut + primeMontant;
+  var revenuBrutMensuel = 0;
+  var revenuMarcheMensuel = 0;
+  for (var i = 0; i < units.length; i++) {
+    var u = units[i];
+    var loyerMarche = loyerEstimePourType(secteur, u.type);
+    revenuMarcheMensuel += loyerMarche;
+    if (u.statut === "vacant") revenuBrutMensuel += loyerMarche;
+    else revenuBrutMensuel += Number(u.loyer) || 0;
+  }
+  var revenuBrutAnnuel = revenuBrutMensuel * 12;
+  var revenuMarcheAnnuel = revenuMarcheMensuel * 12;
+  var vacancePct = tauxVacance(secteur.priorite);
+  var vacance = Math.round(revenuBrutAnnuel * vacancePct);
+  var revenuNetEffectif = revenuBrutAnnuel - vacance;
+  var opex = depensesOpAnnuelles(prix, revenuBrutAnnuel, nbUnites, taxesConnues);
+  var noi = revenuNetEffectif - opex.total;
+  var paiementMensuel = paiementHypoMensuel(pretAvecPrime, taux, ans);
+  var serviceDetteAnnuel = Math.round(paiementMensuel * 12);
+  var cashflowAnnuel = noi - serviceDetteAnnuel;
+  var cashflowMensuel = cashflowAnnuel / 12;
+  var frais = fraisAcquisition(prix, nbUnites, annee, primeMontant);
+  var cashTotal = miseFonds + frais.total;
+  var mrb = revenuBrutAnnuel > 0 ? prix / revenuBrutAnnuel : null;
+  var tga = prix > 0 ? noi / prix : null;
+  var dcr = serviceDetteAnnuel > 0 ? noi / serviceDetteAnnuel : null;
+  var loyerActuelVsMarche = revenuMarcheAnnuel > 0 ? revenuBrutAnnuel / revenuMarcheAnnuel : 1;
+  var scoring = scorerDeal({ prix:prix, secteur:secteur, tga:tga, dcr:dcr, mrb:mrb, loyerActuelVsMarche:loyerActuelVsMarche, occupation:occupation, annee:annee });
+  return Object.assign({
+    timestamp: Date.now(), input:input, secteurNom:input.secteur, secteur:secteur,
+    misePct:misePct, miseFonds:miseFonds, pretBrut:pretBrut, primePct:primePct, primeMontant:primeMontant, pretAvecPrime:pretAvecPrime,
+    revenuBrutMensuel:revenuBrutMensuel, revenuBrutAnnuel:revenuBrutAnnuel, revenuMarcheMensuel:revenuMarcheMensuel, revenuMarcheAnnuel:revenuMarcheAnnuel,
+    vacancePct:vacancePct, vacance:vacance, revenuNetEffectif:revenuNetEffectif, opex:opex, noi:noi,
+    paiementMensuel:paiementMensuel, serviceDetteAnnuel:serviceDetteAnnuel, cashflowAnnuel:cashflowAnnuel, cashflowMensuel:cashflowMensuel,
+    frais:frais, cashTotal:cashTotal, mrb:mrb, tga:tga, dcr:dcr, loyerActuelVsMarche:loyerActuelVsMarche, nbUnites:nbUnites
+  }, scoring);
+}
+
+function scorerDeal(p) {
+  var prix = p.prix, secteur = p.secteur, tga = p.tga, dcr = p.dcr, mrb = p.mrb;
+  var loyerActuelVsMarche = p.loyerActuelVsMarche, occupation = p.occupation, annee = p.annee;
+  var criteres = [];
+  var score = 0;
+  if (prix >= secteur.prix_min && prix <= secteur.prix_max) {
+    score += 25;
+    criteres.push({ status:"pass", text:"Prix " + fmt$(prix) + " dans la fourchette du secteur (" + fmt$(secteur.prix_min) + "-" + fmt$(secteur.prix_max) + ")" });
+  } else if (prix < secteur.prix_min) {
+    score += 22;
+    criteres.push({ status:"warn", text:"Prix " + fmt$(prix) + " sous la fourchette (" + fmt$(secteur.prix_min) + " min) - possiblement sous-evalue ou probleme cache" });
+  } else {
+    var overshoot = (prix - secteur.prix_max) / secteur.prix_max;
+    var partiel = Math.max(0, 15 - Math.round(overshoot * 100));
+    score += partiel;
+    criteres.push({ status:"fail", text:"Prix " + fmt$(prix) + " au-dessus de la fourchette (" + fmt$(secteur.prix_max) + " max, depassement +" + (overshoot*100).toFixed(0) + "%)" });
+  }
+  if (tga !== null) {
+    var tgaPct = tga * 100;
+    var ciblePct = secteur.tga_cible * 100;
+    if (tga >= secteur.tga_cible) { score += 25; criteres.push({ status:"pass", text:"TGA " + tgaPct.toFixed(2) + "% >= cible secteur " + ciblePct.toFixed(2) + "%" }); }
+    else if (tga >= secteur.tga_cible - 0.01) { score += 18; criteres.push({ status:"warn", text:"TGA " + tgaPct.toFixed(2) + "% legerement sous cible (" + ciblePct.toFixed(2) + "%)" }); }
+    else if (tga >= 0) {
+      var ecart = (secteur.tga_cible - tga) * 100;
+      var partiel2 = Math.max(0, 15 - Math.round(ecart * 5));
+      score += partiel2;
+      criteres.push({ status:"fail", text:"TGA " + tgaPct.toFixed(2) + "% sous cible " + ciblePct.toFixed(2) + "% - deficit " + ecart.toFixed(2) + " pts" });
+    } else {
+      criteres.push({ status:"fail", text:"TGA negatif (" + tgaPct.toFixed(2) + "%) - depenses operationnelles > revenus avant hypotheque" });
+    }
+  }
+  if (dcr !== null) {
+    if (occupation === "investisseur") {
+      if (dcr >= 1.20) { score += 20; criteres.push({ status:"pass", text:"DCR " + dcr.toFixed(2) + " - couverture solide pour investisseur" }); }
+      else if (dcr >= 1.10) { score += 15; criteres.push({ status:"warn", text:"DCR " + dcr.toFixed(2) + " - couverture juste pour investisseur (cible >=1.20)" }); }
+      else if (dcr >= 1.00) { score += 8; criteres.push({ status:"fail", text:"DCR " + dcr.toFixed(2) + " - banques refusent generalement <1.10 en investisseur" }); }
+      else { criteres.push({ status:"fail", text:"DCR " + dcr.toFixed(2) + " - cashflow negatif sous plein loyer (rejet quasi certain)" }); }
+    } else {
+      if (dcr >= 1.10) { score += 20; criteres.push({ status:"pass", text:"DCR " + dcr.toFixed(2) + " - autoporteur meme en proprietaire-occupant" }); }
+      else if (dcr >= 0.90) { score += 14; criteres.push({ status:"warn", text:"DCR " + dcr.toFixed(2) + " - leger appoint mensuel requis (normal en proprietaire-occupant 1-4 unites)" }); }
+      else if (dcr >= 0.70) { score += 8; criteres.push({ status:"warn", text:"DCR " + dcr.toFixed(2) + " - appoint mensuel important (>30% du service de la dette)" }); }
+      else { score += 2; criteres.push({ status:"fail", text:"DCR " + dcr.toFixed(2) + " - appoint mensuel tres lourd, qualifie la residence principale plus que linvestissement" }); }
+    }
+  }
+  if (loyerActuelVsMarche >= 0.95) { score += 15; criteres.push({ status:"pass", text:"Loyers actuels a " + (loyerActuelVsMarche*100).toFixed(0) + "% du marche - peu de marge de hausse" }); }
+  else if (loyerActuelVsMarche >= 0.80) { score += 12; criteres.push({ status:"pass", text:"Loyers actuels a " + (loyerActuelVsMarche*100).toFixed(0) + "% du marche - marge de hausse aux renouvellements" }); }
+  else if (loyerActuelVsMarche >= 0.65) { score += 8; criteres.push({ status:"warn", text:"Loyers actuels a " + (loyerActuelVsMarche*100).toFixed(0) + "% du marche - gros ecart, verifier baux et clause F" }); }
+  else if (loyerActuelVsMarche > 0) { score += 3; criteres.push({ status:"fail", text:"Loyers actuels a " + (loyerActuelVsMarche*100).toFixed(0) + "% du marche - ecart enorme, baux possiblement rigides" }); }
+  if (secteur.priorite >= 9) { score += 10; criteres.push({ status:"pass", text:"Secteur priorite " + secteur.priorite + "/10 - top du plan" }); }
+  else if (secteur.priorite >= 7) { score += 7; criteres.push({ status:"pass", text:"Secteur priorite " + secteur.priorite + "/10 - solide" }); }
+  else if (secteur.priorite >= 5) { score += 4; criteres.push({ status:"warn", text:"Secteur priorite " + secteur.priorite + "/10 - secondaire dans le plan" }); }
+  else { score += 1; criteres.push({ status:"warn", text:"Secteur priorite " + secteur.priorite + "/10 - faible (TGA bas ou eloigne)" }); }
+  if (mrb !== null && mrb > 0) {
+    if (mrb <= 8) { score += 5; criteres.push({ status:"pass", text:"MRB " + mrb.toFixed(1) + " - excellent (<=8)" }); }
+    else if (mrb <= 10) { score += 3; criteres.push({ status:"pass", text:"MRB " + mrb.toFixed(1) + " - bon (<=10)" }); }
+    else if (mrb <= 12) { score += 1; criteres.push({ status:"warn", text:"MRB " + mrb.toFixed(1) + " - limite (cible <10)" }); }
+    else { criteres.push({ status:"fail", text:"MRB " + mrb.toFixed(1) + " - eleve (>12, prix exigeant vs revenus)" }); }
+  }
+  if (annee && annee < 1960) { score -= 5; criteres.push({ status:"warn", text:"Batiment construit en " + annee + " - pre-1960, capex eleve probable (toiture, fondations, electricite)" }); }
+  score = Math.max(0, Math.min(100, Math.round(score)));
+  var verdict, classe;
+  if (score >= 80) { verdict = "Visite prioritaire"; classe = "green"; }
+  else if (score >= 60) { verdict = "A surveiller"; classe = "orange"; }
+  else { verdict = "Pass"; classe = "red"; }
+  return { score:score, verdict:verdict, verdictClasse:classe, criteres:criteres };
+}
+function fmt$(n) {
+  if (n === null || n === undefined || Number.isNaN(n)) return "-";
+  if (Math.abs(n) < 1) return n.toFixed(2) + "$";
+  return Math.round(n).toLocaleString("fr-CA") + "$";
+}
+function fmt$signe(n) {
+  if (n === null || n === undefined || Number.isNaN(n)) return "-";
+  var abs = Math.abs(Math.round(n)).toLocaleString("fr-CA");
+  return (n >= 0 ? "+" : "-") + abs + "$";
+}
+function fmtPct(n, dec) {
+  if (n === null || n === undefined || Number.isNaN(n)) return "-";
+  if (dec === undefined) dec = 1;
+  return (n * 100).toFixed(dec) + "%";
+}
+function escapeHtml(s) {
+  if (!s) return "";
+  return String(s).replace(/[&<>"]/g, function(c) {
+    return ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" })[c];
+  });
+}
+
+function renderResult(r) {
+  var cf = r.cashflowAnnuel;
+  var cfClass = cf >= 0 ? "good" : (cf >= -12000 ? "warn" : "bad");
+  var dcrClass = r.dcr === null ? "" : (r.dcr >= 1.10 ? "good" : (r.dcr >= 0.90 ? "warn" : "bad"));
+  var tgaClass = r.tga === null ? "" : (r.tga >= r.secteur.tga_cible ? "good" : (r.tga >= r.secteur.tga_cible - 0.01 ? "warn" : "bad"));
+  var mrbClass = r.mrb === null ? "" : (r.mrb <= 10 ? "good" : (r.mrb <= 12 ? "warn" : "bad"));
+  var critsHtml = r.criteres.map(function(c) {
+    var sym = c.status === "pass" ? "OK" : c.status === "warn" ? "~" : "X";
+    return '<li><span class="marker ' + c.status + '">' + sym + '</span><span class="crit-text">' + escapeHtml(c.text) + '</span></li>';
+  }).join("");
+  var opex = r.opex;
+  var opexRows =
+    '<tr><td>Taxes muni + scolaires</td><td>' + fmt$(opex.taxes) + '</td></tr>' +
+    '<tr><td>Assurances</td><td>' + fmt$(opex.assurances) + '</td></tr>' +
+    '<tr><td>Hydro / eau espaces communs</td><td>' + fmt$(opex.hydroEau) + '</td></tr>' +
+    '<tr><td>Deneigement + entretien terrain</td><td>' + fmt$(opex.deneigementTerrain) + '</td></tr>' +
+    '<tr><td>Entretien preventif + reparations</td><td>' + fmt$(opex.entretienRepa) + '</td></tr>' +
+    '<tr><td>Fonds de reserve (capex)</td><td>' + fmt$(opex.fondsReserve) + '</td></tr>' +
+    '<tr><td>Admin / comptabilite / juridique</td><td>' + fmt$(opex.adminCompta) + '</td></tr>' +
+    '<tr><td>Pertes locatives (impayes + dommages)</td><td>' + fmt$(opex.pertesLoyers) + '</td></tr>' +
+    '<tr><td>Ameliorations capitalisees</td><td>' + fmt$(opex.ameliorations) + '</td></tr>' +
+    '<tr class="total"><td>Total depenses operationnelles</td><td>' + fmt$(opex.total) + '</td></tr>';
+  var fr = r.frais;
+  var fraisRows =
+    '<tr><td>Mise de fonds (' + r.misePct + '%)</td><td>' + fmt$(r.miseFonds) + '</td></tr>' +
+    '<tr><td>TVQ sur prime SCHL (9.975%)</td><td>' + fmt$(fr.tvqSurPrime) + '</td></tr>' +
+    '<tr><td>Notaire</td><td>' + fmt$(fr.notaire) + '</td></tr>' +
+    '<tr><td>Droits de mutation (taxe de bienvenue)</td><td>' + fmt$(fr.mutation) + '</td></tr>' +
+    '<tr><td>Inspection (' + r.nbUnites + ' unite' + (r.nbUnites > 1 ? 's' : '') + ')</td><td>' + fmt$(fr.inspection) + '</td></tr>' +
+    (fr.phase1 > 0 ? '<tr><td>Phase 1 environnementale (bati pre-1985)</td><td>' + fmt$(fr.phase1) + '</td></tr>' : '') +
+    '<tr><td>Certificat de localisation</td><td>' + fmt$(fr.certif) + '</td></tr>' +
+    '<tr><td>Ajustements taxes / loyers a closing</td><td>' + fmt$(fr.ajustements) + '</td></tr>' +
+    '<tr><td>Assurance immeuble (1ere annee)</td><td>' + fmt$(fr.assurance1) + '</td></tr>' +
+    '<tr><td>Coussin urgence post-closing</td><td>' + fmt$(fr.coussin) + '</td></tr>' +
+    '<tr class="total"><td>Cash total requis (mise + frais)</td><td>' + fmt$(r.cashTotal) + '</td></tr>';
+  return ''
+    + '<div class="score-banner ' + r.verdictClasse + '">'
+    +   '<div><div class="score-label">Score</div><div class="score-num">' + r.score + '</div></div>'
+    +   '<div style="flex:1"><div class="score-label">Verdict</div><div class="verdict">' + r.verdict + '</div></div>'
+    + '</div>'
+    + '<h3>Ratios cles</h3>'
+    + '<div class="metrics-grid">'
+    +   '<div class="metric ' + tgaClass + '"><div class="metric-label">TGA (cap rate)</div><div class="metric-value">' + fmtPct(r.tga, 2) + '</div><div class="metric-sub">cible secteur ' + fmtPct(r.secteur.tga_cible, 2) + '</div></div>'
+    +   '<div class="metric ' + dcrClass + '"><div class="metric-label">DCR</div><div class="metric-value">' + (r.dcr === null ? '-' : r.dcr.toFixed(2)) + '</div><div class="metric-sub">cible ' + (r.input.occupation === 'investisseur' ? '>=1.20' : '>=0.90') + '</div></div>'
+    +   '<div class="metric ' + mrbClass + '"><div class="metric-label">MRB</div><div class="metric-value">' + (r.mrb === null ? '-' : r.mrb.toFixed(1)) + '</div><div class="metric-sub">cible <=10</div></div>'
+    +   '<div class="metric ' + cfClass + '"><div class="metric-label">Cashflow / mois</div><div class="metric-value">' + fmt$signe(r.cashflowMensuel) + '</div><div class="metric-sub">' + fmt$signe(r.cashflowAnnuel) + '/an</div></div>'
+    + '</div>'
+    + '<h3>Criteres du plan</h3>'
+    + '<ul class="criteria-list">' + critsHtml + '</ul>'
+    + '<div class="collapsible-toggle" onclick="toggleCollapse(this)">Details revenus / depenses</div>'
+    + '<div class="collapsible-content"><table class="breakdown">'
+    +   '<tr><td>Loyers bruts annuels</td><td>' + fmt$(r.revenuBrutAnnuel) + '</td></tr>'
+    +   '<tr class="subtle"><td>Vacance (' + (r.vacancePct*100).toFixed(0) + '%)</td><td>-' + fmt$(r.vacance) + '</td></tr>'
+    +   '<tr><td>Revenu net effectif</td><td>' + fmt$(r.revenuNetEffectif) + '</td></tr>'
+    +   opexRows
+    +   '<tr class="total ' + (r.noi >= 0 ? 'pos' : 'neg') + '"><td>NOI</td><td>' + fmt$signe(r.noi) + '</td></tr>'
+    +   '<tr><td>Service de la dette annuel (P+I)</td><td>-' + fmt$(r.serviceDetteAnnuel) + '</td></tr>'
+    +   '<tr class="total ' + (r.cashflowAnnuel >= 0 ? 'pos' : 'neg') + '"><td>Cashflow annuel</td><td>' + fmt$signe(r.cashflowAnnuel) + '</td></tr>'
+    + '</table></div>'
+    + '<div class="collapsible-toggle" onclick="toggleCollapse(this)">Frais dacquisition (cash requis)</div>'
+    + '<div class="collapsible-content"><table class="breakdown">' + fraisRows + '</table>'
+    + '<div class="notes-block">Hypotheses : pret ' + fmt$(r.pretAvecPrime) + ' (incluant prime SCHL ' + fmt$(r.primeMontant) + ' ajoutee au pret), amortissement ' + r.input.amortissement + ' ans a ' + r.input.taux + '%. Paiement mensuel P+I : <strong>' + fmt$(r.paiementMensuel) + '</strong>.</div></div>'
+    + (r.secteur.notes ? '<div class="notes-block"><strong>Note secteur :</strong> ' + escapeHtml(r.secteur.notes) + '</div>' : '');
+}
+window.toggleCollapse = function(el) {
+  el.classList.toggle("open");
+  var next = el.nextElementSibling;
+  if (next) next.classList.toggle("open");
+};
+
+var unitsState = JSON.parse(JSON.stringify(DEFAULT_UNITS));
+var lastResult = null;
+function renderUnits() {
+  var tbody = document.getElementById("units-body");
+  tbody.innerHTML = unitsState.map(function(u, i) {
+    var opts = UNIT_TYPES.map(function(t) { return '<option value="' + t + '"' + (t === u.type ? ' selected' : '') + '>' + t + '</option>'; }).join("");
+    var placeholder = u.statut === "vacant" ? "marche auto" : "ex: 1200";
+    return ''
+      + '<tr>'
+      +   '<td><select data-i="' + i + '" data-k="type">' + opts + '</select></td>'
+      +   '<td><input type="number" data-i="' + i + '" data-k="loyer" value="' + (u.loyer || "") + '" placeholder="' + placeholder + '" min="0" step="10"></td>'
+      +   '<td><select data-i="' + i + '" data-k="statut">'
+      +     '<option value="occupe"' + (u.statut === "occupe" ? " selected" : "") + '>Occupe</option>'
+      +     '<option value="vacant"' + (u.statut === "vacant" ? " selected" : "") + '>Vacant</option>'
+      +   '</select></td>'
+      +   '<td><button class="btn-icon" data-action="del" data-i="' + i + '" title="Retirer">x</button></td>'
+      + '</tr>';
+  }).join("");
+  tbody.querySelectorAll("input, select").forEach(function(el) {
+    el.addEventListener("change", function(e) {
+      var i = Number(e.target.dataset.i);
+      var k = e.target.dataset.k;
+      var v = e.target.value;
+      if (k === "loyer") v = Number(v) || 0;
+      unitsState[i][k] = v;
+    });
+    el.addEventListener("input", function(e) {
+      if (e.target.dataset.k === "loyer") {
+        var i = Number(e.target.dataset.i);
+        unitsState[i].loyer = Number(e.target.value) || 0;
+      }
+    });
+  });
+  tbody.querySelectorAll('[data-action="del"]').forEach(function(b) {
+    b.addEventListener("click", function(e) {
+      var i = Number(e.target.dataset.i);
+      unitsState.splice(i, 1);
+      renderUnits();
+    });
+  });
+}
+function populateSecteurs() {
+  var sel = document.getElementById("f-secteur");
+  sel.innerHTML = Object.keys(SECTEURS).map(function(k) { return '<option value="' + escapeHtml(k) + '">' + escapeHtml(k) + '</option>'; }).join("");
+}
+function readForm() {
+  return {
+    adresse: document.getElementById("f-adresse").value.trim(),
+    secteur: document.getElementById("f-secteur").value,
+    prix: Number(document.getElementById("f-prix").value) || 0,
+    annee: Number(document.getElementById("f-annee").value) || null,
+    occupation: document.getElementById("f-occupation").value,
+    amortissement: Number(document.getElementById("f-amortissement").value),
+    taux: Number(document.getElementById("f-taux").value) || 5.5,
+    taxes: Number(document.getElementById("f-taxes").value) || 0,
+    units: JSON.parse(JSON.stringify(unitsState)),
+    url: document.getElementById("f-url").value.trim(),
+    notes: document.getElementById("f-notes").value.trim()
+  };
+}
+function resetForm() {
+  ["f-adresse","f-prix","f-annee","f-taxes","f-url","f-notes"].forEach(function(id) { document.getElementById(id).value = ""; });
+  document.getElementById("f-secteur").selectedIndex = 0;
+  document.getElementById("f-occupation").value = "proprio";
+  document.getElementById("f-amortissement").value = "25";
+  document.getElementById("f-taux").value = "5.5";
+  unitsState = JSON.parse(JSON.stringify(DEFAULT_UNITS));
+  renderUnits();
+  document.getElementById("result-card").style.display = "none";
+  lastResult = null;
+}
+function onAnalyze() {
+  var input = readForm();
+  if (!input.prix || input.prix < 10000) { alert("Saisis un prix demande valide (au moins 10 000$)."); return; }
+  if (input.units.length === 0) { alert("Ajoute au moins une unite locative."); return; }
+  lastResult = analyserDeal(input);
+  document.getElementById("result-body").innerHTML = renderResult(lastResult);
+  document.getElementById("result-card").style.display = "block";
+  document.getElementById("result-card").scrollIntoView({ behavior:"smooth", block:"start" });
+}
+function loadDeals() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch (e) { return []; } }
+function saveDeals(deals) { localStorage.setItem(STORAGE_KEY, JSON.stringify(deals)); }
+function renderDeals() {
+  var deals = loadDeals();
+  var c = document.getElementById("deals-container");
+  document.getElementById("deals-count").textContent = deals.length ? "(" + deals.length + ")" : "";
+  if (deals.length === 0) {
+    c.innerHTML = '<div class="empty-state">Aucun deal sauvegarde. Analyse un deal puis clique sur Sauvegarder.</div>';
+    return;
+  }
+  var sorted = deals.slice().sort(function(a, b) { return b.timestamp - a.timestamp; });
+  var rows = sorted.map(function(d) {
+    var date = new Date(d.timestamp).toLocaleDateString("fr-CA", { year:"2-digit", month:"short", day:"numeric" });
+    var cls = d.verdictClasse || "orange";
+    return ''
+      + '<tr class="row-clickable" data-id="' + d.timestamp + '">'
+      +   '<td>' + escapeHtml(date) + '</td>'
+      +   '<td>' + escapeHtml(d.input.adresse || "-") + '</td>'
+      +   '<td>' + escapeHtml(d.secteurNom || "-") + '</td>'
+      +   '<td class="num">' + fmt$(d.input.prix) + '</td>'
+      +   '<td class="num">' + fmtPct(d.tga, 1) + '</td>'
+      +   '<td class="num">' + fmt$signe(d.cashflowMensuel) + '</td>'
+      +   '<td class="num"><span class="pill ' + cls + '">' + d.score + '</span></td>'
+      +   '<td><button class="btn-icon" data-action="del-deal" data-id="' + d.timestamp + '" title="Supprimer">x</button></td>'
+      + '</tr>';
+  }).join("");
+  c.innerHTML = '<div style="overflow-x:auto"><table class="deals-list"><thead><tr><th>Date</th><th>Adresse</th><th>Secteur</th><th class="num">Prix</th><th class="num">TGA</th><th class="num">Cashflow/mois</th><th class="num">Score</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  c.querySelectorAll("tr.row-clickable").forEach(function(row) {
+    row.addEventListener("click", function(e) {
+      if (e.target.dataset.action === "del-deal") return;
+      var id = Number(row.dataset.id);
+      var deal = loadDeals().find(function(d) { return d.timestamp === id; });
+      if (deal) {
+        lastResult = deal;
+        document.getElementById("result-body").innerHTML = renderResult(deal);
+        document.getElementById("result-card").style.display = "block";
+        document.getElementById("result-card").scrollIntoView({ behavior:"smooth", block:"start" });
+      }
+    });
+  });
+  c.querySelectorAll('[data-action="del-deal"]').forEach(function(b) {
+    b.addEventListener("click", function(e) {
+      e.stopPropagation();
+      var id = Number(e.target.dataset.id);
+      var deals2 = loadDeals().filter(function(d) { return d.timestamp !== id; });
+      saveDeals(deals2);
+      renderDeals();
+    });
+  });
+}
+function onSave() {
+  if (!lastResult) return;
+  var deals = loadDeals();
+  var idx = deals.findIndex(function(d) { return d.timestamp === lastResult.timestamp; });
+  if (idx >= 0) deals[idx] = lastResult; else deals.push(lastResult);
+  saveDeals(deals);
+  renderDeals();
+  flashButton("save-btn", "Sauvegarde");
+}
+function flashButton(id, text) {
+  var b = document.getElementById(id);
+  var orig = b.textContent;
+  b.textContent = text;
+  setTimeout(function() { b.textContent = orig; }, 1200);
+}
+function onCopyJSON() {
+  if (!lastResult) return;
+  navigator.clipboard.writeText(JSON.stringify(lastResult, null, 2))
+    .then(function() { flashButton("copy-json-btn", "Copie"); })
+    .catch(function() { alert("Copie impossible"); });
+}
+function onExportAll() {
+  var deals = loadDeals();
+  if (deals.length === 0) { alert("Aucun deal a exporter."); return; }
+  var blob = new Blob([JSON.stringify(deals, null, 2)], { type:"application/json" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "dealfinder-export-" + new Date().toISOString().slice(0, 10) + ".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function onClearAll() {
+  if (!confirm("Effacer TOUS les deals sauvegardes ? Action irreversible.")) return;
+  saveDeals([]);
+  renderDeals();
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  document.getElementById("theme-toggle").textContent = theme === "dark" ? "Clair" : "Sombre";
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", theme === "dark" ? "#0d0d0d" : "#ffffff");
+}
+function initTheme() {
+  var theme = localStorage.getItem(THEME_KEY);
+  if (!theme) theme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  applyTheme(theme);
+}
+function toggleTheme() {
+  var cur = document.documentElement.getAttribute("data-theme") || "light";
+  var next = cur === "dark" ? "light" : "dark";
+  localStorage.setItem(THEME_KEY, next);
+  applyTheme(next);
+}
+function init() {
+  populateSecteurs();
+  renderUnits();
+  initTheme();
+  renderDeals();
+  document.getElementById("add-unit").addEventListener("click", function() {
+    unitsState.push({ type:"4.5", loyer:0, statut:"occupe" });
+    renderUnits();
+  });
+  document.getElementById("analyze-btn").addEventListener("click", onAnalyze);
+  document.getElementById("reset-form-btn").addEventListener("click", resetForm);
+  document.getElementById("save-btn").addEventListener("click", onSave);
+  document.getElementById("copy-json-btn").addEventListener("click", onCopyJSON);
+  document.getElementById("export-all-btn").addEventListener("click", onExportAll);
+  document.getElementById("clear-all-btn").addEventListener("click", onClearAll);
+  document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+else init();
+</script>
+</body>
+</html>
