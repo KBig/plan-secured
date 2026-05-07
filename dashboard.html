@@ -472,6 +472,35 @@ button.action.secondary:hover { background: var(--bg-4); }
   </div>
 
   <div class="card">
+    <div class="card-title">Conjointe (Mode B 50/50, optionnel)</div>
+    <p class="desc" style="margin-bottom:10px">Si renseigné : utilisé pour calculer le patrimoine couple réel. Sinon : approximation × 2 (Mode B 50/50 strict, hypothèse identique à toi).</p>
+    <div class="field">
+      <label>FHSA conjointe ($)</label>
+      <input type="number" id="r-c-fhsa" placeholder="laisser vide = identique à toi" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>CELI conjointe ($)</label>
+      <input type="number" id="r-c-celi" placeholder="laisser vide = identique à toi" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>REER conjointe ($)</label>
+      <input type="number" id="r-c-reer" placeholder="laisser vide = identique à toi" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>Cash + fonds urgence conjointe ($)</label>
+      <input type="number" id="r-c-cash" placeholder="laisser vide = identique à toi" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>Compte non-enregistré conjointe ($)</label>
+      <input type="number" id="r-c-nonreg" placeholder="laisser vide = identique à toi" oninput="saveData()">
+    </div>
+    <div class="field">
+      <label>Équité immobilière conjointe ($)</label>
+      <input type="number" id="r-c-equity" placeholder="laisser vide = identique à toi" oninput="saveData()">
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-title">Choix de path (Section 24)</div>
     <div class="path-selector">
       <button class="path-btn active" data-path="A" onclick="selectPath('A')">
@@ -703,14 +732,27 @@ function loadData() {
 
 function saveData() {
   userData = {};
+  // Champs Mathis
   ['date','age','fhsa','celi','reer','cash','nonreg','revenu','dette','credit','portes','equity','cashflow'].forEach(k => {
     const el = document.getElementById('r-' + k);
     if (el) userData[k] = el.value;
   });
+  // Champs conjointe (préfixe c-) — optionnels
+  ['c-fhsa','c-celi','c-reer','c-cash','c-nonreg','c-equity'].forEach(k => {
+    const el = document.getElementById('r-' + k);
+    if (el) userData[k] = el.value;
+  });
   localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-  // Refresh comparaison + graphique si visibles
   renderComparaison();
   drawChart();
+}
+
+// Helper : retourne la valeur conjointe (champ rempli OU fallback identique à toi)
+function getConjointeValue(key) {
+  const cKey = 'c-' + key;
+  const cVal = userData[cKey];
+  if (cVal !== undefined && cVal !== '' && !Number.isNaN(+cVal)) return +cVal;
+  return +userData[key] || 0;  // Fallback Mode B 50/50 strict
 }
 
 function selectPath(p) {
@@ -994,10 +1036,15 @@ function drawChart() {
 
   // Point réalité (si données saisies)
   const age = +userData.age || 0;
+  // Toi
   const equity = +userData.equity || 0;
   const liquidite = (+userData.fhsa||0) + (+userData.celi||0) + (+userData.reer||0) + (+userData.cash||0) + (+userData.nonreg||0);
   const patrimoineToi_k = (liquidite + equity) / 1000;
-  const patrimoineCouple_k = patrimoineToi_k * 2; // approximation Mode B
+  // Conjointe (vraies données si saisies, sinon fallback identique à toi)
+  const cEquity = getConjointeValue('equity');
+  const cLiquidite = getConjointeValue('fhsa') + getConjointeValue('celi') + getConjointeValue('reer') + getConjointeValue('cash') + getConjointeValue('nonreg');
+  const patrimoineConjointe_k = (cLiquidite + cEquity) / 1000;
+  const patrimoineCouple_k = patrimoineToi_k + patrimoineConjointe_k;
 
   if (age >= ageMin && age <= ageMax && patrimoineCouple_k > 0) {
     const x = xPos(age);
