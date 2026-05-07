@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d0d0d">
+<title>Scan Dealfinder — 2026-05-07-0521</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root { --bg:#fff; --bg-2:#fafafa; --bg-3:#f0f0f0; --text:#111; --text-2:#444; --text-3:#777; --border:#e0e0e0; --border-2:#c8c8c8; --accent:#0066cc; --accent-2:#003d7a; --green:#1a7f37; --green-bg:#ddf4e1; --red:#cf222e; --red-bg:#ffe5e5; --orange:#d1841d; --orange-bg:#fff3dc; --radius:6px; --radius-lg:10px; }
+[data-theme="dark"] { --bg:#0d0d0d; --bg-2:#1a1a1a; --bg-3:#222; --text:#e8e8e8; --text-2:#b8b8b8; --text-3:#888; --border:#333; --border-2:#444; --accent:#66b3ff; --accent-2:#99ccff; --green:#3fb950; --green-bg:#14301c; --red:#f85149; --red-bg:#3a1414; --orange:#f0883e; --orange-bg:#3a2a14; }
+html, body { background:var(--bg); color:var(--text); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; font-size:14px; line-height:1.5; min-height:100vh; }
+.topbar { position:sticky; top:0; z-index:100; background:var(--bg-2); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px; }
+.topbar h1 { font-size:15px; font-weight:600; flex:1; }
+.btn-text { background:transparent; border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; text-decoration:none; }
+.btn-text:hover { background:var(--bg-3); border-color:var(--border-2); color:var(--text); }
+main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
+.summary { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:12px; }
+.summary .stat { text-align:center; }
+.summary .stat-value { font-size:24px; font-weight:700; letter-spacing:-0.02em; }
+.summary .stat-label { font-size:11px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
+.deal { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:14px; }
+.deal-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
+.deal-header .info { flex:1; min-width:0; }
+.deal-header h2 { font-size:16px; font-weight:600; line-height:1.3; margin-bottom:4px; }
+.deal-header .meta { font-size:12px; color:var(--text-3); }
+.deal-header .badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+.badge { font-size:11px; font-weight:600; padding:3px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em; }
+.badge.new { background:var(--green-bg); color:var(--green); }
+.badge.changed { background:var(--orange-bg); color:var(--orange); }
+.badge.priority { background:var(--accent); color:#fff; opacity:0.9; }
+.score-pill { flex-shrink:0; width:64px; height:64px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; }
+.score-pill.green { background:var(--green-bg); color:var(--green); }
+.score-pill.orange { background:var(--orange-bg); color:var(--orange); }
+.score-pill.red { background:var(--red-bg); color:var(--red); }
+.score-pill .num { font-size:22px; line-height:1; }
+.score-pill .lbl { font-size:9px; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; opacity:0.8; }
+.metrics { display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; margin:10px 0; }
+.metric { background:var(--bg-3); border-radius:var(--radius); padding:8px 10px; }
+.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; font-weight:600; }
+.metric-value { font-size:17px; font-weight:700; font-variant-numeric:tabular-nums; margin:4px 0 6px; }
+.metric-sub { font-size:10.5px; color:var(--text-3); line-height:1.45; }
+.metric { padding:10px 11px; }
+.metric.good .metric-value { color:var(--green); }
+.metric.bad .metric-value { color:var(--red); }
+.metric.warn .metric-value { color:var(--orange); }
+.deal-actions { display:flex; gap:10px; margin-top:12px; align-items:center; }
+.deal-actions a.btn-primary-inline { background:var(--accent); color:white; padding:9px 16px; border-radius:var(--radius); text-decoration:none; font-size:13px; font-weight:600; flex:1; text-align:center; }
+.deal-actions a.btn-primary-inline:hover { background:var(--accent-2); }
+.deal-details { display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-size:13px; }
+.deal-details h4 { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-3); margin-top:18px; margin-bottom:8px; }
+.deal-details h4:first-child { margin-top:0; }
+.deal-details .breakdown { width:100%; border-collapse:collapse; font-size:12px; margin-bottom:6px; }
+.deal-details .breakdown td { padding:6px 8px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; }
+.deal-details .breakdown td:last-child { text-align:right; }
+.deal-details .breakdown tr.total td { font-weight:600; border-top:1px solid var(--border-2); border-bottom:1px solid var(--border-2); }
+.deal-details .breakdown tr.subtle td { color:var(--text-3); }
+.deal-details .breakdown tr.pos td:last-child { color:var(--green); }
+.deal-details .breakdown tr.neg td:last-child { color:var(--red); }
+.info-block { font-size:11.5px; color:var(--text-2); background:var(--bg-3); padding:8px 10px; border-radius:var(--radius); margin:8px 0 12px; line-height:1.5; }
+.info-block strong { color:var(--text); }
+.info-block-accent { background:var(--bg-3); border-left:3px solid var(--accent); }
+.deal.open .deal-details { display:block; }
+.toggle { cursor:pointer; user-select:none; font-size:12px; color:var(--accent); white-space:nowrap; padding:9px 12px; }
+.toggle:hover { background:var(--bg-3); border-radius:var(--radius); }
+.crit-list { list-style:none; display:flex; flex-direction:column; gap:4px; margin-top:8px; }
+.crit-list li { padding:6px 8px; background:var(--bg-3); border-radius:var(--radius); display:flex; gap:6px; font-size:12px; }
+.crit-list .marker { font-weight:700; flex-shrink:0; width:18px; }
+.crit-list .marker.pass { color:var(--green); }
+.crit-list .marker.fail { color:var(--red); }
+.crit-list .marker.warn { color:var(--orange); }
+.empty { text-align:center; color:var(--text-3); padding:40px; font-size:14px; }
+.filter-bar { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+.filter-bar button { background:var(--bg-2); border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; }
+.filter-bar button.active { background:var(--accent); color:white; border-color:var(--accent); }
+.notes { font-size:12px; color:var(--text-3); margin-top:14px; padding:10px 12px; background:var(--bg-2); border-left:3px solid var(--text-3); border-radius:var(--radius); }
+.glossary { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:0; margin-bottom:18px; overflow:hidden; }
+.glossary-toggle { padding:14px 18px; cursor:pointer; font-weight:600; display:flex; justify-content:space-between; align-items:center; user-select:none; }
+.glossary-toggle:hover { background:var(--bg-3); }
+.glossary-toggle::after { content:"▾"; transition:transform 0.15s; }
+.glossary.open .glossary-toggle::after { transform:rotate(180deg); }
+.glossary-content { display:none; padding:0 18px 16px; font-size:13px; line-height:1.6; }
+.glossary.open .glossary-content { display:block; }
+.glossary-content h4 { margin:14px 0 6px; font-size:13px; font-weight:600; color:var(--accent); }
+.glossary-content dl { margin:0 0 8px; }
+.glossary-content dt { font-weight:600; color:var(--text); display:inline; }
+.glossary-content dd { display:inline; margin:0 0 0 4px; color:var(--text-2); }
+.glossary-content dd::after { content:"\A"; white-space:pre; }
+.glossary-content .score-scale { display:flex; gap:6px; margin:6px 0; }
+.glossary-content .score-scale span { padding:3px 8px; border-radius:999px; font-size:11px; font-weight:600; }
+.rejections { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:14px 18px; margin-bottom:18px; }
+.rejections h3 { font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-2); text-transform:uppercase; letter-spacing:0.04em; }
+.rejections table { width:100%; font-size:13px; border-collapse:collapse; }
+.rejections td { padding:6px 0; border-bottom:1px solid var(--border); }
+.rejections td:last-child { text-align:right; font-variant-numeric:tabular-nums; color:var(--text-3); }
+.rejections tr:last-child td { border-bottom:none; font-weight:600; }
+.condition-banner { display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 4px; }
+.condition-banner .cond-badge { font-size:11px; font-weight:600; padding:4px 9px; border-radius:6px; }
+.cond-badge.good-state { background:var(--green-bg); color:var(--green); }
+.cond-badge.warn-state { background:var(--orange-bg); color:var(--orange); }
+.cond-badge.bad-state { background:var(--red-bg); color:var(--red); }
+.cond-badge.neutral-state { background:var(--bg-3); color:var(--text-2); }
+.deal-photo { width:100%; max-height:200px; object-fit:cover; border-radius:var(--radius); margin:10px 0; background:var(--bg-3); }
+.deal-quick-facts { display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:6px; margin:8px 0 10px; font-size:12px; }
+.deal-quick-facts .fact { background:var(--bg-3); padding:6px 8px; border-radius:var(--radius); }
+.deal-quick-facts .fact-label { color:var(--text-3); font-size:10px; text-transform:uppercase; letter-spacing:0.04em; }
+.deal-quick-facts .fact-value { color:var(--text); font-weight:500; }
+</style>
+</head>
+<body>
+<div class="topbar">
+<a href="index.html" class="btn-text">&larr; Plan</a>
+<a href="dealfinder.html" class="btn-text">Analyseur manuel</a>
+<h1>Scan auto — 07 May 2026, 05h21</h1>
+<button class="btn-text" id="theme-toggle">Sombre</button>
+</div>
+<main>
+<div class="summary">
+<div class="stat"><div class="stat-value">24</div><div class="stat-label">Annonces scrapées</div></div>
+<div class="stat"><div class="stat-value" style="color:var(--green)">8</div><div class="stat-label">Nouvelles</div></div>
+<div class="stat"><div class="stat-value" style="color:var(--orange)">0</div><div class="stat-label">Prix modifié</div></div>
+<div class="stat"><div class="stat-value">16</div><div class="stat-label">Filtrées (hors critères)</div></div>
+<div class="stat"><div class="stat-value" style="color:var(--accent)">8</div><div class="stat-label">Retenues à analyser</div></div>
+</div>
+
+<div class="rejections"><h3>Pourquoi seulement 8 retenues sur 24 scrapées</h3><table><tr><td>Bâti pré-1960 (vieux)</td><td>16 annonces</td></tr><tr><td>Total filtrées</td><td>16</td></tr></table><p style="font-size:12px;color:var(--text-3);margin-top:10px">Pour voir plus de deals : élargis <code>max_price</code>, baisse <code>year_built_min</code>, ou augmente <code>max_drive_hours_from_quebec</code> dans <code>scripts/dealfinder/config.json</code>.</p></div>
+
+<div class="glossary" id="glossary">
+<div class="glossary-toggle" onclick="this.parentElement.classList.toggle('open')">Comment lire ce rapport (glossaire + barème score)</div>
+<div class="glossary-content">
+
+<h4>Score 0-100 et verdict</h4>
+<div class="score-scale">
+  <span style="background:var(--green-bg);color:var(--green)">80-100 Visite prioritaire</span>
+  <span style="background:var(--orange-bg);color:var(--orange)">60-79 À surveiller</span>
+  <span style="background:var(--red-bg);color:var(--red)">0-59 Pass</span>
+</div>
+<p>Le score combine 10 critères pondérés. Pondération en mode <strong>propriétaire-occupant</strong> (mise 5%) :</p>
+<dl>
+<dt>Patrimoine net Y1 (35 pts)</dt><dd>la métrique principale — équité forcée + appréciation 5%/an + cashflow après impôt. C'est ce qui compte vraiment selon SDV §9.</dd>
+<dt>Prix dans fourchette secteur (15 pts)</dt><dd>vs cible Section 14.4 du plan.</dd>
+<dt>ROI Y1 sur cash investi (15 pts)</dt><dd>patrimoine créé Y1 ÷ (mise + frais d'acquisition).</dd>
+<dt>DCR (10 pts)</dt><dd>NOI ÷ service de la dette. Tolérance 0.80+ acceptée en propriétaire-occupant.</dd>
+<dt>Loyers actuels vs marché (10 pts)</dt><dd>marge de hausse aux renouvellements.</dd>
+<dt>Priorité secteur (8 pts)</dt><dd>1-10 selon Section 14.4 (Val-Bélair=10, Pont-Rouge=9, Sainte-Foy=4).</dd>
+<dt>État rénovation (5 ± 8 pts)</dt><dd>détection automatique via mots-clés description.</dd>
+<dt>Année construction (5 ± 5 pts)</dt><dd>bonus si ≥1990, pénalité si pré-1960.</dd>
+<dt>MRB bonus (2 pts)</dt><dt>Drapeaux qualitatifs (variable)</dt>
+</dl>
+
+<h4>Glossaire des ratios financiers</h4>
+<dl>
+<dt>NOI (Net Operating Income)</dt><dd>revenus locatifs − dépenses opérationnelles, avant hypothèque. Le "vrai" revenu de l'immeuble.</dd>
+<dt>TGA / Cap rate</dt><dd>NOI ÷ prix d'achat. Cible plan : 5-7% selon secteur.</dd>
+<dt>DCR (Debt Coverage Ratio)</dt><dd>NOI ÷ service de la dette annuel. Banques exigent ≥1.10 pour investisseurs purs, plus tolérantes en propriétaire-occupant.</dd>
+<dt>MRB (Multiplicateur Revenu Brut)</dt><dd>prix ÷ revenu brut annuel. Cible ≤10. Plus c'est haut, plus tu paies cher pour les revenus.</dd>
+<dt>Cashflow / mois</dt><dd>revenus − toutes dépenses incluant hypothèque. Négatif = tu mets de l'argent chaque mois.</dd>
+<dt>Patrimoine net Y1</dt><dd>équité forcée (capital remboursé) + appréciation 5%/an + cashflow après impôt. Mesure la richesse créée la 1ère année.</dd>
+<dt>ROI Y1 sur cash</dt><dd>patrimoine net Y1 ÷ cash investi (mise + frais). Un ROI 30%+ est excellent.</dd>
+</dl>
+
+<h4>Drapeaux automatiques (détectés depuis description)</h4>
+<dl>
+<dt>Rénové récent</dt><dd>"complètement rénové", "refait à neuf", "rénovations majeures effectuées".</dd>
+<dt>Travaux requis</dt><dd>"à rénover", "travaux majeurs requis" — capex non budgété, déduit 8 pts.</dd>
+<dt>Toiture/fenêtres récentes</dt><dd>capex différé, +3 pts.</dd>
+<dt>Unité vacante</dt><dd>opportunité fixer loyer marché OU drapeau rouge.</dd>
+<dt>Rentable / potentiel hausse loyers</dt><dd>vante par le vendeur — à valider avec les chiffres.</dd>
+</dl>
+
+<h4>Hypothèses de calcul (alignées SDV §9 + Section 18)</h4>
+<dl>
+<dt>Mise propriétaire-occupant</dt><dd>5% (SCHL résidentiel 1-4 unités).</dd>
+<dt>Mise investisseur</dt><dd>20% (pas d'assurance SCHL requise).</dd>
+<dt>Taux hypothécaire</dt><dd>5.5% (modifiable dans config.json).</dd>
+<dt>Amortissement</dt><dd>25 ans par défaut.</dd>
+<dt>Vacance</dt><dd>3% (secteur prio 9-10), 5% (prio 7-8), 7% (prio &lt;7).</dd>
+<dt>Appréciation</dt><dd>5%/an (moyenne historique QC).</dd>
+<dt>Taux marginal impôt</dt><dd>36% (compagnon CCQ typique). Ratio locatif déductible = (units-1)/units en propriétaire-occupant.</dd>
+<dt>Dépenses opérationnelles</dt><dd>10 catégories Section 18 — taxes réelles si scrapées sinon 1.37% du prix, assurances 0.6%, fonds réserve 1.2%, etc.</dd>
+<dt>Frais acquisition</dt><dd>Section 18.9 — droits mutation Québec progressifs, notaire 3000$, inspection 500$/unité, Phase 1 environnementale 2000$ si pré-1985, etc.</dd>
+</dl>
+
+</div>
+</div>
+
+<div class="filter-bar">
+<button class="active" data-filter="all">Toutes (8)</button>
+<button data-filter="green">Visite prioritaire</button>
+<button data-filter="orange">À surveiller</button>
+<button data-filter="new">Nouvelles uniquement</button>
+<button data-filter="changed">Prix modifié</button>
+</div>
+
+<div id="deals">
+
+<div class="deal verdict-orange flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>1234 - 1238, 1re Avenue, Québec (La Cité-Limoilou)</h2>
+      <div class="meta">La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill orange">
+      <div class="num">62</div>
+      <div class="lbl">À surveiller</div>
+    </div>
+  </div>
+  <div class="condition-banner"><span class="cond-badge good-state">Toiture récente</span></div>
+  <img class="deal-photo" src="https://mspublic.centris.ca/media.ashx?id=ADDD250DE374719DDDDDDDDDD0&amp;t=pi&amp;w=640&amp;h=480&amp;sm=c" alt="Photo annonce" loading="lazy">
+  <div class="deal-quick-facts"><div class="fact"><div class="fact-label">Style</div><div class="fact-value">En rangée</div></div><div class="fact"><div class="fact-label">Terrain</div><div class="fact-value">2 160 pi²</div></div><div class="fact"><div class="fact-label">Stationnement</div><div class="fact-value">4 (Allée)</div></div><div class="fact"><div class="fact-label">Unités</div><div class="fact-value">2 x 4 ½</div></div></div>
+  <div class="metrics-grid">
+    <div class="metric">
+      <div class="metric-label">Prix demandé</div>
+      <div class="metric-value">555 000$</div>
+      <div class="metric-sub">prix affiché par le vendeur</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">Patrimoine net Y1</div>
+      <div class="metric-value">+16 086$</div>
+      <div class="metric-sub" style="font-style:italic">richesse créée Y1<br>= équité + appréciation 5% + cashflow après impôt</div>
+    </div>
+    <div class="metric good">
+      <div class="metric-label">ROI Y1 sur cash investi</div>
+      <div class="metric-value">30%</div>
+      <div class="metric-sub" style="font-style:italic">patrimoine net Y1 ÷ cash investi (mise + frais)<br>cible ≥30%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">TGA (Cap rate)</div>
+      <div class="metric-value">0.52%</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ prix d'achat<br>cible secteur 4.50%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">DCR (Couverture dette)</div>
+      <div class="metric-value">0.07</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ service hypothécaire<br>cible ≥0.80 (proprio-occupant)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">Cashflow / mois</div>
+      <div class="metric-value">−3 127$</div>
+      <div class="metric-sub" style="font-style:italic">revenus − toutes dépenses (incl. hypothèque)<br>avant déduction fiscale</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Cash requis au closing</div>
+      <div class="metric-value">53 516$</div>
+      <div class="metric-sub" style="font-style:italic">mise de fonds 5% + frais d'acquisition<br>(notaire, mutation, inspection, etc.)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">MRB (Multiplicateur)</div>
+      <div class="metric-value">14.0</div>
+      <div class="metric-sub" style="font-style:italic">prix ÷ revenu brut annuel<br>cible ≤10 (plus bas = mieux)</div>
+    </div>
+    <div class="metric bad"><div class="metric-label">Prix vs Éval. municipale</div><div class="metric-value">314%</div><div class="metric-sub" style="font-style:italic">prix demandé ÷ évaluation gouvernementale<br>sur-évalué (>30%)</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-cite-limoilou/16423396" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
+    <span class="toggle">Détails complets ▾</span>
+  </div>
+  <div class="deal-details">
+
+    <h4>Critères du plan vs ce deal</h4>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 555,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker warn">~</span>Patrimoine net Y1 +16,086$ — moyen</li><li><span class="marker pass">OK</span>Rendement Y1 sur cash investi : 30% — bon ROI</li><li><span class="marker warn">~</span>DCR 0.07 — appoint lourd, valider que économie vs loyer compense</li><li><span class="marker pass">OK</span>Loyers à 88% du marché — marge de hausse aux renouvellements</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire</li><li><span class="marker pass">OK</span>Description signale toiture/fenêtres récentes — capex différé</li><li><span class="marker fail">X</span>Prix demandé à 314% de l&#x27;éval. municipale — sur-évalué de &gt;30% (signal rouge)</li></ul>
+
+    <h4>Patrimoine net créé Année 1 (la métrique clé)</h4>
+    <table class="breakdown">
+      <tr><td>Équité forcée (capital remboursé via P+I)</td><td>+10 511$</td></tr>
+      <tr><td>Appréciation estimée 5%/an (moyenne historique QC)</td><td>+27 750$</td></tr>
+      <tr><td>Cashflow brut annuel (avant impôt)</td><td>−37 524$</td></tr>
+      <tr class="subtle"><td>Retour fiscal (déduction intérêts + opex)</td><td>+15 349$</td></tr>
+      <tr><td>Cashflow après impôt</td><td>−22 175$</td></tr>
+      <tr class="total pos"><td>Patrimoine net créé Y1 (couple)</td><td>+16 086$</td></tr>
+      <tr class="total"><td>Rendement Y1 sur cash investi (mise + frais)</td><td>30.1%</td></tr>
+    </table>
+    <div class="info-block">
+      C'est la <strong>vraie métrique de qualité</strong> selon SDV §9 : un deal propriétaire-occupant peut avoir cashflow Y1 négatif et rester excellent si patrimoine net positif (équité forcée + appréciation 5%/an dépassent la perte cashflow). Sur 5 ans, ce patrimoine se compose et l'écart vs louer devient massif.
+    </div>
+
+    <h4>Caractéristiques de l'immeuble</h4><table class="breakdown"><tr><td style="color:var(--text-3)">Style bâtiment</td><td>En rangée</td></tr><tr><td style="color:var(--text-3)">Superficie terrain</td><td>2 160 pi²</td></tr><tr><td style="color:var(--text-3)">Stationnement</td><td>4 (Allée)</td></tr><tr><td style="color:var(--text-3)">Composition unités</td><td>2 x 4 ½</td></tr><tr><td style="color:var(--text-3)">Unité principale</td><td>4 pièces, 2 chambres, 1 salle de bain</td></tr><tr><td style="color:var(--text-3)">Caractéristiques additionnelles</td><td>Sous-sol 6 pieds +</td></tr><tr><td style="color:var(--text-3)">Évaluation municipale</td><td>177 000$ (2026)</td></tr><tr><td style="color:var(--text-3)">Date d&#x27;emménagement</td><td>30 jours après l’acceptation de la promesse d’achat ou de location</td></tr></table>
+
+    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
+    <table class="breakdown">
+      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>39 720$</td></tr>
+      <tr class="subtle"><td>Vacance (7%)</td><td>−2 780$</td></tr>
+      <tr><td>Revenu net effectif</td><td>36 940$</td></tr>
+      <tr><td>Taxes muni + scolaires</td><td>9 311$</td></tr><tr><td>Assurances immeuble</td><td>3 330$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>3 178$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>6 660$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>993$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>3 885$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>34 057$</td></tr>
+      <tr class="total pos"><td>NOI (revenu net d'exploitation)</td><td>+2 883$</td></tr>
+      <tr><td>Service de la dette annuel (P+I)</td><td>−40 407$</td></tr>
+      <tr class="total neg"><td>Cashflow annuel net</td><td>−37 524$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses cashflow</strong> — Taxes : réelles (9,038$ muni + 273$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
+    </div>
+
+    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
+    <table class="breakdown">
+      <tr><td>Mise de fonds (5%)</td><td>27 750$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 104$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>6 832$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>3 330$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>53 516$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 527 250$ + prime SCHL 21 090$ = 548 340$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 3 367$</strong>.
+    </div>
+
+    
+    <div class="info-block"><strong>Description :</strong> Opportunité EXCEPTIONNELLE d&#x27;investissement dans le quartier branché du Vieux-Limoilou! 2 X 4 1/2 + 1 local commercial TOUT ÉQUIPÉ qui combinent près de 46 000$ en revenus bruts potentiels. Non chauffés &amp; non éclairés. Sur la route du futur Tramway, le local commercial offre une …</div>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>376 - 390, Avenue des Oblats, Québec (La Cité-Limoilou)</h2>
+      <div class="meta">La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">55</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  
+  <img class="deal-photo" src="https://mspublic.centris.ca/media.ashx?id=ADDD250DE96F428DDDDDDDDDDF&amp;t=pi&amp;w=640&amp;h=480&amp;sm=c" alt="Photo annonce" loading="lazy">
+  <div class="deal-quick-facts"><div class="fact"><div class="fact-label">Style</div><div class="fact-value">En rangée</div></div><div class="fact"><div class="fact-label">Terrain</div><div class="fact-value">2 380 pi²</div></div><div class="fact"><div class="fact-label">Unités</div><div class="fact-value">3 x 4 ½</div></div></div>
+  <div class="metrics-grid">
+    <div class="metric">
+      <div class="metric-label">Prix demandé</div>
+      <div class="metric-value">599 000$</div>
+      <div class="metric-sub">prix affiché par le vendeur</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">Patrimoine net Y1</div>
+      <div class="metric-value">+15 575$</div>
+      <div class="metric-sub" style="font-style:italic">richesse créée Y1<br>= équité + appréciation 5% + cashflow après impôt</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">ROI Y1 sur cash investi</div>
+      <div class="metric-value">27%</div>
+      <div class="metric-sub" style="font-style:italic">patrimoine net Y1 ÷ cash investi (mise + frais)<br>cible ≥30%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">TGA (Cap rate)</div>
+      <div class="metric-value">0.43%</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ prix d'achat<br>cible secteur 4.50%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">DCR (Couverture dette)</div>
+      <div class="metric-value">0.06</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ service hypothécaire<br>cible ≥0.80 (proprio-occupant)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">Cashflow / mois</div>
+      <div class="metric-value">−3 419$</div>
+      <div class="metric-sub" style="font-style:italic">revenus − toutes dépenses (incl. hypothèque)<br>avant déduction fiscale</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Cash requis au closing</div>
+      <div class="metric-value">57 027$</div>
+      <div class="metric-sub" style="font-style:italic">mise de fonds 5% + frais d'acquisition<br>(notaire, mutation, inspection, etc.)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">MRB (Multiplicateur)</div>
+      <div class="metric-value">16.3</div>
+      <div class="metric-sub" style="font-style:italic">prix ÷ revenu brut annuel<br>cible ≤10 (plus bas = mieux)</div>
+    </div>
+    <div class="metric bad"><div class="metric-label">Prix vs Éval. municipale</div><div class="metric-value">329%</div><div class="metric-sub" style="font-style:italic">prix demandé ÷ évaluation gouvernementale<br>sur-évalué (>30%)</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-cite-limoilou/24988001" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
+    <span class="toggle">Détails complets ▾</span>
+  </div>
+  <div class="deal-details">
+
+    <h4>Critères du plan vs ce deal</h4>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 599,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker warn">~</span>Patrimoine net Y1 +15,575$ — moyen</li><li><span class="marker warn">~</span>Rendement Y1 sur cash investi : 27% — moyen ROI</li><li><span class="marker warn">~</span>DCR 0.06 — appoint lourd, valider que économie vs loyer compense</li><li><span class="marker pass">OK</span>Loyers à 81% du marché — marge de hausse aux renouvellements</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire</li><li><span class="marker warn">~</span>MRB 16.3 — élevé, prix exigeant vs revenus</li><li><span class="marker fail">X</span>Prix demandé à 329% de l&#x27;éval. municipale — sur-évalué de &gt;30% (signal rouge)</li></ul>
+
+    <h4>Patrimoine net créé Année 1 (la métrique clé)</h4>
+    <table class="breakdown">
+      <tr><td>Équité forcée (capital remboursé via P+I)</td><td>+11 344$</td></tr>
+      <tr><td>Appréciation estimée 5%/an (moyenne historique QC)</td><td>+29 950$</td></tr>
+      <tr><td>Cashflow brut annuel (avant impôt)</td><td>−41 025$</td></tr>
+      <tr class="subtle"><td>Retour fiscal (déduction intérêts + opex)</td><td>+15 306$</td></tr>
+      <tr><td>Cashflow après impôt</td><td>−25 719$</td></tr>
+      <tr class="total pos"><td>Patrimoine net créé Y1 (couple)</td><td>+15 575$</td></tr>
+      <tr class="total"><td>Rendement Y1 sur cash investi (mise + frais)</td><td>27.3%</td></tr>
+    </table>
+    <div class="info-block">
+      C'est la <strong>vraie métrique de qualité</strong> selon SDV §9 : un deal propriétaire-occupant peut avoir cashflow Y1 négatif et rester excellent si patrimoine net positif (équité forcée + appréciation 5%/an dépassent la perte cashflow). Sur 5 ans, ce patrimoine se compose et l'écart vs louer devient massif.
+    </div>
+
+    <h4>Caractéristiques de l'immeuble</h4><table class="breakdown"><tr><td style="color:var(--text-3)">Style bâtiment</td><td>En rangée</td></tr><tr><td style="color:var(--text-3)">Superficie terrain</td><td>2 380 pi²</td></tr><tr><td style="color:var(--text-3)">Composition unités</td><td>3 x 4 ½</td></tr><tr><td style="color:var(--text-3)">Unité principale</td><td>4 pièces, 2 chambres, 1 salle de bain</td></tr><tr><td style="color:var(--text-3)">Évaluation municipale</td><td>182 000$ (2025)</td></tr><tr><td style="color:var(--text-3)">Date d&#x27;emménagement</td><td>Selon les baux</td></tr></table>
+
+    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
+    <table class="breakdown">
+      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>36 660$</td></tr>
+      <tr class="subtle"><td>Vacance (7%)</td><td>−2 566$</td></tr>
+      <tr><td>Revenu net effectif</td><td>34 094$</td></tr>
+      <tr><td>Taxes muni + scolaires</td><td>5 984$</td></tr><tr><td>Assurances immeuble</td><td>3 594$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>2 933$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>7 188$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>916$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>4 193$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>31 508$</td></tr>
+      <tr class="total pos"><td>NOI (revenu net d'exploitation)</td><td>+2 586$</td></tr>
+      <tr><td>Service de la dette annuel (P+I)</td><td>−43 611$</td></tr>
+      <tr class="total neg"><td>Cashflow annuel net</td><td>−41 025$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses cashflow</strong> — Taxes : réelles (5,639$ muni + 345$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
+    </div>
+
+    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
+    <table class="breakdown">
+      <tr><td>Mise de fonds (5%)</td><td>29 950$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 271$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>7 712$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>3 594$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>57 027$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 569 050$ + prime SCHL 22 762$ = 591 812$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 3 634$</strong>.
+    </div>
+
+    
+    <div class="info-block"><strong>Description :</strong> Triplex incluant un garage double en tandem. Revenu potentiel pour juillet 2026 est de 40 032 $. L&#x27;immeuble comprend 3 logements de type 4 1/2, dont un disponible à l&#x27;acheteur. D&#x27;importantes rénovations ont été réalisées au cours des dernières années, incluant le mur de brique, l…</div>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>1218 - 1220, Avenue Saint-Pascal, Québec (La Cité-Limoilou)</h2>
+      <div class="meta">La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • Bâti 1962</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">55</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  
+  <img class="deal-photo" src="https://mspublic.centris.ca/media.ashx?id=ADDD250DE696AFEDDDDDDDDDDD&amp;t=pi&amp;w=640&amp;h=480&amp;sm=c" alt="Photo annonce" loading="lazy">
+  <div class="deal-quick-facts"><div class="fact"><div class="fact-label">Style</div><div class="fact-value">Détaché</div></div><div class="fact"><div class="fact-label">Terrain</div><div class="fact-value">5 948 pi²</div></div><div class="fact"><div class="fact-label">Stationnement</div><div class="fact-value">6 (Allée)</div></div><div class="fact"><div class="fact-label">Unités</div><div class="fact-value">1 x 3 ½, 1 x 4 ½, 1 x 7 ½</div></div></div>
+  <div class="metrics-grid">
+    <div class="metric">
+      <div class="metric-label">Prix demandé</div>
+      <div class="metric-value">624 900$</div>
+      <div class="metric-sub">prix affiché par le vendeur</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">Patrimoine net Y1</div>
+      <div class="metric-value">+15 705$</div>
+      <div class="metric-sub" style="font-style:italic">richesse créée Y1<br>= équité + appréciation 5% + cashflow après impôt</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">ROI Y1 sur cash investi</div>
+      <div class="metric-value">26%</div>
+      <div class="metric-sub" style="font-style:italic">patrimoine net Y1 ÷ cash investi (mise + frais)<br>cible ≥30%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">TGA (Cap rate)</div>
+      <div class="metric-value">0.39%</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ prix d'achat<br>cible secteur 4.50%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">DCR (Couverture dette)</div>
+      <div class="metric-value">0.05</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ service hypothécaire<br>cible ≥0.80 (proprio-occupant)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">Cashflow / mois</div>
+      <div class="metric-value">−3 590$</div>
+      <div class="metric-sub" style="font-style:italic">revenus − toutes dépenses (incl. hypothèque)<br>avant déduction fiscale</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Cash requis au closing</div>
+      <div class="metric-value">61 093$</div>
+      <div class="metric-sub" style="font-style:italic">mise de fonds 5% + frais d'acquisition<br>(notaire, mutation, inspection, etc.)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">MRB (Multiplicateur)</div>
+      <div class="metric-value">17.0</div>
+      <div class="metric-sub" style="font-style:italic">prix ÷ revenu brut annuel<br>cible ≤10 (plus bas = mieux)</div>
+    </div>
+    <div class="metric bad"><div class="metric-label">Prix vs Éval. municipale</div><div class="metric-value">288%</div><div class="metric-sub" style="font-style:italic">prix demandé ÷ évaluation gouvernementale<br>sur-évalué (>30%)</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-cite-limoilou/16910569" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
+    <span class="toggle">Détails complets ▾</span>
+  </div>
+  <div class="deal-details">
+
+    <h4>Critères du plan vs ce deal</h4>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 624,900$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker warn">~</span>Patrimoine net Y1 +15,705$ — moyen</li><li><span class="marker warn">~</span>Rendement Y1 sur cash investi : 26% — moyen ROI</li><li><span class="marker warn">~</span>DCR 0.05 — appoint lourd, valider que économie vs loyer compense</li><li><span class="marker pass">OK</span>Loyers à 82% du marché — marge de hausse aux renouvellements</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire</li><li><span class="marker warn">~</span>Bâti 1962 — vérifier toiture/électricité/plomberie</li><li><span class="marker warn">~</span>MRB 17.0 — élevé, prix exigeant vs revenus</li><li><span class="marker fail">X</span>Prix demandé à 288% de l&#x27;éval. municipale — sur-évalué de &gt;30% (signal rouge)</li></ul>
+
+    <h4>Patrimoine net créé Année 1 (la métrique clé)</h4>
+    <table class="breakdown">
+      <tr><td>Équité forcée (capital remboursé via P+I)</td><td>+11 835$</td></tr>
+      <tr><td>Appréciation estimée 5%/an (moyenne historique QC)</td><td>+31 245$</td></tr>
+      <tr><td>Cashflow brut annuel (avant impôt)</td><td>−43 084$</td></tr>
+      <tr class="subtle"><td>Retour fiscal (déduction intérêts + opex)</td><td>+15 709$</td></tr>
+      <tr><td>Cashflow après impôt</td><td>−27 375$</td></tr>
+      <tr class="total pos"><td>Patrimoine net créé Y1 (couple)</td><td>+15 705$</td></tr>
+      <tr class="total"><td>Rendement Y1 sur cash investi (mise + frais)</td><td>25.7%</td></tr>
+    </table>
+    <div class="info-block">
+      C'est la <strong>vraie métrique de qualité</strong> selon SDV §9 : un deal propriétaire-occupant peut avoir cashflow Y1 négatif et rester excellent si patrimoine net positif (équité forcée + appréciation 5%/an dépassent la perte cashflow). Sur 5 ans, ce patrimoine se compose et l'écart vs louer devient massif.
+    </div>
+
+    <h4>Caractéristiques de l'immeuble</h4><table class="breakdown"><tr><td style="color:var(--text-3)">Style bâtiment</td><td>Détaché</td></tr><tr><td style="color:var(--text-3)">Superficie terrain</td><td>5 948 pi²</td></tr><tr><td style="color:var(--text-3)">Stationnement</td><td>6 (Allée)</td></tr><tr><td style="color:var(--text-3)">Composition unités</td><td>1 x 3 ½, 1 x 4 ½, 1 x 7 ½</td></tr><tr><td style="color:var(--text-3)">Unité principale</td><td>7 pièces, 3 chambres, 1 salle de bain</td></tr><tr><td style="color:var(--text-3)">Caractéristiques additionnelles</td><td>Sous-sol 6 pieds +</td></tr><tr><td style="color:var(--text-3)">Évaluation municipale</td><td>217 000$ (2026)</td></tr><tr><td style="color:var(--text-3)">Date d&#x27;emménagement</td><td>30 jours après l’acceptation de la promesse d’achat ou de location</td></tr></table>
+
+    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
+    <table class="breakdown">
+      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>36 780$</td></tr>
+      <tr class="subtle"><td>Vacance (7%)</td><td>−2 575$</td></tr>
+      <tr><td>Revenu net effectif</td><td>34 205$</td></tr>
+      <tr><td>Taxes muni + scolaires</td><td>5 608$</td></tr><tr><td>Assurances immeuble</td><td>3 749$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>2 942$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>7 499$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>920$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>4 374$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>31 792$</td></tr>
+      <tr class="total pos"><td>NOI (revenu net d'exploitation)</td><td>+2 413$</td></tr>
+      <tr><td>Service de la dette annuel (P+I)</td><td>−45 497$</td></tr>
+      <tr class="total neg"><td>Cashflow annuel net</td><td>−43 084$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses cashflow</strong> — Taxes : réelles (5,296$ muni + 312$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
+    </div>
+
+    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
+    <table class="breakdown">
+      <tr><td>Mise de fonds (5%)</td><td>31 245$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 369$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>8 230$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Phase 1 environnementale (bâti pré-1985)</td><td>2 000$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>3 749$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>61 093$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 593 655$ + prime SCHL 23 746$ = 617 401$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 3 791$</strong>.
+    </div>
+
+    
+    <div class="info-block"><strong>Description :</strong> Ayant comme voisin le magnifique Domaine de Maizerets,voici une occasion rare d&#x27;acquérir ce grand triplex de 1962, n&#x27;ayant jamais été négligé. Grandes pièces lumineuses, situé sur un coin de rue, il est parfait pour un investisseur ou pour un propriétaire occupant désirant une ba…</div>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>111 - 115, Rue Albert-Trudel, Québec (La Haute-Saint-Charles)</h2>
+      <div class="meta">La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • Bâti 2022</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">54</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="condition-banner"><span class="cond-badge good-state">Bâti moderne (1990+)</span></div>
+  <img class="deal-photo" src="https://mspublic.centris.ca/media.ashx?id=ADDD250DE6774CADDDDDDDDDDD&amp;t=pi&amp;w=640&amp;h=480&amp;sm=c" alt="Photo annonce" loading="lazy">
+  <div class="deal-quick-facts"><div class="fact"><div class="fact-label">Style</div><div class="fact-value">Détaché</div></div><div class="fact"><div class="fact-label">Terrain</div><div class="fact-value">5 129 pi²</div></div><div class="fact"><div class="fact-label">Stationnement</div><div class="fact-value">4 (Allée)</div></div><div class="fact"><div class="fact-label">Unités</div><div class="fact-value">2 x 4 ½, 1 x 5 ½</div></div></div>
+  <div class="metrics-grid">
+    <div class="metric">
+      <div class="metric-label">Prix demandé</div>
+      <div class="metric-value">998 000$</div>
+      <div class="metric-sub">prix affiché par le vendeur</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">Patrimoine net Y1</div>
+      <div class="metric-value">+29 286$</div>
+      <div class="metric-sub" style="font-style:italic">richesse créée Y1<br>= équité + appréciation 5% + cashflow après impôt</div>
+    </div>
+    <div class="metric good">
+      <div class="metric-label">ROI Y1 sur cash investi</div>
+      <div class="metric-value">33%</div>
+      <div class="metric-sub" style="font-style:italic">patrimoine net Y1 ÷ cash investi (mise + frais)<br>cible ≥30%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">TGA (Cap rate)</div>
+      <div class="metric-value">0.93%</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ prix d'achat<br>cible secteur 4.50%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">DCR (Couverture dette)</div>
+      <div class="metric-value">0.13</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ service hypothécaire<br>cible ≥0.80 (proprio-occupant)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">Cashflow / mois</div>
+      <div class="metric-value">−5 282$</div>
+      <div class="metric-sub" style="font-style:italic">revenus − toutes dépenses (incl. hypothèque)<br>avant déduction fiscale</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Cash requis au closing</div>
+      <div class="metric-value">88 863$</div>
+      <div class="metric-sub" style="font-style:italic">mise de fonds 5% + frais d'acquisition<br>(notaire, mutation, inspection, etc.)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">MRB (Multiplicateur)</div>
+      <div class="metric-value">16.9</div>
+      <div class="metric-sub" style="font-style:italic">prix ÷ revenu brut annuel<br>cible ≤10 (plus bas = mieux)</div>
+    </div>
+    <div class="metric bad"><div class="metric-label">Prix vs Éval. municipale</div><div class="metric-value">648%</div><div class="metric-sub" style="font-style:italic">prix demandé ÷ évaluation gouvernementale<br>sur-évalué (>30%)</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-haute-saint-charles/14319680" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
+    <span class="toggle">Détails complets ▾</span>
+  </div>
+  <div class="deal-details">
+
+    <h4>Critères du plan vs ce deal</h4>
+    <ul class="crit-list"><li><span class="marker fail">X</span>Prix 998,000$ au-dessus du marché secteur (900,000$ max, +11%)</li><li><span class="marker warn">~</span>Patrimoine net Y1 +29,286$ — moyen</li><li><span class="marker pass">OK</span>Rendement Y1 sur cash investi : 33% — bon ROI</li><li><span class="marker warn">~</span>DCR 0.13 — appoint lourd, valider que économie vs loyer compense</li><li><span class="marker pass">OK</span>Loyers à 131% du marché</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire</li><li><span class="marker pass">OK</span>Bâti 2022 — moderne, capex faible</li><li><span class="marker warn">~</span>MRB 16.9 — élevé, prix exigeant vs revenus</li><li><span class="marker fail">X</span>Prix demandé à 648% de l&#x27;éval. municipale — sur-évalué de &gt;30% (signal rouge)</li></ul>
+
+    <h4>Patrimoine net créé Année 1 (la métrique clé)</h4>
+    <table class="breakdown">
+      <tr><td>Équité forcée (capital remboursé via P+I)</td><td>+18 901$</td></tr>
+      <tr><td>Appréciation estimée 5%/an (moyenne historique QC)</td><td>+49 900$</td></tr>
+      <tr><td>Cashflow brut annuel (avant impôt)</td><td>−63 382$</td></tr>
+      <tr class="subtle"><td>Retour fiscal (déduction intérêts + opex)</td><td>+23 867$</td></tr>
+      <tr><td>Cashflow après impôt</td><td>−39 515$</td></tr>
+      <tr class="total pos"><td>Patrimoine net créé Y1 (couple)</td><td>+29 286$</td></tr>
+      <tr class="total"><td>Rendement Y1 sur cash investi (mise + frais)</td><td>33.0%</td></tr>
+    </table>
+    <div class="info-block">
+      C'est la <strong>vraie métrique de qualité</strong> selon SDV §9 : un deal propriétaire-occupant peut avoir cashflow Y1 négatif et rester excellent si patrimoine net positif (équité forcée + appréciation 5%/an dépassent la perte cashflow). Sur 5 ans, ce patrimoine se compose et l'écart vs louer devient massif.
+    </div>
+
+    <h4>Caractéristiques de l'immeuble</h4><table class="breakdown"><tr><td style="color:var(--text-3)">Style bâtiment</td><td>Détaché</td></tr><tr><td style="color:var(--text-3)">Superficie terrain</td><td>5 129 pi²</td></tr><tr><td style="color:var(--text-3)">Stationnement</td><td>4 (Allée)</td></tr><tr><td style="color:var(--text-3)">Composition unités</td><td>2 x 4 ½, 1 x 5 ½</td></tr><tr><td style="color:var(--text-3)">Unité principale</td><td>4 pièces, 2 chambres, 1 salle de bain</td></tr><tr><td style="color:var(--text-3)">Évaluation municipale</td><td>154 000$ (2026)</td></tr><tr><td style="color:var(--text-3)">Date d&#x27;emménagement</td><td>30 jours après l’acceptation de la promesse d’achat ou de location</td></tr></table>
+
+    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
+    <table class="breakdown">
+      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>59 100$</td></tr>
+      <tr class="subtle"><td>Vacance (7%)</td><td>−4 137$</td></tr>
+      <tr><td>Revenu net effectif</td><td>54 963$</td></tr>
+      <tr><td>Taxes muni + scolaires</td><td>7 828$</td></tr><tr><td>Assurances immeuble</td><td>5 988$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>4 728$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>11 976$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>1 478$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>6 986$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>45 684$</td></tr>
+      <tr class="total pos"><td>NOI (revenu net d'exploitation)</td><td>+9 279$</td></tr>
+      <tr><td>Service de la dette annuel (P+I)</td><td>−72 661$</td></tr>
+      <tr class="total neg"><td>Cashflow annuel net</td><td>−63 382$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses cashflow</strong> — Taxes : réelles (7,341$ muni + 487$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
+    </div>
+
+    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
+    <table class="breakdown">
+      <tr><td>Mise de fonds (5%)</td><td>49 900$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>3 783$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>15 692$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>5 988$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>88 863$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 948 100$ + prime SCHL 37 924$ = 986 024$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 6 055$</strong>.
+    </div>
+
+    
+    <div class="info-block"><strong>Description :</strong> Triplex moderne face à la polyvalente Roger Comtois. Immeuble rénové en 2022 (maison 1960) maintenant enregistré en triplex. Excellents revenus : 111 loué 1 625 $, 113 loué 1 700 $, 115 à 1 600 $ (1 625 $ dès septembre). Comprend 2 spacieux 4½ sur deux étages et 1 grand 5½ avec p…</div>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>2881 - 2885, Avenue Saint-Omer, Québec (Les Rivières)</h2>
+      <div class="meta">La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • Bâti 1985</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">45</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="condition-banner"><span class="cond-badge neutral-state">État : bâti années 70-80</span></div>
+  <img class="deal-photo" src="https://mspublic.centris.ca/media.ashx?id=ADDD250DE632C22DDDDDDDDDD2&amp;t=pi&amp;w=640&amp;h=480&amp;sm=c" alt="Photo annonce" loading="lazy">
+  <div class="deal-quick-facts"><div class="fact"><div class="fact-label">Style</div><div class="fact-value">Détaché</div></div><div class="fact"><div class="fact-label">Terrain</div><div class="fact-value">5 328 pi²</div></div><div class="fact"><div class="fact-label">Stationnement</div><div class="fact-value">5 (Allée)</div></div><div class="fact"><div class="fact-label">Unités</div><div class="fact-value">1 x 2 ½, 2 x 4 ½</div></div></div>
+  <div class="metrics-grid">
+    <div class="metric">
+      <div class="metric-label">Prix demandé</div>
+      <div class="metric-value">649 000$</div>
+      <div class="metric-sub">prix affiché par le vendeur</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">Patrimoine net Y1</div>
+      <div class="metric-value">+11 202$</div>
+      <div class="metric-sub" style="font-style:italic">richesse créée Y1<br>= équité + appréciation 5% + cashflow après impôt</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">ROI Y1 sur cash investi</div>
+      <div class="metric-value">18%</div>
+      <div class="metric-sub" style="font-style:italic">patrimoine net Y1 ÷ cash investi (mise + frais)<br>cible ≥30%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">TGA (Cap rate)</div>
+      <div class="metric-value">-0.34%</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ prix d'achat<br>cible secteur 4.50%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">DCR (Couverture dette)</div>
+      <div class="metric-value">-0.05</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ service hypothécaire<br>cible ≥0.80 (proprio-occupant)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">Cashflow / mois</div>
+      <div class="metric-value">−4 124$</div>
+      <div class="metric-sub" style="font-style:italic">revenus − toutes dépenses (incl. hypothèque)<br>avant déduction fiscale</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Cash requis au closing</div>
+      <div class="metric-value">61 017$</div>
+      <div class="metric-sub" style="font-style:italic">mise de fonds 5% + frais d'acquisition<br>(notaire, mutation, inspection, etc.)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">MRB (Multiplicateur)</div>
+      <div class="metric-value">20.6</div>
+      <div class="metric-sub" style="font-style:italic">prix ÷ revenu brut annuel<br>cible ≤10 (plus bas = mieux)</div>
+    </div>
+    <div class="metric bad"><div class="metric-label">Prix vs Éval. municipale</div><div class="metric-value">363%</div><div class="metric-sub" style="font-style:italic">prix demandé ÷ évaluation gouvernementale<br>sur-évalué (>30%)</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-les-rivieres/16971876" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
+    <span class="toggle">Détails complets ▾</span>
+  </div>
+  <div class="deal-details">
+
+    <h4>Critères du plan vs ce deal</h4>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 649,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker warn">~</span>Patrimoine net Y1 +11,202$ — faible mais positif</li><li><span class="marker warn">~</span>Rendement Y1 sur cash investi : 18% — moyen ROI</li><li><span class="marker warn">~</span>DCR -0.05 — appoint lourd, valider que économie vs loyer compense</li><li><span class="marker warn">~</span>Loyers à 70% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire</li><li><span class="marker pass">OK</span>Bâti 1985 — âge moyen</li><li><span class="marker warn">~</span>MRB 20.6 — élevé, prix exigeant vs revenus</li><li><span class="marker fail">X</span>Prix demandé à 363% de l&#x27;éval. municipale — sur-évalué de &gt;30% (signal rouge)</li></ul>
+
+    <h4>Patrimoine net créé Année 1 (la métrique clé)</h4>
+    <table class="breakdown">
+      <tr><td>Équité forcée (capital remboursé via P+I)</td><td>+12 291$</td></tr>
+      <tr><td>Appréciation estimée 5%/an (moyenne historique QC)</td><td>+32 450$</td></tr>
+      <tr><td>Cashflow brut annuel (avant impôt)</td><td>−49 482$</td></tr>
+      <tr class="subtle"><td>Retour fiscal (déduction intérêts + opex)</td><td>+15 943$</td></tr>
+      <tr><td>Cashflow après impôt</td><td>−33 539$</td></tr>
+      <tr class="total pos"><td>Patrimoine net créé Y1 (couple)</td><td>+11 202$</td></tr>
+      <tr class="total"><td>Rendement Y1 sur cash investi (mise + frais)</td><td>18.4%</td></tr>
+    </table>
+    <div class="info-block">
+      C'est la <strong>vraie métrique de qualité</strong> selon SDV §9 : un deal propriétaire-occupant peut avoir cashflow Y1 négatif et rester excellent si patrimoine net positif (équité forcée + appréciation 5%/an dépassent la perte cashflow). Sur 5 ans, ce patrimoine se compose et l'écart vs louer devient massif.
+    </div>
+
+    <h4>Caractéristiques de l'immeuble</h4><table class="breakdown"><tr><td style="color:var(--text-3)">Style bâtiment</td><td>Détaché</td></tr><tr><td style="color:var(--text-3)">Superficie terrain</td><td>5 328 pi²</td></tr><tr><td style="color:var(--text-3)">Stationnement</td><td>5 (Allée)</td></tr><tr><td style="color:var(--text-3)">Composition unités</td><td>1 x 2 ½, 2 x 4 ½</td></tr><tr><td style="color:var(--text-3)">Unité principale</td><td>4 pièces, 2 chambres, 1 salle de bain</td></tr><tr><td style="color:var(--text-3)">Caractéristiques additionnelles</td><td>Sous-sol 6 pieds +</td></tr><tr><td style="color:var(--text-3)">Évaluation municipale</td><td>179 000$ (2026)</td></tr><tr><td style="color:var(--text-3)">Date d&#x27;emménagement</td><td>30 jours après l’acceptation de la promesse d’achat ou de location</td></tr></table>
+
+    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
+    <table class="breakdown">
+      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>31 440$</td></tr>
+      <tr class="subtle"><td>Vacance (7%)</td><td>−2 201$</td></tr>
+      <tr><td>Revenu net effectif</td><td>29 239$</td></tr>
+      <tr><td>Taxes muni + scolaires</td><td>5 244$</td></tr><tr><td>Assurances immeuble</td><td>3 894$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>2 515$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>7 788$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>786$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>4 543$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>31 470$</td></tr>
+      <tr class="total neg"><td>NOI (revenu net d'exploitation)</td><td>−2 231$</td></tr>
+      <tr><td>Service de la dette annuel (P+I)</td><td>−47 251$</td></tr>
+      <tr class="total neg"><td>Cashflow annuel net</td><td>−49 482$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses cashflow</strong> — Taxes : réelles (4,959$ muni + 285$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
+    </div>
+
+    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
+    <table class="breakdown">
+      <tr><td>Mise de fonds (5%)</td><td>32 450$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 460$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>8 712$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>3 894$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>61 017$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 616 550$ + prime SCHL 24 662$ = 641 212$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 3 938$</strong>.
+    </div>
+
+    
+    <div class="info-block"><strong>Description :</strong> Triplex, situé dans un secteur paisible et dynamique, bien entretenu et rénové au fil des années, 5 stationnements, rangement extérieur, deux 4 1/2 et un 2 1/2, chaque unité dispose d&#x27;une entrée indépendante. Idéale pour propriétaire occupant, grand terrain bordé par de haies mat…</div>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>361 - 365, boulevard Louis-XIV, Québec (Les Rivières)</h2>
+      <div class="meta">La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • Bâti 1962</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">43</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  
+  <img class="deal-photo" src="https://mspublic.centris.ca/media.ashx?id=ADDD250DE666F90DDDDDDDDDDB&amp;t=pi&amp;w=640&amp;h=480&amp;sm=c" alt="Photo annonce" loading="lazy">
+  <div class="deal-quick-facts"><div class="fact"><div class="fact-label">Style</div><div class="fact-value">Détaché</div></div><div class="fact"><div class="fact-label">Sup. habitable</div><div class="fact-value">1 981 pi²</div></div><div class="fact"><div class="fact-label">Terrain</div><div class="fact-value">10 455 pi²</div></div><div class="fact"><div class="fact-label">Stationnement</div><div class="fact-value">6 (Allée)</div></div><div class="fact"><div class="fact-label">Unités</div><div class="fact-value">1 x 3 ½, 1 x 5 ½, 1 x 6 ½</div></div></div>
+  <div class="metrics-grid">
+    <div class="metric">
+      <div class="metric-label">Prix demandé</div>
+      <div class="metric-value">700 000$</div>
+      <div class="metric-sub">prix affiché par le vendeur</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">Patrimoine net Y1</div>
+      <div class="metric-value">+10 258$</div>
+      <div class="metric-sub" style="font-style:italic">richesse créée Y1<br>= équité + appréciation 5% + cashflow après impôt</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">ROI Y1 sur cash investi</div>
+      <div class="metric-value">15%</div>
+      <div class="metric-sub" style="font-style:italic">patrimoine net Y1 ÷ cash investi (mise + frais)<br>cible ≥30%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">TGA (Cap rate)</div>
+      <div class="metric-value">-0.57%</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ prix d'achat<br>cible secteur 4.50%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">DCR (Couverture dette)</div>
+      <div class="metric-value">-0.08</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ service hypothécaire<br>cible ≥0.80 (proprio-occupant)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">Cashflow / mois</div>
+      <div class="metric-value">−4 577$</div>
+      <div class="metric-sub" style="font-style:italic">revenus − toutes dépenses (incl. hypothèque)<br>avant déduction fiscale</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Cash requis au closing</div>
+      <div class="metric-value">67 086$</div>
+      <div class="metric-sub" style="font-style:italic">mise de fonds 5% + frais d'acquisition<br>(notaire, mutation, inspection, etc.)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">MRB (Multiplicateur)</div>
+      <div class="metric-value">22.6</div>
+      <div class="metric-sub" style="font-style:italic">prix ÷ revenu brut annuel<br>cible ≤10 (plus bas = mieux)</div>
+    </div>
+    <div class="metric bad"><div class="metric-label">Prix vs Éval. municipale</div><div class="metric-value">405%</div><div class="metric-sub" style="font-style:italic">prix demandé ÷ évaluation gouvernementale<br>sur-évalué (>30%)</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-les-rivieres/24692761" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
+    <span class="toggle">Détails complets ▾</span>
+  </div>
+  <div class="deal-details">
+
+    <h4>Critères du plan vs ce deal</h4>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 700,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker warn">~</span>Patrimoine net Y1 +10,258$ — faible mais positif</li><li><span class="marker warn">~</span>Rendement Y1 sur cash investi : 15% — moyen ROI</li><li><span class="marker warn">~</span>DCR -0.08 — appoint lourd, valider que économie vs loyer compense</li><li><span class="marker warn">~</span>Loyers à 69% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire</li><li><span class="marker warn">~</span>Bâti 1962 — vérifier toiture/électricité/plomberie</li><li><span class="marker warn">~</span>MRB 22.6 — élevé, prix exigeant vs revenus</li><li><span class="marker fail">X</span>Prix demandé à 405% de l&#x27;éval. municipale — sur-évalué de &gt;30% (signal rouge)</li></ul>
+
+    <h4>Patrimoine net créé Année 1 (la métrique clé)</h4>
+    <table class="breakdown">
+      <tr><td>Équité forcée (capital remboursé via P+I)</td><td>+13 257$</td></tr>
+      <tr><td>Appréciation estimée 5%/an (moyenne historique QC)</td><td>+35 000$</td></tr>
+      <tr><td>Cashflow brut annuel (avant impôt)</td><td>−54 923$</td></tr>
+      <tr class="subtle"><td>Retour fiscal (déduction intérêts + opex)</td><td>+16 924$</td></tr>
+      <tr><td>Cashflow après impôt</td><td>−37 999$</td></tr>
+      <tr class="total pos"><td>Patrimoine net créé Y1 (couple)</td><td>+10 258$</td></tr>
+      <tr class="total"><td>Rendement Y1 sur cash investi (mise + frais)</td><td>15.3%</td></tr>
+    </table>
+    <div class="info-block">
+      C'est la <strong>vraie métrique de qualité</strong> selon SDV §9 : un deal propriétaire-occupant peut avoir cashflow Y1 négatif et rester excellent si patrimoine net positif (équité forcée + appréciation 5%/an dépassent la perte cashflow). Sur 5 ans, ce patrimoine se compose et l'écart vs louer devient massif.
+    </div>
+
+    <h4>Caractéristiques de l'immeuble</h4><table class="breakdown"><tr><td style="color:var(--text-3)">Style bâtiment</td><td>Détaché</td></tr><tr><td style="color:var(--text-3)">Superficie habitable</td><td>1 981 pi²</td></tr><tr><td style="color:var(--text-3)">Superficie terrain</td><td>10 455 pi²</td></tr><tr><td style="color:var(--text-3)">Stationnement</td><td>6 (Allée)</td></tr><tr><td style="color:var(--text-3)">Composition unités</td><td>1 x 3 ½, 1 x 5 ½, 1 x 6 ½</td></tr><tr><td style="color:var(--text-3)">Unité principale</td><td>6 pièces, 2 chambres, 1 salle de bain</td></tr><tr><td style="color:var(--text-3)">Caractéristiques additionnelles</td><td>Sous-sol 6 pieds +</td></tr><tr><td style="color:var(--text-3)">Évaluation municipale</td><td>173 000$ (2026)</td></tr><tr><td style="color:var(--text-3)">Date d&#x27;emménagement</td><td>Selon les baux</td></tr></table>
+
+    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
+    <table class="breakdown">
+      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>31 020$</td></tr>
+      <tr class="subtle"><td>Vacance (7%)</td><td>−2 171$</td></tr>
+      <tr><td>Revenu net effectif</td><td>28 849$</td></tr>
+      <tr><td>Taxes muni + scolaires</td><td>5 350$</td></tr><tr><td>Assurances immeuble</td><td>4 200$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>2 482$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>8 400$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>776$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>4 900$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>32 808$</td></tr>
+      <tr class="total neg"><td>NOI (revenu net d'exploitation)</td><td>−3 959$</td></tr>
+      <tr><td>Service de la dette annuel (P+I)</td><td>−50 964$</td></tr>
+      <tr class="total neg"><td>Cashflow annuel net</td><td>−54 923$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses cashflow</strong> — Taxes : réelles (5,064$ muni + 286$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
+    </div>
+
+    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
+    <table class="breakdown">
+      <tr><td>Mise de fonds (5%)</td><td>35 000$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 653$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>9 732$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Phase 1 environnementale (bâti pré-1985)</td><td>2 000$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>4 200$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>67 086$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 665 000$ + prime SCHL 26 600$ = 691 600$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 4 247$</strong>.
+    </div>
+
+    
+    <div class="info-block"><strong>Description :</strong> Situé dans le secteur recherché de Lebourgneuf, ce triplex très bien entretenu au fil des années représente une excellente opportunité d&#x27;investissement. Il se compose d&#x27;un 6 1/2, d&#x27;un 5 1/2 et d&#x27;un 3 1/2. Toutes les unités sont louées et leur bail renouvelé pour juillet 2026. Les…</div>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>240 - 244, Rue De La Martinière, Québec (La Cité-Limoilou)</h2>
+      <div class="meta">La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • Bâti 1955</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">38</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="condition-banner"><span class="cond-badge warn-state">Pré-1960 — capex élevé probable</span><span class="cond-badge good-state">100% loué</span></div>
+  <img class="deal-photo" src="https://mspublic.centris.ca/media.ashx?id=ADDD250DE6C9CD1DDDDDDDDDD0&amp;t=pi&amp;w=640&amp;h=480&amp;sm=c" alt="Photo annonce" loading="lazy">
+  <div class="deal-quick-facts"><div class="fact"><div class="fact-label">Style</div><div class="fact-value">Détaché</div></div><div class="fact"><div class="fact-label">Sup. habitable</div><div class="fact-value">2 700 pi²</div></div><div class="fact"><div class="fact-label">Terrain</div><div class="fact-value">2 756 pi²</div></div><div class="fact"><div class="fact-label">Stationnement</div><div class="fact-value">3 (Allée)</div></div><div class="fact"><div class="fact-label">Unités</div><div class="fact-value">2 x 4 ½, 1 x 5 ½</div></div></div>
+  <div class="metrics-grid">
+    <div class="metric">
+      <div class="metric-label">Prix demandé</div>
+      <div class="metric-value">549 000$</div>
+      <div class="metric-sub">prix affiché par le vendeur</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">Patrimoine net Y1</div>
+      <div class="metric-value">+10 895$</div>
+      <div class="metric-sub" style="font-style:italic">richesse créée Y1<br>= équité + appréciation 5% + cashflow après impôt</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">ROI Y1 sur cash investi</div>
+      <div class="metric-value">20%</div>
+      <div class="metric-sub" style="font-style:italic">patrimoine net Y1 ÷ cash investi (mise + frais)<br>cible ≥30%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">TGA (Cap rate)</div>
+      <div class="metric-value">-0.19%</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ prix d'achat<br>cible secteur 4.50%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">DCR (Couverture dette)</div>
+      <div class="metric-value">-0.03</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ service hypothécaire<br>cible ≥0.80 (proprio-occupant)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">Cashflow / mois</div>
+      <div class="metric-value">−3 416$</div>
+      <div class="metric-sub" style="font-style:italic">revenus − toutes dépenses (incl. hypothèque)<br>avant déduction fiscale</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Cash requis au closing</div>
+      <div class="metric-value">55 037$</div>
+      <div class="metric-sub" style="font-style:italic">mise de fonds 5% + frais d'acquisition<br>(notaire, mutation, inspection, etc.)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">MRB (Multiplicateur)</div>
+      <div class="metric-value">18.3</div>
+      <div class="metric-sub" style="font-style:italic">prix ÷ revenu brut annuel<br>cible ≤10 (plus bas = mieux)</div>
+    </div>
+    <div class="metric bad"><div class="metric-label">Prix vs Éval. municipale</div><div class="metric-value">279%</div><div class="metric-sub" style="font-style:italic">prix demandé ÷ évaluation gouvernementale<br>sur-évalué (>30%)</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-cite-limoilou/11811172" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
+    <span class="toggle">Détails complets ▾</span>
+  </div>
+  <div class="deal-details">
+
+    <h4>Critères du plan vs ce deal</h4>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 549,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker warn">~</span>Patrimoine net Y1 +10,895$ — faible mais positif</li><li><span class="marker warn">~</span>Rendement Y1 sur cash investi : 20% — moyen ROI</li><li><span class="marker warn">~</span>DCR -0.03 — appoint lourd, valider que économie vs loyer compense</li><li><span class="marker warn">~</span>Loyers à 67% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire</li><li><span class="marker warn">~</span>Bâti 1955 — pré-1960, capex élevé probable + risque amiante/vermiculite/pyrite</li><li><span class="marker warn">~</span>MRB 18.3 — élevé, prix exigeant vs revenus</li><li><span class="marker fail">X</span>Prix demandé à 279% de l&#x27;éval. municipale — sur-évalué de &gt;30% (signal rouge)</li></ul>
+
+    <h4>Patrimoine net créé Année 1 (la métrique clé)</h4>
+    <table class="breakdown">
+      <tr><td>Équité forcée (capital remboursé via P+I)</td><td>+10 397$</td></tr>
+      <tr><td>Appréciation estimée 5%/an (moyenne historique QC)</td><td>+27 450$</td></tr>
+      <tr><td>Cashflow brut annuel (avant impôt)</td><td>−40 990$</td></tr>
+      <tr class="subtle"><td>Retour fiscal (déduction intérêts + opex)</td><td>+14 038$</td></tr>
+      <tr><td>Cashflow après impôt</td><td>−26 952$</td></tr>
+      <tr class="total pos"><td>Patrimoine net créé Y1 (couple)</td><td>+10 895$</td></tr>
+      <tr class="total"><td>Rendement Y1 sur cash investi (mise + frais)</td><td>19.8%</td></tr>
+    </table>
+    <div class="info-block">
+      C'est la <strong>vraie métrique de qualité</strong> selon SDV §9 : un deal propriétaire-occupant peut avoir cashflow Y1 négatif et rester excellent si patrimoine net positif (équité forcée + appréciation 5%/an dépassent la perte cashflow). Sur 5 ans, ce patrimoine se compose et l'écart vs louer devient massif.
+    </div>
+
+    <h4>Caractéristiques de l'immeuble</h4><table class="breakdown"><tr><td style="color:var(--text-3)">Style bâtiment</td><td>Détaché</td></tr><tr><td style="color:var(--text-3)">Superficie habitable</td><td>2 700 pi²</td></tr><tr><td style="color:var(--text-3)">Superficie terrain</td><td>2 756 pi²</td></tr><tr><td style="color:var(--text-3)">Stationnement</td><td>3 (Allée)</td></tr><tr><td style="color:var(--text-3)">Composition unités</td><td>2 x 4 ½, 1 x 5 ½</td></tr><tr><td style="color:var(--text-3)">Unité principale</td><td>4 pièces, 2 chambres, 1 salle de bain</td></tr><tr><td style="color:var(--text-3)">Évaluation municipale</td><td>197 000$ (2026)</td></tr><tr><td style="color:var(--text-3)">Date d&#x27;emménagement</td><td>30 jours après l’acceptation de la promesse d’achat ou de location</td></tr></table>
+
+    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
+    <table class="breakdown">
+      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>30 000$</td></tr>
+      <tr class="subtle"><td>Vacance (7%)</td><td>−2 100$</td></tr>
+      <tr><td>Revenu net effectif</td><td>27 900$</td></tr>
+      <tr><td>Taxes muni + scolaires</td><td>5 344$</td></tr><tr><td>Assurances immeuble</td><td>3 294$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>2 400$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>6 588$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>750$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>3 843$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>28 919$</td></tr>
+      <tr class="total neg"><td>NOI (revenu net d'exploitation)</td><td>−1 019$</td></tr>
+      <tr><td>Service de la dette annuel (P+I)</td><td>−39 971$</td></tr>
+      <tr class="total neg"><td>Cashflow annuel net</td><td>−40 990$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses cashflow</strong> — Taxes : réelles (5,050$ muni + 294$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
+    </div>
+
+    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
+    <table class="breakdown">
+      <tr><td>Mise de fonds (5%)</td><td>27 450$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 081$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>6 712$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Phase 1 environnementale (bâti pré-1985)</td><td>2 000$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>3 294$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>55 037$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 521 550$ + prime SCHL 20 862$ = 542 412$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 3 331$</strong>.
+    </div>
+
+    
+    <div class="info-block"><strong>Description :</strong> TRIPLEX très bien situé dans Limoilou, à deux pas du Grand Marché et du Centre Vidéotron, cet immeuble offre 1 x 5½ + 2 x 4½, tous loués non chauffés/non éclairés, chacun avec son propre stationnement. Les baux sont renouvelés. Revenus bruts de 30 000 $/année à compter du 1er jui…</div>
+  </div>
+</div>
+
+<div class="deal verdict-red flag-new">
+  <div class="deal-header">
+    <div class="info">
+      <h2>273 - 277, Rue Champlain, Québec (La Cité-Limoilou)</h2>
+      <div class="meta">La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • Bâti 1952</div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
+    </div>
+    <div class="score-pill red">
+      <div class="num">38</div>
+      <div class="lbl">Pass</div>
+    </div>
+  </div>
+  <div class="condition-banner"><span class="cond-badge warn-state">Pré-1960 — capex élevé probable</span></div>
+  <img class="deal-photo" src="https://mspublic.centris.ca/media.ashx?id=ADDD250DE714539DDDDDDDDDDF&amp;t=pi&amp;w=640&amp;h=480&amp;sm=c" alt="Photo annonce" loading="lazy">
+  <div class="deal-quick-facts"><div class="fact"><div class="fact-label">Style</div><div class="fact-value">Détaché</div></div><div class="fact"><div class="fact-label">Sup. habitable</div><div class="fact-value">1 470 pi²</div></div><div class="fact"><div class="fact-label">Terrain</div><div class="fact-value">1 637 pi²</div></div><div class="fact"><div class="fact-label">Stationnement</div><div class="fact-value">1 (Allée)</div></div><div class="fact"><div class="fact-label">Unités</div><div class="fact-value">1 x 3 ½, 2 x 4 ½</div></div></div>
+  <div class="metrics-grid">
+    <div class="metric">
+      <div class="metric-label">Prix demandé</div>
+      <div class="metric-value">649 900$</div>
+      <div class="metric-sub">prix affiché par le vendeur</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">Patrimoine net Y1</div>
+      <div class="metric-value">+10 078$</div>
+      <div class="metric-sub" style="font-style:italic">richesse créée Y1<br>= équité + appréciation 5% + cashflow après impôt</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">ROI Y1 sur cash investi</div>
+      <div class="metric-value">16%</div>
+      <div class="metric-sub" style="font-style:italic">patrimoine net Y1 ÷ cash investi (mise + frais)<br>cible ≥30%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">TGA (Cap rate)</div>
+      <div class="metric-value">-0.52%</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ prix d'achat<br>cible secteur 4.50%</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">DCR (Couverture dette)</div>
+      <div class="metric-value">-0.07</div>
+      <div class="metric-sub" style="font-style:italic">NOI ÷ service hypothécaire<br>cible ≥0.80 (proprio-occupant)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">Cashflow / mois</div>
+      <div class="metric-value">−4 225$</div>
+      <div class="metric-sub" style="font-style:italic">revenus − toutes dépenses (incl. hypothèque)<br>avant déduction fiscale</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Cash requis au closing</div>
+      <div class="metric-value">63 088$</div>
+      <div class="metric-sub" style="font-style:italic">mise de fonds 5% + frais d'acquisition<br>(notaire, mutation, inspection, etc.)</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">MRB (Multiplicateur)</div>
+      <div class="metric-value">21.4</div>
+      <div class="metric-sub" style="font-style:italic">prix ÷ revenu brut annuel<br>cible ≤10 (plus bas = mieux)</div>
+    </div>
+    <div class="metric bad"><div class="metric-label">Prix vs Éval. municipale</div><div class="metric-value">430%</div><div class="metric-sub" style="font-style:italic">prix demandé ÷ évaluation gouvernementale<br>sur-évalué (>30%)</div></div>
+  </div>
+  <div class="deal-actions">
+    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-cite-limoilou/14297465" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
+    <span class="toggle">Détails complets ▾</span>
+  </div>
+  <div class="deal-details">
+
+    <h4>Critères du plan vs ce deal</h4>
+    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 649,900$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker warn">~</span>Patrimoine net Y1 +10,078$ — faible mais positif</li><li><span class="marker warn">~</span>Rendement Y1 sur cash investi : 16% — moyen ROI</li><li><span class="marker warn">~</span>DCR -0.07 — appoint lourd, valider que économie vs loyer compense</li><li><span class="marker warn">~</span>Loyers à 67% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire</li><li><span class="marker warn">~</span>Bâti 1952 — pré-1960, capex élevé probable + risque amiante/vermiculite/pyrite</li><li><span class="marker warn">~</span>MRB 21.4 — élevé, prix exigeant vs revenus</li><li><span class="marker fail">X</span>Prix demandé à 430% de l&#x27;éval. municipale — sur-évalué de &gt;30% (signal rouge)</li></ul>
+
+    <h4>Patrimoine net créé Année 1 (la métrique clé)</h4>
+    <table class="breakdown">
+      <tr><td>Équité forcée (capital remboursé via P+I)</td><td>+12 308$</td></tr>
+      <tr><td>Appréciation estimée 5%/an (moyenne historique QC)</td><td>+32 495$</td></tr>
+      <tr><td>Cashflow brut annuel (avant impôt)</td><td>−50 703$</td></tr>
+      <tr class="subtle"><td>Retour fiscal (déduction intérêts + opex)</td><td>+15 978$</td></tr>
+      <tr><td>Cashflow après impôt</td><td>−34 725$</td></tr>
+      <tr class="total pos"><td>Patrimoine net créé Y1 (couple)</td><td>+10 078$</td></tr>
+      <tr class="total"><td>Rendement Y1 sur cash investi (mise + frais)</td><td>16.0%</td></tr>
+    </table>
+    <div class="info-block">
+      C'est la <strong>vraie métrique de qualité</strong> selon SDV §9 : un deal propriétaire-occupant peut avoir cashflow Y1 négatif et rester excellent si patrimoine net positif (équité forcée + appréciation 5%/an dépassent la perte cashflow). Sur 5 ans, ce patrimoine se compose et l'écart vs louer devient massif.
+    </div>
+
+    <h4>Caractéristiques de l'immeuble</h4><table class="breakdown"><tr><td style="color:var(--text-3)">Style bâtiment</td><td>Détaché</td></tr><tr><td style="color:var(--text-3)">Superficie habitable</td><td>1 470 pi²</td></tr><tr><td style="color:var(--text-3)">Superficie terrain</td><td>1 637 pi²</td></tr><tr><td style="color:var(--text-3)">Stationnement</td><td>1 (Allée)</td></tr><tr><td style="color:var(--text-3)">Composition unités</td><td>1 x 3 ½, 2 x 4 ½</td></tr><tr><td style="color:var(--text-3)">Unité principale</td><td>4 pièces, 2 chambres, 1 salle de bain</td></tr><tr><td style="color:var(--text-3)">Évaluation municipale</td><td>151 000$ (2025)</td></tr><tr><td style="color:var(--text-3)">Date d&#x27;emménagement</td><td>Selon les baux</td></tr></table>
+
+    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
+    <table class="breakdown">
+      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>30 300$</td></tr>
+      <tr class="subtle"><td>Vacance (7%)</td><td>−2 121$</td></tr>
+      <tr><td>Revenu net effectif</td><td>28 179$</td></tr>
+      <tr><td>Taxes muni + scolaires</td><td>5 436$</td></tr><tr><td>Assurances immeuble</td><td>3 899$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>2 424$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>7 799$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>758$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>4 549$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>31 565$</td></tr>
+      <tr class="total neg"><td>NOI (revenu net d'exploitation)</td><td>−3 386$</td></tr>
+      <tr><td>Service de la dette annuel (P+I)</td><td>−47 317$</td></tr>
+      <tr class="total neg"><td>Cashflow annuel net</td><td>−50 703$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses cashflow</strong> — Taxes : réelles (5,126$ muni + 310$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
+    </div>
+
+    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
+    <table class="breakdown">
+      <tr><td>Mise de fonds (5%)</td><td>32 495$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 463$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>8 730$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Phase 1 environnementale (bâti pré-1985)</td><td>2 000$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>3 899$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>63 088$</td></tr>
+    </table>
+    <div class="info-block">
+      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 617 405$ + prime SCHL 24 696$ = 642 101$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 3 943$</strong>.
+    </div>
+
+    
+    <div class="info-block"><strong>Description :</strong> Triplex au cachet unique, emplacement exceptionnel. Situé sur la rue Champlain, cet immeuble se distingue par sa vue imprenable sur le fleuve Saint-Laurent et sa proximité immédiate avec le Vieux-Québec. Un logement rénové est libre à l&#x27;acheteur, offrant une flexibilité recherché…</div>
+  </div>
+</div>
+
+</div>
+
+<div class="notes">
+Scan effectué le 2026-05-07 05:21:23 • Source : Centris (triplex/quadruplex) • Critères config : prix max 1 000 000$, 3-4 unités, 1.5h max de Québec.<br>
+Les ratios financiers (TGA / DCR / MRB / cashflow) sont calculés selon les hypothèses du plan (Section 9 SDV + Section 18). Vacance, dépenses opérationnelles et frais d'acquisition sont estimés — à valider sur place.
+</div>
+</main>
+<script>
+(function() {
+  document.querySelectorAll('.toggle').forEach(function(t) {
+    t.addEventListener('click', function() { t.closest('.deal').classList.toggle('open'); });
+  });
+  var btns = document.querySelectorAll('.filter-bar button');
+  btns.forEach(function(b) {
+    b.addEventListener('click', function() {
+      btns.forEach(function(x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      var f = b.dataset.filter;
+      document.querySelectorAll('.deal').forEach(function(d) {
+        var show = f === 'all' || d.classList.contains('verdict-' + f) || d.classList.contains('flag-' + f);
+        d.style.display = show ? '' : 'none';
+      });
+    });
+  });
+  var theme = localStorage.getItem('dealfinder_theme');
+  if (!theme) theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-toggle').textContent = theme === 'dark' ? 'Clair' : 'Sombre';
+  document.getElementById('theme-toggle').addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = cur === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('dealfinder_theme', next);
+    document.documentElement.setAttribute('data-theme', next);
+    this.textContent = next === 'dark' ? 'Clair' : 'Sombre';
+  });
+})();
+</script>
+</body>
+</html>

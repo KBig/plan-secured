@@ -215,8 +215,21 @@ main { max-width:820px; margin:0 auto; padding:20px 16px 100px; }
 </div>
 <div class="field">
 <label for="f-taxes">Taxes muni+scol annuelles ($)</label>
-<input type="number" id="f-taxes" placeholder="laisser vide = estimation auto" min="0" step="100">
-<div class="field-hint">Optionnel. Vide = estime a 1.37% du prix. Si tu as le vrai chiffre (annonce, role municipal), saisis-le pour analyse precise.</div>
+<input type="number" id="f-taxes" placeholder="laisser vide = estimation par secteur" min="0" step="100">
+<div class="field-hint">Optionnel. Vide = estime au taux effectif du secteur (Pont-Rouge 0.95%, Trois-Rivieres 1.30%, etc.).</div>
+</div>
+</div>
+
+<div class="field-row">
+<div class="field">
+<label for="f-eval">Evaluation municipale Total ($)</label>
+<input type="number" id="f-eval" placeholder="optionnel" min="0" step="1000">
+<div class="field-hint">Total Terrain + Batiment depuis le role municipal. Sert a comparer prix demande vs evaluation gouvernementale (signal sur/sous-evalue).</div>
+</div>
+<div class="field">
+<label for="f-description">Description annonce</label>
+<textarea id="f-description" rows="3" placeholder="optionnel - colle le texte de la description Centris"></textarea>
+<div class="field-hint">Detection automatique des drapeaux : "renove recemment", "a renover", "toiture neuve", "100% loue", etc.</div>
 </div>
 </div>
 
@@ -255,20 +268,23 @@ Une ligne par logement. Types : <strong>1.5</strong> (studio), <strong>2.5</stro
 </div>
 </main><script>
 "use strict";
+// IMPORTANT : ce dict doit rester synchronisé avec scripts/dealfinder/analyzer.py SECTEURS.
+// Toute modification de loyers/vacance/appreciation/taxes ici doit être propagée à Python.
 var SECTEURS = {
-  "Lac-Sergent / Portneuf (Pont-Rouge, St-Basile)": { prix_min:350000, prix_max:750000, loyer_3_5:980, loyer_4_5:1180, loyer_5_5:1380, loyer_6_5:1500, tga_cible:0.065, priorite:9, notes:"Sous-evalue + proche de chez toi. Cible top pour 1er achat." },
-  "Val-Belair / Loretteville / Neufchatel": { prix_min:400000, prix_max:850000, loyer_3_5:1100, loyer_4_5:1300, loyer_5_5:1500, loyer_6_5:1620, tga_cible:0.060, priorite:10, notes:"CIBLE TOP - Boom Valcartier en cours. Demande locative forte." },
-  "Shannon / St-Gabriel-de-Valcartier": { prix_min:300000, prix_max:700000, loyer_3_5:1100, loyer_4_5:1300, loyer_5_5:1500, loyer_6_5:1620, tga_cible:0.062, priorite:9, notes:"Boom Valcartier proche, demande militaire." },
-  "Stoneham / Tewkesbury / Lac-Beauport": { prix_min:400000, prix_max:750000, loyer_3_5:1080, loyer_4_5:1280, loyer_5_5:1480, loyer_6_5:1600, tga_cible:0.055, priorite:8, notes:"Boom Valcartier." },
-  "Beauport": { prix_min:400000, prix_max:850000, loyer_3_5:1080, loyer_4_5:1280, loyer_5_5:1480, loyer_6_5:1600, tga_cible:0.055, priorite:8, notes:"" },
-  "Charlesbourg": { prix_min:450000, prix_max:950000, loyer_3_5:1120, loyer_4_5:1320, loyer_5_5:1520, loyer_6_5:1640, tga_cible:0.052, priorite:7, notes:"" },
-  "Levis / St-Romuald / Charny": { prix_min:380000, prix_max:800000, loyer_3_5:1020, loyer_4_5:1220, loyer_5_5:1420, loyer_6_5:1540, tga_cible:0.060, priorite:7, notes:"" },
-  "St-Raymond / Donnacona": { prix_min:320000, prix_max:650000, loyer_3_5:920, loyer_4_5:1120, loyer_5_5:1320, loyer_6_5:1440, tga_cible:0.070, priorite:7, notes:"" },
-  "La Cite / Limoilou / Vieux-Quebec / St-Roch": { prix_min:400000, prix_max:900000, loyer_3_5:1050, loyer_4_5:1250, loyer_5_5:1450, loyer_6_5:1570, tga_cible:0.045, priorite:6, notes:"" },
-  "Trois-Rivieres / Cap-de-la-Madeleine": { prix_min:280000, prix_max:600000, loyer_3_5:880, loyer_4_5:1050, loyer_5_5:1250, loyer_6_5:1370, tga_cible:0.075, priorite:6, notes:"Phase 3 (post-2027), plus loin." },
-  "Drummondville / Victoriaville": { prix_min:280000, prix_max:600000, loyer_3_5:880, loyer_4_5:1050, loyer_5_5:1250, loyer_6_5:1370, tga_cible:0.072, priorite:5, notes:"Phase 3 (post-2027), plus loin." },
-  "Sainte-Foy / Sillery / Cap-Rouge": { prix_min:500000, prix_max:1300000, loyer_3_5:1180, loyer_4_5:1380, loyer_5_5:1580, loyer_6_5:1700, tga_cible:0.038, priorite:4, notes:"Plus-value mais TGA bas - cashflow negatif probable." },
-  "Autre / non liste": { prix_min:0, prix_max:5000000, loyer_3_5:1000, loyer_4_5:1200, loyer_5_5:1400, loyer_6_5:1520, tga_cible:0.060, priorite:5, notes:"Pas de criteres de reference - analyse strictement financiere." }
+  "Lac-Sergent / Portneuf (Pont-Rouge, St-Basile)": { prix_min:350000, prix_max:750000, loyer_3_5:980, loyer_4_5:1180, loyer_5_5:1380, loyer_6_5:1500, tga_cible:0.065, priorite:9, drive_hours:0.3, vacance_pct:0.02, appreciation_pct:0.05, taxes_effective_pct:0.0095, notes:"Sous-evalue + proche de chez toi. Cible top pour 1er achat." },
+  "Val-Belair / Loretteville / Neufchatel / Haute-Saint-Charles": { prix_min:400000, prix_max:850000, loyer_3_5:1100, loyer_4_5:1300, loyer_5_5:1500, loyer_6_5:1620, tga_cible:0.060, priorite:10, drive_hours:0.5, vacance_pct:0.02, appreciation_pct:0.06, taxes_effective_pct:0.0100, notes:"CIBLE TOP - Boom Valcartier en cours." },
+  "Les Rivieres (Duberger / Vanier / Lebourgneuf)": { prix_min:380000, prix_max:850000, loyer_3_5:1080, loyer_4_5:1280, loyer_5_5:1480, loyer_6_5:1600, tga_cible:0.055, priorite:7, drive_hours:0.4, vacance_pct:0.025, appreciation_pct:0.045, taxes_effective_pct:0.0100, notes:"Arrondissement central de Quebec - bon ratio prix/proximite services." },
+  "Shannon / St-Gabriel-de-Valcartier": { prix_min:300000, prix_max:700000, loyer_3_5:1100, loyer_4_5:1300, loyer_5_5:1500, loyer_6_5:1620, tga_cible:0.062, priorite:9, drive_hours:0.6, vacance_pct:0.02, appreciation_pct:0.05, taxes_effective_pct:0.0090, notes:"Boom Valcartier proche, demande militaire." },
+  "Stoneham / Tewkesbury / Lac-Beauport": { prix_min:400000, prix_max:750000, loyer_3_5:1080, loyer_4_5:1280, loyer_5_5:1480, loyer_6_5:1600, tga_cible:0.055, priorite:8, drive_hours:0.5, vacance_pct:0.025, appreciation_pct:0.045, taxes_effective_pct:0.0090, notes:"Boom Valcartier." },
+  "Beauport": { prix_min:400000, prix_max:850000, loyer_3_5:1080, loyer_4_5:1280, loyer_5_5:1480, loyer_6_5:1600, tga_cible:0.055, priorite:8, drive_hours:0.7, vacance_pct:0.025, appreciation_pct:0.045, taxes_effective_pct:0.0095, notes:"" },
+  "Charlesbourg": { prix_min:450000, prix_max:950000, loyer_3_5:1120, loyer_4_5:1320, loyer_5_5:1520, loyer_6_5:1640, tga_cible:0.052, priorite:7, drive_hours:0.6, vacance_pct:0.025, appreciation_pct:0.045, taxes_effective_pct:0.0100, notes:"" },
+  "Levis / St-Romuald / Charny": { prix_min:380000, prix_max:800000, loyer_3_5:1020, loyer_4_5:1220, loyer_5_5:1420, loyer_6_5:1540, tga_cible:0.060, priorite:7, drive_hours:0.8, vacance_pct:0.025, appreciation_pct:0.045, taxes_effective_pct:0.0090, notes:"" },
+  "St-Raymond / Donnacona": { prix_min:320000, prix_max:650000, loyer_3_5:920, loyer_4_5:1120, loyer_5_5:1320, loyer_6_5:1440, tga_cible:0.070, priorite:7, drive_hours:0.5, vacance_pct:0.030, appreciation_pct:0.040, taxes_effective_pct:0.0110, notes:"" },
+  "La Cite / Limoilou / Vieux-Quebec / St-Roch": { prix_min:400000, prix_max:900000, loyer_3_5:1050, loyer_4_5:1250, loyer_5_5:1450, loyer_6_5:1570, tga_cible:0.045, priorite:6, drive_hours:0.6, vacance_pct:0.025, appreciation_pct:0.040, taxes_effective_pct:0.0110, notes:"" },
+  "Trois-Rivieres / Cap-de-la-Madeleine": { prix_min:280000, prix_max:600000, loyer_3_5:880, loyer_4_5:1050, loyer_5_5:1250, loyer_6_5:1370, tga_cible:0.075, priorite:6, drive_hours:1.5, vacance_pct:0.025, appreciation_pct:0.035, taxes_effective_pct:0.0130, notes:"Phase 3 (post-2027), plus loin. Taxes municipales elevees (~1.3%)." },
+  "Drummondville / Victoriaville": { prix_min:280000, prix_max:600000, loyer_3_5:880, loyer_4_5:1050, loyer_5_5:1250, loyer_6_5:1370, tga_cible:0.072, priorite:5, drive_hours:2.0, vacance_pct:0.030, appreciation_pct:0.035, taxes_effective_pct:0.0135, notes:"Phase 3 (post-2027), plus loin." },
+  "Sainte-Foy / Sillery / Cap-Rouge": { prix_min:500000, prix_max:1300000, loyer_3_5:1180, loyer_4_5:1380, loyer_5_5:1580, loyer_6_5:1700, tga_cible:0.038, priorite:4, drive_hours:0.6, vacance_pct:0.020, appreciation_pct:0.055, taxes_effective_pct:0.0100, notes:"Plus-value mais TGA bas - cashflow negatif probable." },
+  "Autre / non liste": { prix_min:0, prix_max:5000000, loyer_3_5:1000, loyer_4_5:1200, loyer_5_5:1400, loyer_6_5:1520, tga_cible:0.060, priorite:5, drive_hours:1.0, vacance_pct:0.030, appreciation_pct:0.040, taxes_effective_pct:0.0120, notes:"Pas de criteres de reference - analyse strictement financiere." }
 };
 var UNIT_TYPES = ["1.5", "2.5", "3.5", "4.5", "5.5", "6.5", "7.5"];
 var DEFAULT_UNITS = [
@@ -316,12 +332,12 @@ function fraisAcquisition(prix, nbUnites, anneeConstruction, primeSCHLMontant) {
   var tvqSurPrime = primeSCHLMontant * 0.09975;
   var notaire = 3000;
   var mutation = droitsMutation(prix);
-  var inspection = 500 * Math.max(1, nbUnites);
-  var phase1 = (anneeConstruction && anneeConstruction < 1985) ? 2000 : 0;
+  var inspection = 700 * Math.max(1, nbUnites);  // Aligné Section 18.9 (700/u au lieu de 500/u)
+  var phase1 = (anneeConstruction && anneeConstruction < 1985) ? 3000 : 0;  // ESA pré-1985 : 2500-4000$
   var certif = 1000;
   var ajustements = 3000;
   var assurance1 = Math.round(prix * 0.006);
-  var coussin = 5000;
+  var coussin = 10000;  // Coussin urgence post-closing 4-plex (Section 18.9 plage 5-15k)
   return {
     tvqSurPrime: Math.round(tvqSurPrime), notaire,
     mutation: Math.round(mutation), inspection: Math.round(inspection),
@@ -329,13 +345,14 @@ function fraisAcquisition(prix, nbUnites, anneeConstruction, primeSCHLMontant) {
     total: Math.round(tvqSurPrime + notaire + mutation + inspection + phase1 + certif + ajustements + assurance1 + coussin)
   };
 }
-function depensesOpAnnuelles(prix, revenuBrut, nbUnites, taxesConnues) {
-  var taxes = (taxesConnues && taxesConnues > 0) ? taxesConnues : Math.round(prix * 0.0137);
+function depensesOpAnnuelles(prix, revenuBrut, nbUnites, taxesConnues, taxesEffectivePct) {
+  if (taxesEffectivePct === undefined) taxesEffectivePct = 0.0110;
+  var taxes = (taxesConnues && taxesConnues > 0) ? taxesConnues : Math.round(prix * taxesEffectivePct);
   var assurances = Math.round(prix * 0.006);
   var hydroEau = 800 + (nbUnites * 300);
   var deneigementTerrain = 2000 + (nbUnites * 200);
   var entretienRepa = Math.round(revenuBrut * 0.080);
-  var fondsReserve = Math.round(prix * 0.012);
+  var fondsReserve = Math.round(prix * 0.010);  // 1.0% aligné SDV §9 (était 1.2%)
   var adminCompta = 1500 + (nbUnites * 300);
   var pertesLoyers = Math.round(revenuBrut * 0.025);
   var ameliorations = Math.round(prix * 0.007);
@@ -346,9 +363,45 @@ function depensesOpAnnuelles(prix, revenuBrut, nbUnites, taxesConnues) {
   };
 }
 function tauxVacance(prio) {
-  if (prio >= 9) return 0.03;
-  if (prio >= 7) return 0.05;
-  return 0.07;
+  // Fallback si secteur ne fournit pas vacance_pct (aligné SCHL Rapport marché locatif)
+  if (prio >= 9) return 0.02;
+  if (prio >= 7) return 0.025;
+  return 0.030;
+}
+
+// Drapeaux extraits depuis description (regex aligné Python DESCRIPTION_FLAGS)
+var DESCRIPTION_FLAGS_PATTERNS = {
+  renove_recent: [/r[ée]nov[ée]?\s+(?:r[ée]cemment|\d{4})/i, /r[ée]novations?\s+majeures?\s+(?:effectu[ée]es|compl[ée]t[ée]es)/i, /compl[èe]tement\s+r[ée]nov/i, /refait\s+[aà]\s+neuf/i],
+  renove_partiel: [/r[ée]novations?\s+partielles?/i, /partiellement\s+r[ée]nov/i],
+  a_renover: [/[aà]\s+r[ée]nover/i, /travaux\s+(?:requis|n[ée]cessaires|majeurs)/i, /r[ée]novations?\s+(?:requises?|n[ée]cessaires?|majeures?\s+requises?)/i],
+  toiture_recente: [/toiture\s+(?:r[ée]cente|\d{4}|neuve)/i, /toit\s+\d{4}/i],
+  fenetres_recentes: [/fen[êe]tres?\s+(?:r[ée]centes?|\d{4})/i],
+  occupe_total: [/100\s*%\s+lou[ée]/i, /tous\s+lou[ée]s/i, /compl[èe]tement\s+lou[ée]/i],
+  vacance_partielle: [/\d+\s+lou[ée]s?\s+sur\s+\d+/i, /un\s+(?:logement|appartement)\s+(?:libre|vacant)/i],
+  rentable: [/excellente\s+rentabilit[ée]/i, /forte\s+rentabilit[ée]/i, /tr[èe]s\s+rentable/i],
+  potentiel_aug_loyers: [/potentiel\s+d.augmentation/i, /loyers?\s+sous-?[ée]valu[ée]s?/i]
+};
+function detectDescriptionFlags(description) {
+  var desc = (description || "").toLowerCase();
+  var flags = {};
+  Object.keys(DESCRIPTION_FLAGS_PATTERNS).forEach(function(k) {
+    flags[k] = DESCRIPTION_FLAGS_PATTERNS[k].some(function(re) { return re.test(desc); });
+  });
+  return flags;
+}
+
+function equiteRembourseeAnnee1(principal, tauxAnnuel, ans) {
+  var paiement = paiementHypoMensuel(principal, tauxAnnuel, ans);
+  var r = (tauxAnnuel / 100) / 12;
+  var solde = principal;
+  var capitalTotal = 0;
+  for (var i = 0; i < 12; i++) {
+    var interet = solde * r;
+    var capital = paiement - interet;
+    capitalTotal += capital;
+    solde -= capital;
+  }
+  return Math.round(capitalTotal);
 }
 function loyerEstimePourType(secteur, type) {
   // Loyers tabulés par secteur pour 3.5/4.5/5.5/6.5.
@@ -368,9 +421,11 @@ function analyserDeal(input) {
   var prix = Number(input.prix) || 0;
   var annee = Number(input.annee) || null;
   var taxesConnues = Number(input.taxes) || 0;
+  var evalMunicipale = Number(input.evalMunicipale) || 0;
   var taux = Number(input.taux) || 5.5;
   var ans = Number(input.amortissement) || 25;
   var occupation = input.occupation || "proprio";
+  var description = input.description || "";
   var units = input.units || [];
   var nbUnites = units.length;
   var misePct = (occupation === "proprio") ? 5 : 20;
@@ -379,6 +434,7 @@ function analyserDeal(input) {
   var primePct = primeSCHL(misePct);
   var primeMontant = Math.round(pretBrut * primePct);
   var pretAvecPrime = pretBrut + primeMontant;
+
   var revenuBrutMensuel = 0;
   var revenuMarcheMensuel = 0;
   for (var i = 0; i < units.length; i++) {
@@ -390,10 +446,14 @@ function analyserDeal(input) {
   }
   var revenuBrutAnnuel = revenuBrutMensuel * 12;
   var revenuMarcheAnnuel = revenuMarcheMensuel * 12;
-  var vacancePct = tauxVacance(secteur.priorite);
+
+  // Vacance par secteur (avec fallback priorité)
+  var vacancePct = (secteur.vacance_pct !== undefined) ? secteur.vacance_pct : tauxVacance(secteur.priorite);
   var vacance = Math.round(revenuBrutAnnuel * vacancePct);
   var revenuNetEffectif = revenuBrutAnnuel - vacance;
-  var opex = depensesOpAnnuelles(prix, revenuBrutAnnuel, nbUnites, taxesConnues);
+
+  var taxesEffectivePct = (secteur.taxes_effective_pct !== undefined) ? secteur.taxes_effective_pct : 0.0110;
+  var opex = depensesOpAnnuelles(prix, revenuBrutAnnuel, nbUnites, taxesConnues, taxesEffectivePct);
   var noi = revenuNetEffectif - opex.total;
   var paiementMensuel = paiementHypoMensuel(pretAvecPrime, taux, ans);
   var serviceDetteAnnuel = Math.round(paiementMensuel * 12);
@@ -401,80 +461,185 @@ function analyserDeal(input) {
   var cashflowMensuel = cashflowAnnuel / 12;
   var frais = fraisAcquisition(prix, nbUnites, annee, primeMontant);
   var cashTotal = miseFonds + frais.total;
+
   var mrb = revenuBrutAnnuel > 0 ? prix / revenuBrutAnnuel : null;
   var tga = prix > 0 ? noi / prix : null;
   var dcr = serviceDetteAnnuel > 0 ? noi / serviceDetteAnnuel : null;
   var loyerActuelVsMarche = revenuMarcheAnnuel > 0 ? revenuBrutAnnuel / revenuMarcheAnnuel : 1;
-  var scoring = scorerDeal({ prix:prix, secteur:secteur, tga:tga, dcr:dcr, mrb:mrb, loyerActuelVsMarche:loyerActuelVsMarche, occupation:occupation, annee:annee });
+
+  // Patrimoine net Y1 = équité + appréciation + cashflow après impôt
+  var equiteY1 = equiteRembourseeAnnee1(pretAvecPrime, taux, ans);
+  var appreciationPct = (secteur.appreciation_pct !== undefined) ? secteur.appreciation_pct : 0.045;
+  var appreciationY1 = Math.round(prix * appreciationPct);
+  var interetsY1 = serviceDetteAnnuel - equiteY1;
+  var retourFiscal = 0;
+  if (occupation === "investisseur") {
+    retourFiscal = Math.round((interetsY1 + opex.total) * 0.36);
+  } else if (occupation === "proprio" && nbUnites > 1) {
+    var ratioLocatif = (nbUnites - 1) / nbUnites;
+    retourFiscal = Math.round((interetsY1 + opex.total) * 0.36 * ratioLocatif);
+  }
+  var cashflowApresImpotY1 = cashflowAnnuel + retourFiscal;
+  var patrimoineNetY1 = equiteY1 + appreciationY1 + cashflowApresImpotY1;
+  var rendementSurCash = cashTotal > 0 ? (patrimoineNetY1 / cashTotal * 100) : 0;
+
+  // Prix vs éval municipale (sanity check : 0.3-3.0 sinon parsing wrong)
+  var prixVsEval = null;
+  var prixVsEvalSignal = null;
+  if (evalMunicipale > 0) {
+    var ratio = prix / evalMunicipale;
+    if (ratio >= 0.3 && ratio <= 3.0) {
+      prixVsEval = ratio;
+      if (ratio >= 1.30) prixVsEvalSignal = "tres_eleve";
+      else if (ratio >= 1.20) prixVsEvalSignal = "eleve";
+      else if (ratio >= 1.05) prixVsEvalSignal = "fair";
+      else if (ratio >= 0.95) prixVsEvalSignal = "bon";
+      else prixVsEvalSignal = "potentiel";
+    }
+  }
+
+  var descFlags = detectDescriptionFlags(description);
+
+  var scoring = scorerDeal({
+    prix:prix, secteur:secteur, tga:tga, dcr:dcr, mrb:mrb,
+    loyerActuelVsMarche:loyerActuelVsMarche, occupation:occupation, annee:annee,
+    patrimoineNetY1:patrimoineNetY1, rendementSurCash:rendementSurCash,
+    descFlags:descFlags, prixVsEval:prixVsEval
+  });
   return Object.assign({
     timestamp: Date.now(), input:input, secteurNom:input.secteur, secteur:secteur,
     misePct:misePct, miseFonds:miseFonds, pretBrut:pretBrut, primePct:primePct, primeMontant:primeMontant, pretAvecPrime:pretAvecPrime,
     revenuBrutMensuel:revenuBrutMensuel, revenuBrutAnnuel:revenuBrutAnnuel, revenuMarcheMensuel:revenuMarcheMensuel, revenuMarcheAnnuel:revenuMarcheAnnuel,
     vacancePct:vacancePct, vacance:vacance, revenuNetEffectif:revenuNetEffectif, opex:opex, noi:noi,
     paiementMensuel:paiementMensuel, serviceDetteAnnuel:serviceDetteAnnuel, cashflowAnnuel:cashflowAnnuel, cashflowMensuel:cashflowMensuel,
-    frais:frais, cashTotal:cashTotal, mrb:mrb, tga:tga, dcr:dcr, loyerActuelVsMarche:loyerActuelVsMarche, nbUnites:nbUnites
+    frais:frais, cashTotal:cashTotal, mrb:mrb, tga:tga, dcr:dcr, loyerActuelVsMarche:loyerActuelVsMarche, nbUnites:nbUnites,
+    equiteY1:equiteY1, appreciationY1:appreciationY1, retourFiscalY1:retourFiscal,
+    cashflowApresImpotY1:cashflowApresImpotY1, patrimoineNetY1:patrimoineNetY1, rendementSurCash:rendementSurCash,
+    prixVsEval:prixVsEval, prixVsEvalSignal:prixVsEvalSignal, descFlags:descFlags
   }, scoring);
 }
 
+// IMPORTANT : doit rester aligné sur _score_deal() de scripts/dealfinder/analyzer.py
 function scorerDeal(p) {
   var prix = p.prix, secteur = p.secteur, tga = p.tga, dcr = p.dcr, mrb = p.mrb;
   var loyerActuelVsMarche = p.loyerActuelVsMarche, occupation = p.occupation, annee = p.annee;
+  var patrimoineNetY1 = p.patrimoineNetY1 || 0;
+  var rendementSurCash = p.rendementSurCash || 0;
+  var descFlags = p.descFlags || {};
+  var prixVsEval = p.prixVsEval;
   var criteres = [];
   var score = 0;
+
+  // 1. Prix dans fourchette secteur (15 pts)
   if (prix >= secteur.prix_min && prix <= secteur.prix_max) {
-    score += 25;
+    score += 15;
     criteres.push({ status:"pass", text:"Prix " + fmt$(prix) + " dans la fourchette du secteur (" + fmt$(secteur.prix_min) + "-" + fmt$(secteur.prix_max) + ")" });
   } else if (prix < secteur.prix_min) {
-    score += 22;
-    criteres.push({ status:"warn", text:"Prix " + fmt$(prix) + " sous la fourchette (" + fmt$(secteur.prix_min) + " min) - possiblement sous-evalue ou probleme cache" });
+    score += 13;
+    criteres.push({ status:"warn", text:"Prix " + fmt$(prix) + " sous la fourchette - sous-evalue possible ou probleme cache" });
   } else {
     var overshoot = (prix - secteur.prix_max) / secteur.prix_max;
-    var partiel = Math.max(0, 15 - Math.round(overshoot * 100));
-    score += partiel;
-    criteres.push({ status:"fail", text:"Prix " + fmt$(prix) + " au-dessus de la fourchette (" + fmt$(secteur.prix_max) + " max, depassement +" + (overshoot*100).toFixed(0) + "%)" });
+    score += Math.max(0, 10 - Math.round(overshoot * 60));
+    criteres.push({ status:"fail", text:"Prix " + fmt$(prix) + " au-dessus du marche secteur (" + fmt$(secteur.prix_max) + " max, +" + (overshoot*100).toFixed(0) + "%)" });
   }
-  if (tga !== null) {
-    var tgaPct = tga * 100;
-    var ciblePct = secteur.tga_cible * 100;
-    if (tga >= secteur.tga_cible) { score += 25; criteres.push({ status:"pass", text:"TGA " + tgaPct.toFixed(2) + "% >= cible secteur " + ciblePct.toFixed(2) + "%" }); }
-    else if (tga >= secteur.tga_cible - 0.01) { score += 18; criteres.push({ status:"warn", text:"TGA " + tgaPct.toFixed(2) + "% legerement sous cible (" + ciblePct.toFixed(2) + "%)" }); }
-    else if (tga >= 0) {
-      var ecart = (secteur.tga_cible - tga) * 100;
-      var partiel2 = Math.max(0, 15 - Math.round(ecart * 5));
-      score += partiel2;
-      criteres.push({ status:"fail", text:"TGA " + tgaPct.toFixed(2) + "% sous cible " + ciblePct.toFixed(2) + "% - deficit " + ecart.toFixed(2) + " pts" });
-    } else {
-      criteres.push({ status:"fail", text:"TGA negatif (" + tgaPct.toFixed(2) + "%) - depenses operationnelles > revenus avant hypotheque" });
-    }
+
+  // 2. Patrimoine net Y1 (35 pts proprio / 20 pts investisseur)
+  var pMax = (occupation === "proprio") ? 35 : 20;
+  if (patrimoineNetY1 >= 50000) {
+    score += pMax;
+    criteres.push({ status:"pass", text:"Patrimoine net Y1 " + fmt$signe(patrimoineNetY1) + " - excellent (equite + appreciation + cashflow apres impot)" });
+  } else if (patrimoineNetY1 >= 30000) {
+    score += Math.round(pMax * 0.85);
+    criteres.push({ status:"pass", text:"Patrimoine net Y1 " + fmt$signe(patrimoineNetY1) + " - solide" });
+  } else if (patrimoineNetY1 >= 15000) {
+    score += Math.round(pMax * 0.65);
+    criteres.push({ status:"warn", text:"Patrimoine net Y1 " + fmt$signe(patrimoineNetY1) + " - moyen" });
+  } else if (patrimoineNetY1 >= 0) {
+    score += Math.round(pMax * 0.40);
+    criteres.push({ status:"warn", text:"Patrimoine net Y1 " + fmt$signe(patrimoineNetY1) + " - faible mais positif" });
+  } else {
+    criteres.push({ status:"fail", text:"Patrimoine net Y1 " + fmt$signe(patrimoineNetY1) + " - negatif" });
   }
+
+  // 3. ROI Y1 sur cash investi (15 pts)
+  if (rendementSurCash >= 50) { score += 15; criteres.push({ status:"pass", text:"Rendement Y1 sur cash : " + rendementSurCash.toFixed(0) + "% - excellent ROI" }); }
+  else if (rendementSurCash >= 30) { score += 12; criteres.push({ status:"pass", text:"Rendement Y1 sur cash : " + rendementSurCash.toFixed(0) + "% - bon ROI" }); }
+  else if (rendementSurCash >= 15) { score += 8; criteres.push({ status:"warn", text:"Rendement Y1 sur cash : " + rendementSurCash.toFixed(0) + "% - moyen ROI" }); }
+  else if (rendementSurCash > 0) { score += 4; criteres.push({ status:"warn", text:"Rendement Y1 sur cash : " + rendementSurCash.toFixed(0) + "% - faible ROI" }); }
+  else { criteres.push({ status:"fail", text:"Rendement Y1 sur cash : " + rendementSurCash.toFixed(0) + "% - perte nette" }); }
+
+  // 4. DCR (10 pts proprio / 20 pts investisseur)
   if (dcr !== null) {
+    var dMax = (occupation === "proprio") ? 10 : 20;
     if (occupation === "investisseur") {
-      if (dcr >= 1.20) { score += 20; criteres.push({ status:"pass", text:"DCR " + dcr.toFixed(2) + " - couverture solide pour investisseur" }); }
-      else if (dcr >= 1.10) { score += 15; criteres.push({ status:"warn", text:"DCR " + dcr.toFixed(2) + " - couverture juste pour investisseur (cible >=1.20)" }); }
-      else if (dcr >= 1.00) { score += 8; criteres.push({ status:"fail", text:"DCR " + dcr.toFixed(2) + " - banques refusent generalement <1.10 en investisseur" }); }
-      else { criteres.push({ status:"fail", text:"DCR " + dcr.toFixed(2) + " - cashflow negatif sous plein loyer (rejet quasi certain)" }); }
+      if (dcr >= 1.20) { score += dMax; criteres.push({ status:"pass", text:"DCR " + dcr.toFixed(2) + " - couverture solide investisseur" }); }
+      else if (dcr >= 1.10) { score += Math.round(dMax * 0.75); criteres.push({ status:"warn", text:"DCR " + dcr.toFixed(2) + " - juste pour investisseur (cible >=1.20)" }); }
+      else if (dcr >= 1.00) { score += Math.round(dMax * 0.40); criteres.push({ status:"fail", text:"DCR " + dcr.toFixed(2) + " - banques refusent <1.10 en investisseur" }); }
+      else { criteres.push({ status:"fail", text:"DCR " + dcr.toFixed(2) + " - cashflow negatif, rejet financement quasi certain" }); }
     } else {
-      if (dcr >= 1.10) { score += 20; criteres.push({ status:"pass", text:"DCR " + dcr.toFixed(2) + " - autoporteur meme en proprietaire-occupant" }); }
-      else if (dcr >= 0.90) { score += 14; criteres.push({ status:"warn", text:"DCR " + dcr.toFixed(2) + " - leger appoint mensuel requis (normal en proprietaire-occupant 1-4 unites)" }); }
-      else if (dcr >= 0.70) { score += 8; criteres.push({ status:"warn", text:"DCR " + dcr.toFixed(2) + " - appoint mensuel important (>30% du service de la dette)" }); }
-      else { score += 2; criteres.push({ status:"fail", text:"DCR " + dcr.toFixed(2) + " - appoint mensuel tres lourd, qualifie la residence principale plus que linvestissement" }); }
+      if (dcr >= 1.10) { score += dMax; criteres.push({ status:"pass", text:"DCR " + dcr.toFixed(2) + " - autoporteur meme en proprio-occupant" }); }
+      else if (dcr >= 0.80) { score += Math.round(dMax * 0.85); criteres.push({ status:"pass", text:"DCR " + dcr.toFixed(2) + " - appoint normal en proprio-occupant" }); }
+      else if (dcr >= 0.50) { score += Math.round(dMax * 0.60); criteres.push({ status:"warn", text:"DCR " + dcr.toFixed(2) + " - appoint significatif" }); }
+      else { score += Math.round(dMax * 0.30); criteres.push({ status:"warn", text:"DCR " + dcr.toFixed(2) + " - appoint lourd, valider economie vs loyer" }); }
     }
   }
-  if (loyerActuelVsMarche >= 0.95) { score += 15; criteres.push({ status:"pass", text:"Loyers actuels a " + (loyerActuelVsMarche*100).toFixed(0) + "% du marche - peu de marge de hausse" }); }
-  else if (loyerActuelVsMarche >= 0.80) { score += 12; criteres.push({ status:"pass", text:"Loyers actuels a " + (loyerActuelVsMarche*100).toFixed(0) + "% du marche - marge de hausse aux renouvellements" }); }
-  else if (loyerActuelVsMarche >= 0.65) { score += 8; criteres.push({ status:"warn", text:"Loyers actuels a " + (loyerActuelVsMarche*100).toFixed(0) + "% du marche - gros ecart, verifier baux et clause F" }); }
-  else if (loyerActuelVsMarche > 0) { score += 3; criteres.push({ status:"fail", text:"Loyers actuels a " + (loyerActuelVsMarche*100).toFixed(0) + "% du marche - ecart enorme, baux possiblement rigides" }); }
-  if (secteur.priorite >= 9) { score += 10; criteres.push({ status:"pass", text:"Secteur priorite " + secteur.priorite + "/10 - top du plan" }); }
-  else if (secteur.priorite >= 7) { score += 7; criteres.push({ status:"pass", text:"Secteur priorite " + secteur.priorite + "/10 - solide" }); }
-  else if (secteur.priorite >= 5) { score += 4; criteres.push({ status:"warn", text:"Secteur priorite " + secteur.priorite + "/10 - secondaire dans le plan" }); }
-  else { score += 1; criteres.push({ status:"warn", text:"Secteur priorite " + secteur.priorite + "/10 - faible (TGA bas ou eloigne)" }); }
-  if (mrb !== null && mrb > 0) {
-    if (mrb <= 8) { score += 5; criteres.push({ status:"pass", text:"MRB " + mrb.toFixed(1) + " - excellent (<=8)" }); }
-    else if (mrb <= 10) { score += 3; criteres.push({ status:"pass", text:"MRB " + mrb.toFixed(1) + " - bon (<=10)" }); }
-    else if (mrb <= 12) { score += 1; criteres.push({ status:"warn", text:"MRB " + mrb.toFixed(1) + " - limite (cible <10)" }); }
-    else { criteres.push({ status:"fail", text:"MRB " + mrb.toFixed(1) + " - eleve (>12, prix exigeant vs revenus)" }); }
+
+  // 5. Loyer actuel vs marché (10 pts) — sur-projection au-dessus 130% = warn pas bonus
+  var pct = loyerActuelVsMarche * 100;
+  if (loyerActuelVsMarche >= 1.30) { score += 3; criteres.push({ status:"warn", text:"Loyers a " + pct.toFixed(0) + "% du marche - sur-projection probable (neuf?), valider baux signes" }); }
+  else if (loyerActuelVsMarche >= 0.95) { score += 10; criteres.push({ status:"pass", text:"Loyers a " + pct.toFixed(0) + "% du marche" }); }
+  else if (loyerActuelVsMarche >= 0.80) { score += 8; criteres.push({ status:"pass", text:"Loyers a " + pct.toFixed(0) + "% du marche - marge de hausse aux renouvellements" }); }
+  else if (loyerActuelVsMarche >= 0.65) { score += 5; criteres.push({ status:"warn", text:"Loyers a " + pct.toFixed(0) + "% du marche - gros ecart, verifier baux et clause F" }); }
+  else if (loyerActuelVsMarche > 0) { score += 2; criteres.push({ status:"fail", text:"Loyers a " + pct.toFixed(0) + "% du marche - ecart enorme" }); }
+
+  // 6. Priorité secteur (8 pts)
+  var prio = secteur.priorite;
+  if (prio >= 9) { score += 8; criteres.push({ status:"pass", text:"Secteur priorite " + prio + "/10 - top du plan" }); }
+  else if (prio >= 7) { score += 6; criteres.push({ status:"pass", text:"Secteur priorite " + prio + "/10 - solide" }); }
+  else if (prio >= 5) { score += 3; criteres.push({ status:"warn", text:"Secteur priorite " + prio + "/10 - secondaire" }); }
+  else { score += 1; criteres.push({ status:"warn", text:"Secteur priorite " + prio + "/10 - faible" }); }
+
+  // 7. État rénovation (description)
+  if (descFlags.renove_recent) { score += 5; criteres.push({ status:"pass", text:"Description signale renovations recentes / refait a neuf" }); }
+  else if (descFlags.a_renover) { score -= 8; criteres.push({ status:"fail", text:"Description signale travaux requis - capex non budgete" }); }
+  else if (descFlags.toiture_recente || descFlags.fenetres_recentes) { score += 3; criteres.push({ status:"pass", text:"Description signale toiture/fenetres recentes - capex differe" }); }
+  else if (descFlags.renove_partiel) { score += 2; criteres.push({ status:"warn", text:"Description signale renovations partielles" }); }
+
+  // 8. Année construction
+  if (annee) {
+    if (annee >= 1990) { score += 5; criteres.push({ status:"pass", text:"Bati " + annee + " - moderne, capex faible" }); }
+    else if (annee >= 1970) { score += 2; criteres.push({ status:"pass", text:"Bati " + annee + " - age moyen" }); }
+    else if (annee >= 1960) { criteres.push({ status:"warn", text:"Bati " + annee + " - verifier toiture/electricite/plomberie" }); }
+    else { score -= 5; criteres.push({ status:"warn", text:"Bati " + annee + " - pre-1960, capex eleve probable + risque amiante/vermiculite/pyrite" }); }
   }
-  if (annee && annee < 1960) { score -= 5; criteres.push({ status:"warn", text:"Batiment construit en " + annee + " - pre-1960, capex eleve probable (toiture, fondations, electricite)" }); }
+
+  // 9. MRB bonus (2 pts)
+  if (mrb !== null && mrb > 0) {
+    if (mrb <= 8) { score += 2; criteres.push({ status:"pass", text:"MRB " + mrb.toFixed(1) + " - excellent ratio prix/revenus" }); }
+    else if (mrb <= 10) { score += 1; criteres.push({ status:"pass", text:"MRB " + mrb.toFixed(1) + " - bon ratio" }); }
+    else if (mrb > 14) { criteres.push({ status:"warn", text:"MRB " + mrb.toFixed(1) + " - eleve, prix exigeant vs revenus" }); }
+  }
+
+  // 10. Prix vs évaluation municipale
+  if (prixVsEval !== null && prixVsEval !== undefined) {
+    var ratioPct = prixVsEval * 100;
+    if (prixVsEval >= 1.30) { score -= 5; criteres.push({ status:"fail", text:"Prix demande a " + ratioPct.toFixed(0) + "% de l'eval municipale - sur-evalue >30% (signal rouge)" }); }
+    else if (prixVsEval >= 1.20) { criteres.push({ status:"warn", text:"Prix demande a " + ratioPct.toFixed(0) + "% de l'eval municipale - premium 20%+" }); }
+    else if (prixVsEval >= 1.05) { score += 2; criteres.push({ status:"pass", text:"Prix demande a " + ratioPct.toFixed(0) + "% de l'eval municipale - proche valeur marchande" }); }
+    else if (prixVsEval >= 0.95) { score += 5; criteres.push({ status:"pass", text:"Prix demande a " + ratioPct.toFixed(0) + "% de l'eval municipale - au niveau ou sous l'evaluation" }); }
+    else { score += 3; criteres.push({ status:"pass", text:"Prix demande a " + ratioPct.toFixed(0) + "% de l'eval municipale - sous evaluation (verifier defaut)" }); }
+  }
+
+  // 11. Drapeaux qualitatifs (note seule, evite double-comptage)
+  if (descFlags.rentable) criteres.push({ status:"pass", text:"Description vante la rentabilite (a valider avec les chiffres)" });
+  if (descFlags.potentiel_aug_loyers) criteres.push({ status:"pass", text:"Description signale potentiel hausse loyers (deja reflete dans loyers vs marche)" });
+  if (descFlags.vacance_partielle) criteres.push({ status:"warn", text:"Au moins une unite vacante - opportunite ou drapeau rouge" });
+
+  // 12. Pénalité distance
+  var drive = secteur.drive_hours !== undefined ? secteur.drive_hours : 1.0;
+  if (drive >= 1.5) { score -= 6; criteres.push({ status:"fail", text:"Secteur a " + drive.toFixed(1) + "h de Quebec - gestion a distance lourde, peu compatible Phase 2" }); }
+  else if (drive >= 1.0) { score -= 3; criteres.push({ status:"warn", text:"Secteur a " + drive.toFixed(1) + "h de Quebec - gestion a distance possible mais sub-optimale" }); }
+
   score = Math.max(0, Math.min(100, Math.round(score)));
   var verdict, classe;
   if (score >= 80) { verdict = "Visite prioritaire"; classe = "green"; }
@@ -546,8 +711,10 @@ function renderResult(r) {
     + '</div>'
     + '<h3>Ratios cles</h3>'
     + '<div class="metrics-grid">'
+    +   '<div class="metric ' + (r.patrimoineNetY1 >= 30000 ? "good" : r.patrimoineNetY1 >= 0 ? "warn" : "bad") + '"><div class="metric-label">Patrimoine net Y1</div><div class="metric-value">' + fmt$signe(r.patrimoineNetY1) + '</div><div class="metric-sub">equite + appreciation + cashflow apres impot</div></div>'
+    +   '<div class="metric ' + (r.rendementSurCash >= 30 ? "good" : r.rendementSurCash >= 10 ? "warn" : "bad") + '"><div class="metric-label">ROI Y1 sur cash</div><div class="metric-value">' + r.rendementSurCash.toFixed(0) + '%</div><div class="metric-sub">patrimoine Y1 / (mise + frais)</div></div>'
     +   '<div class="metric ' + tgaClass + '"><div class="metric-label">TGA (cap rate)</div><div class="metric-value">' + fmtPct(r.tga, 2) + '</div><div class="metric-sub">cible secteur ' + fmtPct(r.secteur.tga_cible, 2) + '</div></div>'
-    +   '<div class="metric ' + dcrClass + '"><div class="metric-label">DCR</div><div class="metric-value">' + (r.dcr === null ? '-' : r.dcr.toFixed(2)) + '</div><div class="metric-sub">cible ' + (r.input.occupation === 'investisseur' ? '>=1.20' : '>=0.90') + '</div></div>'
+    +   '<div class="metric ' + dcrClass + '"><div class="metric-label">DCR</div><div class="metric-value">' + (r.dcr === null ? '-' : r.dcr.toFixed(2)) + '</div><div class="metric-sub">cible ' + (r.input.occupation === 'investisseur' ? '>=1.20' : '>=0.80') + '</div></div>'
     +   '<div class="metric ' + mrbClass + '"><div class="metric-label">MRB</div><div class="metric-value">' + (r.mrb === null ? '-' : r.mrb.toFixed(1)) + '</div><div class="metric-sub">cible <=10</div></div>'
     +   '<div class="metric ' + cfClass + '"><div class="metric-label">Cashflow / mois</div><div class="metric-value">' + fmt$signe(r.cashflowMensuel) + '</div><div class="metric-sub">' + fmt$signe(r.cashflowAnnuel) + '/an</div></div>'
     + '</div>'
@@ -629,13 +796,15 @@ function readForm() {
     amortissement: Number(document.getElementById("f-amortissement").value),
     taux: Number(document.getElementById("f-taux").value) || 5.5,
     taxes: Number(document.getElementById("f-taxes").value) || 0,
+    evalMunicipale: Number(document.getElementById("f-eval").value) || 0,
+    description: document.getElementById("f-description").value.trim(),
     units: JSON.parse(JSON.stringify(unitsState)),
     url: document.getElementById("f-url").value.trim(),
     notes: document.getElementById("f-notes").value.trim()
   };
 }
 function resetForm() {
-  ["f-adresse","f-prix","f-annee","f-taxes","f-url","f-notes"].forEach(function(id) { document.getElementById(id).value = ""; });
+  ["f-adresse","f-prix","f-annee","f-taxes","f-eval","f-description","f-url","f-notes"].forEach(function(id) { document.getElementById(id).value = ""; });
   document.getElementById("f-secteur").selectedIndex = 0;
   document.getElementById("f-occupation").value = "proprio";
   document.getElementById("f-amortissement").value = "25";
