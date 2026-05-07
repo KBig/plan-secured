@@ -30,6 +30,8 @@ main { max-width:820px; margin:0 auto; padding:20px 16px 100px; }
 .field label { font-size:11.5px; font-weight:500; color:var(--text-2); text-transform:uppercase; letter-spacing:0.04em; }
 .field input, .field select, .field textarea { background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:var(--radius); padding:9px 11px; font-family:inherit; font-size:13.5px; outline:none; width:100%; }
 .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--accent); }
+.field-hint { font-size:11.5px; color:var(--text-3); line-height:1.4; margin-top:2px; font-style:italic; }
+.field-hint strong { color:var(--text-2); font-style:normal; font-weight:600; }
 .units-table { width:100%; border-collapse:separate; border-spacing:0; font-size:13px; margin-bottom:10px; }
 .units-table th { text-align:left; font-size:11px; font-weight:500; color:var(--text-3); padding:6px 4px; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid var(--border); }
 .units-table td { padding:4px; }
@@ -159,23 +161,69 @@ main { max-width:820px; margin:0 auto; padding:20px 16px 100px; }
 <h2>Saisie du deal</h2>
 <h3>Localisation</h3>
 <div class="field-row">
-<div class="field"><label for="f-adresse">Adresse</label><input type="text" id="f-adresse" placeholder="123 rue Exemple, Pont-Rouge"></div>
-<div class="field"><label for="f-secteur">Secteur cible</label><select id="f-secteur"></select></div>
+<div class="field">
+<label for="f-adresse">Adresse</label>
+<input type="text" id="f-adresse" placeholder="123 rue Exemple, Pont-Rouge">
+<div class="field-hint">Pour memoire et identification dans la liste sauvegardee.</div>
 </div>
+<div class="field">
+<label for="f-secteur">Secteur cible</label>
+<select id="f-secteur"></select>
+<div class="field-hint">Determine prix de reference + loyer marche + priorite (1-10) selon Section 14.4 du plan.</div>
+</div>
+</div>
+
 <h3>Immeuble</h3>
 <div class="field-row">
-<div class="field"><label for="f-prix">Prix demande ($)</label><input type="number" id="f-prix" placeholder="700000" min="0" step="1000"></div>
-<div class="field"><label for="f-annee">Annee construction</label><input type="number" id="f-annee" placeholder="1985" min="1850" max="2030"></div>
+<div class="field">
+<label for="f-prix">Prix demande ($)</label>
+<input type="number" id="f-prix" placeholder="700000" min="0" step="1000">
+<div class="field-hint">Le prix affiche dans l'annonce. Pas le prix negocie final.</div>
 </div>
+<div class="field">
+<label for="f-annee">Annee construction</label>
+<input type="number" id="f-annee" placeholder="1985" min="1850" max="2030">
+<div class="field-hint">Centris > Caracteristiques. Pre-1960 = penalite capex. Pre-1985 = Phase 1 environnementale 2000$ ajoutee aux frais.</div>
+</div>
+</div>
+
 <div class="field-row">
-<div class="field"><label for="f-occupation">Mode dachat</label><select id="f-occupation"><option value="proprio">Proprietaire-occupant (mise 5%)</option><option value="investisseur">Investisseur (mise 20%)</option></select></div>
-<div class="field"><label for="f-amortissement">Amortissement (ans)</label><select id="f-amortissement"><option value="30">30 ans</option><option value="25" selected>25 ans</option><option value="20">20 ans</option></select></div>
+<div class="field">
+<label for="f-occupation">Mode d'achat</label>
+<select id="f-occupation">
+<option value="proprio">Proprietaire-occupant (1-4 unites, mise 5%) [recommande pour 1er achat]</option>
+<option value="investisseur">Investisseur pur (mise 20%)</option>
+</select>
+<div class="field-hint">Proprio-occupant = tu vis dans une unite, mise 5% SCHL. Investisseur = pure location, mise 20%, banque exige DCR >=1.10.</div>
 </div>
+<div class="field">
+<label for="f-amortissement">Amortissement (annees)</label>
+<select id="f-amortissement">
+<option value="30">30 ans (SCHL residentiel mise &lt;20%)</option>
+<option value="25" selected>25 ans (recommande)</option>
+<option value="20">20 ans (rembourse plus vite)</option>
+</select>
+<div class="field-hint">25 ans = equilibre standard. 30 ans = paiement bas mais plus d'interets total. 20 ans = equite plus rapide.</div>
+</div>
+</div>
+
 <div class="field-row">
-<div class="field"><label for="f-taux">Taux hypothecaire (%)</label><input type="number" id="f-taux" placeholder="5.5" min="0" max="20" step="0.05" value="5.5"></div>
-<div class="field"><label for="f-taxes">Taxes muni+scol annuelles ($, optionnel)</label><input type="number" id="f-taxes" placeholder="estime si vide" min="0" step="100"></div>
+<div class="field">
+<label for="f-taux">Taux hypothecaire (%)</label>
+<input type="number" id="f-taux" placeholder="5.5" min="0" max="20" step="0.05" value="5.5">
+<div class="field-hint">5.5% = approximation 2026 selon SDV. Demande ton vrai taux a ton courtier hypothecaire pour precision.</div>
 </div>
+<div class="field">
+<label for="f-taxes">Taxes muni+scol annuelles ($)</label>
+<input type="number" id="f-taxes" placeholder="laisser vide = estimation auto" min="0" step="100">
+<div class="field-hint">Optionnel. Vide = estime a 1.37% du prix. Si tu as le vrai chiffre (annonce, role municipal), saisis-le pour analyse precise.</div>
+</div>
+</div>
+
 <h3>Unites locatives</h3>
+<div class="field-hint" style="margin-bottom:10px;padding:10px;background:var(--bg-3);border-radius:var(--radius)">
+Une ligne par logement. Types : <strong>1.5</strong> (studio), <strong>2.5</strong> (1 chambre), <strong>3.5</strong> (2 chambres), <strong>4.5</strong> (3 chambres), <strong>5.5</strong> (4 chambres), <strong>6.5</strong> (grand 5 ch.), <strong>7.5</strong> (tres grand). Statut "Vacant" = on prend le loyer marche du secteur automatiquement.
+</div>
 <table class="units-table" id="units-table">
 <thead><tr><th style="width:30%">Type</th><th style="width:30%">Loyer ($/mois)</th><th style="width:25%">Statut</th><th style="width:15%"></th></tr></thead>
 <tbody id="units-body"></tbody>
@@ -222,7 +270,7 @@ var SECTEURS = {
   "Sainte-Foy / Sillery / Cap-Rouge": { prix_min:500000, prix_max:1300000, loyer_3_5:1180, loyer_4_5:1380, loyer_5_5:1580, loyer_6_5:1700, tga_cible:0.038, priorite:4, notes:"Plus-value mais TGA bas - cashflow negatif probable." },
   "Autre / non liste": { prix_min:0, prix_max:5000000, loyer_3_5:1000, loyer_4_5:1200, loyer_5_5:1400, loyer_6_5:1520, tga_cible:0.060, priorite:5, notes:"Pas de criteres de reference - analyse strictement financiere." }
 };
-var UNIT_TYPES = ["3.5", "4.5", "5.5", "6.5"];
+var UNIT_TYPES = ["1.5", "2.5", "3.5", "4.5", "5.5", "6.5", "7.5"];
 var DEFAULT_UNITS = [
   { type:"5.5", loyer:0, statut:"occupe" },
   { type:"4.5", loyer:0, statut:"occupe" },
@@ -303,10 +351,15 @@ function tauxVacance(prio) {
   return 0.07;
 }
 function loyerEstimePourType(secteur, type) {
+  // Loyers tabulés par secteur pour 3.5/4.5/5.5/6.5.
+  // Pour 1.5, 2.5, 7.5 on extrapole depuis la base 4.5.
+  if (type === "1.5") return Math.round(secteur.loyer_4_5 * 0.55);
+  if (type === "2.5") return Math.round(secteur.loyer_4_5 * 0.75);
   if (type === "3.5") return secteur.loyer_3_5;
   if (type === "4.5") return secteur.loyer_4_5;
   if (type === "5.5") return secteur.loyer_5_5;
   if (type === "6.5") return secteur.loyer_6_5;
+  if (type === "7.5") return Math.round(secteur.loyer_6_5 * 1.20);
   return secteur.loyer_4_5;
 }
 
