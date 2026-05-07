@@ -332,7 +332,7 @@ a:hover { text-decoration: underline; }
   letter-spacing: -0.01em;
 }
 .kpi-value.positive { color: var(--green); }
-.kpi-value.negative { color: var(--red); }
+.kpi-value.négative { color: var(--red); }
 .kpi-sub { font-size: 12px; color: var(--text-3); margin-top: 4px; }
 
 .table-wrap { overflow-x: auto; }
@@ -352,7 +352,7 @@ th {
 tbody tr:hover { background: var(--bg-2); }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 td.positive { color: var(--green); }
-td.negative { color: var(--red); }
+td.négative { color: var(--red); }
 
 .badge {
   display: inline-block; padding: 2px 8px;
@@ -479,7 +479,7 @@ td.negative { color: var(--red); }
   .tab { flex: 1 1 calc(50% - 2px); text-align: center; padding: 11px 6px; font-size: 12px; }
 }
 
-/* NUM STEPPER (custom number input avec + / - et selecteur d'unite) */
+/* NUM STEPPER (custom number input avec + / - et selecteur d'unité) */
 .num-stepper {
   display: inline-flex; align-items: stretch;
   border: 1px solid var(--border); border-radius: var(--radius);
@@ -569,13 +569,13 @@ td.negative { color: var(--red); }
   font-size: 11px; color: var(--text-3); margin-top: 2px;
 }
 
-/* Affichage Mensuel/Annuel calcule (read-only) - couleurs par type */
+/* Affichage Mensuel/Annuel calculé (read-only) - couleurs par type */
 .calc-display {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
 .calc-display.calc-revenu  { color: var(--green); }
-.calc-display.calc-depense { color: var(--red); }
+.calc-display.calc-dépense { color: var(--red); }
 .calc-display.calc-epargne { color: var(--accent); }
 .calc-display .calc-unit {
   display: block; font-size: 10px;
@@ -646,7 +646,7 @@ td.negative { color: var(--red); }
   font-variant-numeric: tabular-nums; line-height: 1.1;
 }
 .bs-kpi-value.positive { color: var(--green); }
-.bs-kpi-value.negative { color: var(--red); }
+.bs-kpi-value.négative { color: var(--red); }
 .bs-kpi-sub {
   font-size: 11px; color: var(--text-3);
   font-variant-numeric: tabular-nums; margin-top: 6px;
@@ -741,11 +741,11 @@ td.negative { color: var(--red); }
 .bs-stat-value.good { color: var(--green); }
 .bs-stat-value.warn { color: var(--orange); }
 .bs-stat-value.bad  { color: var(--red); }
-.bs-stat-detail {
+.bs-stat-détail {
   font-size: 11px; color: var(--text-3);
 }
 
-/* Top depenses - design pro */
+/* Top dépenses - design pro */
 .bs-top-list {
   display: flex; gap: 8px; flex-wrap: wrap;
   margin-top: 4px;
@@ -814,7 +814,7 @@ td.negative { color: var(--red); }
   display: flex;
   gap: 0;
   margin-bottom: 0;
-  padding-right: 90px;  /* place pour bouton Details */
+  padding-right: 90px;  /* place pour bouton détails */
 }
 .budget-summary.collapsed .bs-kpi-card {
   flex: 1;
@@ -836,7 +836,7 @@ td.negative { color: var(--red); }
   font-weight: 700;
 }
 
-/* Bouton Details + badge groupe courant flottants en mode collapsed */
+/* Bouton détails + badge groupe courant flottants en mode collapsed */
 .bs-toggle-floating {
   position: absolute;
   top: 50%; right: 14px;
@@ -900,7 +900,7 @@ td.negative { color: var(--red); }
 /* Badge groupe courant : visible uniquement en mode compact, suit le scroll */
 .budget-summary.collapsed .bs-current-group.show {
   position: absolute;
-  top: 50%; right: 92px; /* a gauche du bouton Details */
+  top: 50%; right: 92px; /* a gauche du bouton détails */
   transform: translateY(-50%);
   z-index: 31;
 }
@@ -1480,7 +1480,7 @@ async function forceSync() {
 
 
 /* ===========================================================================
- * CATEGORIES BUDGET — Structure ultra complete (Section 17.7 + 18 du plan)
+ * catégories BUDGET — Structure ultra complete (Section 17.7 + 18 du plan)
  * =========================================================================== */
 const BUDGET_CATEGORIES = {
   revenus: {
@@ -1490,15 +1490,15 @@ const BUDGET_CATEGORIES = {
     sub: [
       { id: "rev_salaire", label: "Salaire net (CCQ / T4)", defaut: 2740, defautProfile: "mathis" },
       { id: "rev_vacances_ccq", label: "Vacances CCQ (paye 2x/an)", defaut: 417, defautProfile: "mathis" },
-      { id: "rev_remb_impot", label: "Remboursement d'impot (FHSA + autres)", defaut: 333, defautProfile: "mathis" },
+      { id: "rev_remb_impot", label: "Remboursement d'impôt (FHSA + autres)", defaut: 333, defautProfile: "mathis" },
       { id: "rev_heures_supp", label: "Heures supplementaires" },
       { id: "rev_bonus", label: "Bonus / primes" },
       { id: "rev_loyers", label: "Loyers locatifs (post-2030)" },
       { id: "rev_immoco", label: "Cashflow ImmoCo (post-2037)" },
-      { id: "rev_dividendes", label: "Dividendes / interets placements" },
+      { id: "rev_dividendes", label: "Dividendes / intérêts placements" },
       { id: "rev_capital_gains", label: "Gains en capital (vente actifs)" },
       { id: "rev_retrait_fhsa", label: "Retrait FHSA (acquisition propriete, max 40 000 $ a vie)" },
-      { id: "rev_retrait_celi", label: "Retrait CELI (libre, plafond restitue annee suivante)" },
+      { id: "rev_retrait_celi", label: "Retrait CELI (libre, plafond restitue année suivante)" },
       { id: "rev_retrait_rap", label: "Retrait RAP REER (1er achat, max 60 000 $, remboursable 15 ans)" },
       { id: "rev_rendement_celi", label: "Rendement CELI cumule (croissance interne, non taxable)" },
       { id: "rev_heritage", label: "Heritage / cadeaux famille" },
@@ -1508,30 +1508,30 @@ const BUDGET_CATEGORIES = {
   },
   logement: {
     label: "Logement",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "log_youtube", label: "YouTube partage pere", defaut: 15, defautProfile: "mathis" },
-      { id: "log_hypotheque_capital", label: "Hypotheque - capital rembourse" },
-      { id: "log_hypotheque_interets", label: "Hypotheque - interets" },
+      { id: "log_hypotheque_capital", label: "hypothèque - capital rembourse" },
+      { id: "log_hypotheque_interets", label: "hypothèque - intérêts" },
       { id: "log_loyer", label: "Loyer (si location)" },
       { id: "log_taxes_municipales", label: "Taxes municipales" },
       { id: "log_taxes_scolaires", label: "Taxes scolaires" },
       { id: "log_internet", label: "Internet" },
-      { id: "log_electricite", label: "Electricite (Hydro-Quebec)" },
+      { id: "log_electricite", label: "Electricite (Hydro-Québec)" },
       { id: "log_chauffage", label: "Chauffage (gaz/mazout/bois)" },
       { id: "log_eau", label: "Eau / egout" },
       { id: "log_cable", label: "Cable / streaming TV" },
       { id: "log_entretien", label: "Entretien general" },
       { id: "log_reparations", label: "Reparations imprevues" },
       { id: "log_mobilier", label: "Mobilier / deco / electros" },
-      { id: "log_outils_jardin", label: "Outils / jardinage / deneigement" },
+      { id: "log_outils_jardin", label: "Outils / jardinage / déneigement" },
       { id: "log_assurance", label: "Assurance habitation" },
       { id: "log_autre", label: "Autres frais logement" }
     ]
   },
   vehicule: {
     label: "Vehicule principal",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "vh_paiement", label: "Paiement pret / location", defaut: 700, defautProfile: "mathis" },
       { id: "vh_assurance", label: "Assurance auto", defaut: 195, defautProfile: "mathis" },
@@ -1549,7 +1549,7 @@ const BUDGET_CATEGORIES = {
   },
   vehicule2: {
     label: "Vehicule secondaire (moto)",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "mt_paiement", label: "Paiement moto" },
       { id: "mt_plaque", label: "Plaque", defaut: 33, defautProfile: "mathis" },
@@ -1561,7 +1561,7 @@ const BUDGET_CATEGORIES = {
   },
   transport: {
     label: "Transport alternatif",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "tr_commun", label: "Transport en commun" },
       { id: "tr_taxi", label: "Uber / taxi" },
@@ -1571,7 +1571,7 @@ const BUDGET_CATEGORIES = {
   },
   alimentation: {
     label: "Epicerie & alimentation",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "al_epicerie", label: "Epicerie generale" },
       { id: "al_boucherie", label: "Boucherie / poissonnerie" },
@@ -1582,7 +1582,7 @@ const BUDGET_CATEGORIES = {
   },
   sorties: {
     label: "Restaurants & sorties",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "so_restaurants", label: "Restaurants" },
       { id: "so_cafe_shop", label: "Cafe / coffee shop" },
@@ -1595,7 +1595,7 @@ const BUDGET_CATEGORIES = {
   },
   communication: {
     label: "Communication",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "co_cellulaire", label: "Cellulaire (Fizz / Public Mobile)", defaut: 40, defautProfile: "mathis" },
       { id: "co_data_supp", label: "Forfaits donnees mobiles supp." }
@@ -1603,7 +1603,7 @@ const BUDGET_CATEGORIES = {
   },
   abonnements: {
     label: "Abonnements numeriques",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "ab_ia", label: "IA (Claude, ChatGPT)", defaut: 50, defautProfile: "mathis" },
       { id: "ab_streaming_video", label: "Streaming video (Netflix, Disney+, etc.)" },
@@ -1617,7 +1617,7 @@ const BUDGET_CATEGORIES = {
   },
   sante: {
     label: "Sante",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "sa_gym", label: "Gym / activites physiques", defaut: 30, defautProfile: "mathis" },
       { id: "sa_supplements", label: "Supplements / vitamines" },
@@ -1633,7 +1633,7 @@ const BUDGET_CATEGORIES = {
   },
   vie_courante: {
     label: "Vie courante",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "vc_vetements", label: "Vetements", defaut: 25, defautProfile: "mathis" },
       { id: "vc_chaussures", label: "Chaussures" },
@@ -1651,7 +1651,7 @@ const BUDGET_CATEGORIES = {
   },
   voyages: {
     label: "Voyages",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "vo_vols", label: "Vols" },
       { id: "vo_hebergement", label: "Hebergement (hotel / AirBnB)" },
@@ -1663,7 +1663,7 @@ const BUDGET_CATEGORIES = {
   },
   assurances: {
     label: "Assurances personnelles",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "as_vie", label: "Vie" },
       { id: "as_invalidite", label: "Invalidite" },
@@ -1675,7 +1675,7 @@ const BUDGET_CATEGORIES = {
   },
   professionnels: {
     label: "Services professionnels",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "pr_notaire", label: "Notaire" },
       { id: "pr_comptable", label: "Comptable" },
@@ -1683,14 +1683,14 @@ const BUDGET_CATEGORIES = {
       { id: "pr_fiscaliste", label: "Fiscaliste" },
       { id: "pr_conseiller", label: "Conseiller financier" },
       { id: "pr_inspecteur", label: "Inspecteur batiment" },
-      { id: "pr_courtier_hypo", label: "Courtier hypothecaire" },
+      { id: "pr_courtier_hypo", label: "Courtier hypothécaire" },
       { id: "pr_courtier_immo", label: "Courtier immobilier" },
       { id: "pr_gestionnaire", label: "Gestionnaire immobilier (post-2035)" }
     ]
   },
   education: {
     label: "Education & formation",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "ed_livres", label: "Livres" },
       { id: "ed_formations_online", label: "Formations en ligne" },
@@ -1701,19 +1701,19 @@ const BUDGET_CATEGORIES = {
     ]
   },
   dettes_interets: {
-    label: "Interets de dettes",
-    type: "depense",
+    label: "intérêts de dettes",
+    type: "dépense",
     sub: [
-      { id: "di_pret_auto", label: "Interets pret auto" },
-      { id: "di_cartes_credit", label: "Interets cartes credit" },
-      { id: "di_marge", label: "Interets marge credit" },
-      { id: "di_pret_perso", label: "Interets pret personnel" },
-      { id: "di_hypotheque_perso", label: "Interets hypotheque residence (non deductible)" }
+      { id: "di_pret_auto", label: "intérêts pret auto" },
+      { id: "di_cartes_credit", label: "intérêts cartes credit" },
+      { id: "di_marge", label: "intérêts marge credit" },
+      { id: "di_pret_perso", label: "intérêts pret personnel" },
+      { id: "di_hypotheque_perso", label: "intérêts hypothèque residence (non deductible)" }
     ]
   },
   frais_bancaires: {
     label: "Frais bancaires",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "fb_comptes", label: "Frais mensuels comptes" },
       { id: "fb_cartes_annuels", label: "Frais cartes (annuels)" },
@@ -1723,23 +1723,23 @@ const BUDGET_CATEGORIES = {
     ]
   },
   taxes: {
-    label: "Taxes & impots (paiements directs)",
-    type: "depense",
+    label: "Taxes & impôts (paiements directs)",
+    type: "dépense",
     sub: [
       { id: "tx_acomptes", label: "Acomptes provisionnels" },
-      { id: "tx_solde_impot", label: "Solde impot a payer" },
+      { id: "tx_solde_impot", label: "Solde impôt a payer" },
       { id: "tx_taxes_pro", label: "Taxes professionnelles" }
     ]
   },
   autres: {
     label: "Autres",
-    type: "depense",
+    type: "dépense",
     sub: [
       { id: "au_animal", label: "Animal domestique" },
       { id: "au_enfants", label: "Enfants (futur)" },
       { id: "au_legal", label: "Frais legaux divers" },
       { id: "au_dons_politiques", label: "Dons politiques" },
-      { id: "au_autres", label: "Autres depenses" }
+      { id: "au_autres", label: "Autres dépenses" }
     ]
   },
   epargne: {
@@ -1753,7 +1753,7 @@ const BUDGET_CATEGORIES = {
       { id: "ep_reee", label: "Cotisation REEE (futur enfants)" },
       { id: "ep_non_enreg", label: "Cotisation compte non-enregistre" },
       { id: "ep_compte_conjoint_immo", label: "Cotisation compte conjoint immobilier (post-2027)" },
-      { id: "ep_capital_hypotheque", label: "Remboursement capital hypotheque" },
+      { id: "ep_capital_hypotheque", label: "Remboursement capital hypothèque" },
       { id: "ep_fonds_urgence", label: "Renflouement fonds d'urgence" }
     ]
   }
@@ -1795,8 +1795,8 @@ const ACCOUNT_TYPES = {
   pret_auto:     { label: "Pret auto",             group: "dette",       sign: -1, isLoan: true },
   pret_etudiant: { label: "Pret etudiant",         group: "dette",       sign: -1, isLoan: true },
   pret_perso:    { label: "Pret personnel",        group: "dette",       sign: -1, isLoan: true },
-  hypotheque:    { label: "Hypotheque",            group: "dette",       sign: -1, isMortgage: true },
-  heloc:         { label: "Marge hypothecaire (HELOC)", group: "dette",   sign: -1 },
+  hypothèque:    { label: "hypothèque",            group: "dette",       sign: -1, isMortgage: true },
+  heloc:         { label: "Marge hypothécaire (HELOC)", group: "dette",   sign: -1 },
 
   // Actifs immobiliers
   immeuble_locatif: { label: "Immeuble locatif",   group: "immobilier",  sign: 1, isProperty: true },
@@ -1844,7 +1844,7 @@ function emptyProfileData() {
     accountSnapshots: [],   // { id, accountId, date, balance }
     budget: {
       year: new Date().getFullYear(),
-      categories: {},        // { catId: { budget: number, active: bool } }  -- override defauts
+      catégories: {},        // { catId: { budget: number, active: bool } }  -- override defauts
       monthlyEntries: {},    // { "YYYY-MM": { catId: amount } }
       monthlyNotes: {}       // { "YYYY-MM": { catId: note } }
     },
@@ -1881,11 +1881,11 @@ function emptyStore() {
  * PRECHARGEMENT DES DONNEES MAI 2026 (depuis SOURCE_DE_VERITE.md)
  * =========================================================================== */
 /* Defauts budget Mathis (mai 2026, depuis SOURCE_DE_VERITE.md section 4)
-   Stockage canonique en MENSUEL. L'unite affichee est celle d'origine SDV. */
+   Stockage canonique en MENSUEL. L'unité affichee est celle d'origine SDV. */
 const MATHIS_BUDGET_DEFAULTS = [
   // Revenus (SDV section 2)
   { id: "rev_salaire",       monthly: 2860,  unit: "week",  source: "660 $/sem net Apprenti 1 post-hausse 26 avril 2026 (25,40 $/h x 35 h)" },
-  { id: "rev_vacances_ccq",  monthly: 475,   unit: "year",  source: "~5 700 $/an vacances CCQ (post-hausse + Apprenti 2 mi-annee)" },
+  { id: "rev_vacances_ccq",  monthly: 475,   unit: "year",  source: "~5 700 $/an vacances CCQ (post-hausse + Apprenti 2 mi-année)" },
   { id: "rev_remb_impot",    monthly: 342,   unit: "year",  source: "~4 100 $/an : ~2k$ FHSA 8k x 25% + ~2,1k$ over-withholding paye" },
 
   // Logement
@@ -1910,7 +1910,7 @@ const MATHIS_BUDGET_DEFAULTS = [
   { id: "co_cellulaire",     monthly: 40,    unit: "month", source: "Fizz / Public Mobile" },
 
   // Sante
-  { id: "sa_gym",            monthly: 30,    unit: "month", source: "Gym economique" },
+  { id: "sa_gym",            monthly: 30,    unit: "month", source: "Gym économique" },
   { id: "sa_autre",          monthly: 17,    unit: "year",  source: "200 $/an hors couverture" },
 
   // Abonnements numeriques
@@ -1934,7 +1934,7 @@ const MATHIS_BUDGET_DEFAULTS = [
 ];
 
 /* Defauts budget Conjointe (mai 2026 - hypothese 100% identique en revenus
-   et depenses, sauf logement (gratuit chez parents) et pret auto (82 $/sem)) */
+   et dépenses, sauf logement (gratuit chez parents) et pret auto (82 $/sem)) */
 const CONJOINTE_BUDGET_DEFAULTS = [
   { id: "rev_salaire",       monthly: 2740,  unit: "week",  source: "Hypothese 100 % identique a Mathis" },
   { id: "rev_vacances_ccq",  monthly: 417,   unit: "year" },
@@ -1950,14 +1950,14 @@ const CONJOINTE_BUDGET_DEFAULTS = [
 ];
 
 function applyBudgetDefaults(profileData, defaults, force = false) {
-  if (!profileData.budget.categories) profileData.budget.categories = {};
+  if (!profileData.budget.catégories) profileData.budget.catégories = {};
   if (!profileData.budget.unit) profileData.budget.unit = {};
   if (!profileData.budget.sources) profileData.budget.sources = {};
   let added = 0;
   for (const d of defaults) {
-    const existing = profileData.budget.categories[d.id]?.budget;
+    const existing = profileData.budget.catégories[d.id]?.budget;
     if (!force && existing != null && existing > 0) continue;
-    profileData.budget.categories[d.id] = { budget: d.monthly, active: true };
+    profileData.budget.catégories[d.id] = { budget: d.monthly, active: true };
     profileData.budget.unit[d.id] = d.unit;
     if (d.source) profileData.budget.sources[d.id] = d.source;
     added++;
@@ -1975,12 +1975,12 @@ function preloadMathis(data) {
     { id: uid(), nom: "Carte Desjardins",         type: "carte_credit", institution: "Desjardins",                            solde: 0,      devise: "CAD", statut: "actif", limite: 1750, dateMaj: today, notes: "Cible: augmenter limite a 5000$ (T2 2026)." },
     { id: uid(), nom: "Carte Tangerine",          type: "carte_credit", institution: "Tangerine",                             solde: 0,      devise: "CAD", statut: "actif", limite: 1000, dateMaj: today, notes: "Cible: augmenter limite a 3000-5000$ (T2 2026)." },
     { id: uid(), nom: "Carte Wealthsimple",       type: "carte_credit", institution: "Wealthsimple",                          solde: 0,      devise: "CAD", statut: "actif", limite: 500, dateMaj: today, notes: "Carte virtuelle." },
-    { id: uid(), nom: "Fonds pension CCQ",        type: "pension_ccq",  institution: "CCQ",                                   solde: 7000,   devise: "CAD", statut: "actif", notes: "A valider dans Mon Dossier CCQ. Croit avec annees CCQ.", dateMaj: today },
+    { id: uid(), nom: "Fonds pension CCQ",        type: "pension_ccq",  institution: "CCQ",                                   solde: 7000,   devise: "CAD", statut: "actif", notes: "A valider dans Mon Dossier CCQ. Croit avec années CCQ.", dateMaj: today },
     { id: uid(), nom: "Moto (50% part)",          type: "moto",         institution: "",                                      solde: 4250,   devise: "CAD", statut: "actif", notes: "Valeur totale 8-9k$. Cash, 50% au pere.", dateMaj: today }
   ];
   data.accounts = accs;
   data.accountSnapshots = accs.map(a => ({ id: uid(), accountId: a.id, date: today, balance: a.solde }));
-  // Budget previsionnel mensuel + unite preferee (depuis SDV)
+  // Budget previsionnel mensuel + unité preferee (depuis SDV)
   applyBudgetDefaults(data, MATHIS_BUDGET_DEFAULTS, true);
   // Cotes credit
   data.scoresCredit = {
@@ -1989,7 +1989,7 @@ function preloadMathis(data) {
   };
   // Pros recommandes
   data.pros = [
-    { id: uid(), nom: "Conseiller VMD familial", cabinet: "Desjardins / VMD", categorie: "Routine", source: "Reseau VMD familial", phone: "", email: "", services: "Plan financier, allocation FHSA/CELI/REER", tarification: "Inclus dans services VMD familial", dateContact: "", prochainContact: "2026-09-01", evalPrix: 0, evalQualite: 0, evalChimie: 0, evalReseau: 0, notes: "Acces via pere. RV initial planifie automne 2026." }
+    { id: uid(), nom: "Conseiller VMD familial", cabinet: "Desjardins / VMD", catégorie: "Routine", source: "Reseau VMD familial", phone: "", email: "", services: "Plan financier, allocation FHSA/CELI/REER", tarification: "Inclus dans services VMD familial", dateContact: "", prochainContact: "2026-09-01", evalPrix: 0, evalQualite: 0, evalChimie: 0, evalReseau: 0, notes: "Acces via pere. RV initial planifie automne 2026." }
   ];
   return data;
 }
@@ -2015,7 +2015,7 @@ function preloadCouple(data) {
   // On pre-cree les structures avec solde 0 pour que l'user puisse les activer plus tard
   const accs = [
     { id: uid(), nom: "Compte conjoint immobilier (a creer 2027+)", type: "epargne", institution: "(a definir)", solde: 0, devise: "CAD", statut: "actif", notes: "A ouvrir avec convention notariee 14 clauses (planifie nov. 2027). Cotisations egales obligatoires (clause 2).", dateMaj: today },
-    { id: uid(), nom: "Compte conjoint depenses communes (optionnel)", type: "cheque", institution: "(a definir)", solde: 0, devise: "CAD", statut: "actif", notes: "Optionnel - epicerie / sorties communes.", dateMaj: today }
+    { id: uid(), nom: "Compte conjoint dépenses communes (optionnel)", type: "cheque", institution: "(a definir)", solde: 0, devise: "CAD", statut: "actif", notes: "Optionnel - epicerie / sorties communes.", dateMaj: today }
   ];
   data.accounts = accs;
   data.accountSnapshots = accs.map(a => ({ id: uid(), accountId: a.id, date: today, balance: a.solde }));
@@ -2098,11 +2098,11 @@ function setBudgetEntry(profileData, monthYM, catId, value) {
 function getBudgetMensuel(profileData, catId) {
   // Strict isolation: chaque profil a ses propres valeurs. Pas de fallback global
   // (sinon une valeur defaut Mathis fuirait dans la conjointe).
-  return profileData.budget?.categories?.[catId]?.budget || 0;
+  return profileData.budget?.catégories?.[catId]?.budget || 0;
 }
 function setBudgetMensuel(profileData, catId, montant) {
-  if (!profileData.budget.categories[catId]) profileData.budget.categories[catId] = { budget: 0, active: true };
-  profileData.budget.categories[catId].budget = Number(montant) || 0;
+  if (!profileData.budget.catégories[catId]) profileData.budget.catégories[catId] = { budget: 0, active: true };
+  profileData.budget.catégories[catId].budget = Number(montant) || 0;
 }
 
 function findCategorie(catId) {
@@ -2196,9 +2196,9 @@ const MIGRATIONS = [
       let changes = 0;
       for (const profileId of ["mathis", "conjointe", "couple"]) {
         const p = data.profiles?.[profileId];
-        if (!p?.budget?.categories) continue;
-        if (p.budget.categories.ep_capital_pret_auto) {
-          delete p.budget.categories.ep_capital_pret_auto;
+        if (!p?.budget?.catégories) continue;
+        if (p.budget.catégories.ep_capital_pret_auto) {
+          delete p.budget.catégories.ep_capital_pret_auto;
           delete p.budget.unit?.ep_capital_pret_auto;
           delete p.budget.sources?.ep_capital_pret_auto;
           changes++;
@@ -2214,15 +2214,15 @@ const MIGRATIONS = [
     apply: (data) => {
       let changes = 0;
       const m = data.profiles?.mathis;
-      if (m?.budget?.categories) {
+      if (m?.budget?.catégories) {
         // Si valeur ancienne (154 ou moins) -> mettre canonical 667
-        const fhsa = m.budget.categories.ep_fhsa;
+        const fhsa = m.budget.catégories.ep_fhsa;
         if (fhsa && fhsa.budget && fhsa.budget < 600) {
           m.budget.categories.ep_fhsa.budget = 667;
           changes++;
         }
         // Si valeur ancienne (100 ou moins) -> mettre canonical 433
-        const celi = m.budget.categories.ep_celi;
+        const celi = m.budget.catégories.ep_celi;
         if (celi && celi.budget && celi.budget < 400) {
           m.budget.categories.ep_celi.budget = 433;
           changes++;
@@ -2233,14 +2233,14 @@ const MIGRATIONS = [
     }
   },
   {
-    id: "2026-05-02-fix-remb-impot-4000",
+    id: "2026-05-02-fix-remb-impôt-4000",
     desc: "Met a jour rev_remb_impot a 333$/mois (4000$/an : FHSA 2k + over-withholding 2k)",
     apply: (data) => {
       let changes = 0;
       for (const profileId of ["mathis", "conjointe"]) {
         const p = data.profiles?.[profileId];
-        if (!p?.budget?.categories) continue;
-        const remb = p.budget.categories.rev_remb_impot;
+        if (!p?.budget?.catégories) continue;
+        const remb = p.budget.catégories.rev_remb_impot;
         // Si valeur ancienne (167 ou proche) -> mettre canonical 333
         if (remb && remb.budget && remb.budget > 0 && remb.budget < 250) {
           p.budget.categories.rev_remb_impot.budget = 333;
@@ -2513,18 +2513,18 @@ function renderDashboard() {
 
   // KPIs
   const kpis = el("div", { class: "kpi-grid" });
-  kpis.appendChild(makeKPI("Valeur nette", fmt.money(vn), vn >= 0 ? "positive" : "negative", `${accountsForList.length} compte(s)`));
+  kpis.appendChild(makeKPI("Valeur nette", fmt.money(vn), vn >= 0 ? "positive" : "négative", `${accountsForList.length} compte(s)`));
   kpis.appendChild(makeKPI("Actifs totaux", fmt.money(actifs), "positive"));
-  kpis.appendChild(makeKPI("Dettes totales", fmt.money(dettes), dettes > 0 ? "negative" : ""));
+  kpis.appendChild(makeKPI("Dettes totales", fmt.money(dettes), dettes > 0 ? "négative" : ""));
   if (!isCouple) {
-    kpis.appendChild(makeKPI("Flux mois courant", fmt.money(flux), flux >= 0 ? "positive" : "negative", fmt.monthLabel(month)));
+    kpis.appendChild(makeKPI("Flux mois courant", fmt.money(flux), flux >= 0 ? "positive" : "négative", fmt.monthLabel(month)));
   }
   root.appendChild(kpis);
 
   // Repartition par groupe
   const cardGroupes = el("div", { class: "card" });
   cardGroupes.appendChild(el("div", { class: "card-header" }, [
-    el("div", { class: "card-title", text: "Repartition par categorie" })
+    el("div", { class: "card-title", text: "Repartition par catégorie" })
   ]));
   const total = Object.values(totalsGroupe).reduce((s, v) => s + Math.abs(v), 0);
   if (total === 0) {
@@ -2535,7 +2535,7 @@ function renderDashboard() {
       .sort((a, b) => (a.info?.order ?? 99) - (b.info?.order ?? 99));
     const tbl = el("div", { class: "table-wrap" });
     const t = el("table");
-    t.innerHTML = `<thead><tr><th>Categorie</th><th class="num">Solde</th><th class="num">Part</th><th>Repartition</th></tr></thead>`;
+    t.innerHTML = `<thead><tr><th>catégorie</th><th class="num">Solde</th><th class="num">Part</th><th>Repartition</th></tr></thead>`;
     const tbody = el("tbody");
     for (const r of sorted) {
       const pct = total ? Math.abs(r.v) / total : 0;
@@ -2739,7 +2739,7 @@ function renderAccounts() {
   fbox.appendChild(searchInp);
   // groupe
   const groupSel = el("select", { class: "form-select", style: "max-width:180px;", onchange: (e) => { _accountsFilter.group = e.target.value; renderAccounts(); } });
-  groupSel.innerHTML = `<option value="all">Toutes categories</option>` + Object.entries(ACCOUNT_GROUPS).map(([k, v]) => `<option value="${k}" ${k === _accountsFilter.group ? "selected" : ""}>${v.label}</option>`).join("");
+  groupSel.innerHTML = `<option value="all">Toutes catégories</option>` + Object.entries(ACCOUNT_GROUPS).map(([k, v]) => `<option value="${k}" ${k === _accountsFilter.group ? "selected" : ""}>${v.label}</option>`).join("");
   fbox.appendChild(groupSel);
   // statut
   const statSel = el("select", { class: "form-select", style: "max-width:140px;", onchange: (e) => { _accountsFilter.statut = e.target.value; renderAccounts(); } });
@@ -2774,7 +2774,7 @@ function renderAccounts() {
     return String(va).localeCompare(String(vb)) * dir;
   });
 
-  // Groupement par categorie
+  // Groupement par catégorie
   const byGroup = {};
   for (const a of filtered) {
     const g = ACCOUNT_TYPES[a.type]?.group || "divers";
@@ -2847,7 +2847,7 @@ function renderAccounts() {
   const totalCard = el("div", { class: "card", style: "background: var(--bg-3);" });
   totalCard.appendChild(el("div", { style: "display:flex; justify-content:space-between; align-items:center;" }, [
     el("div", { class: "bold", text: "Total filtre (valeur nette)" }),
-    el("div", { class: "kpi-value " + (allTotal >= 0 ? "positive" : "negative"), text: fmt.money(allTotal) })
+    el("div", { class: "kpi-value " + (allTotal >= 0 ? "positive" : "négative"), text: fmt.money(allTotal) })
   ]));
   root.appendChild(totalCard);
 }
@@ -2900,7 +2900,7 @@ function updateAccountFormFields(typeId) {
   let extraHTML = "";
   if (at?.hasContrib) {
     extraHTML += `<div class="form-grid">
-      <div class="form-row"><div class="form-label">Cotisation YTD ($)</div><input class="form-input" type="number" step="0.01" name="cotisationYTD" value="${acc.cotisationYTD ?? ""}"><div class="form-help">Combien cotise depuis le 1er janvier de l'annee courante</div></div>
+      <div class="form-row"><div class="form-label">Cotisation YTD ($)</div><input class="form-input" type="number" step="0.01" name="cotisationYTD" value="${acc.cotisationYTD ?? ""}"><div class="form-help">Combien cotise depuis le 1er janvier de l'année courante</div></div>
       <div class="form-row"><div class="form-label">Plafond annuel ($)</div><input class="form-input" type="number" step="0.01" name="plafondAnnuel" value="${acc.plafondAnnuel ?? at.plafondAnnuel ?? ""}"></div>
       ${at.plafondVie ? `<div class="form-row"><div class="form-label">Plafond a vie ($)</div><input class="form-input" type="number" step="0.01" name="plafondVie" value="${acc.plafondVie ?? at.plafondVie ?? ""}"></div>` : ""}
     </div>`;
@@ -2914,7 +2914,7 @@ function updateAccountFormFields(typeId) {
   }
   if (at?.isLoan) {
     extraHTML += `<div class="form-grid">
-      <div class="form-row"><div class="form-label">Taux d'interet (%)</div><input class="form-input" type="number" step="0.01" name="taux" value="${acc.taux ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Taux d'intérêt (%)</div><input class="form-input" type="number" step="0.01" name="taux" value="${acc.taux ?? ""}"></div>
       <div class="form-row"><div class="form-label">Paiement mensuel ($)</div><input class="form-input" type="number" step="0.01" name="paiementMensuel" value="${acc.paiementMensuel ?? ""}"></div>
       <div class="form-row"><div class="form-label">Date prochaine echeance</div><input class="form-input" type="date" name="prochainPaiement" value="${acc.prochainPaiement || ""}"></div>
       <div class="form-row"><div class="form-label">Date de fin estimee</div><input class="form-input" type="date" name="dateFin" value="${acc.dateFin || ""}"></div>
@@ -2923,7 +2923,7 @@ function updateAccountFormFields(typeId) {
   if (at?.isMortgage) {
     extraHTML += `<div class="form-grid">
       <div class="form-row"><div class="form-label">Taux (%)</div><input class="form-input" type="number" step="0.01" name="taux" value="${acc.taux ?? ""}"></div>
-      <div class="form-row"><div class="form-label">Amortissement (annees)</div><input class="form-input" type="number" name="amortissement" value="${acc.amortissement ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Amortissement (années)</div><input class="form-input" type="number" name="amortissement" value="${acc.amortissement ?? ""}"></div>
       <div class="form-row"><div class="form-label">Paiement mensuel</div><input class="form-input" type="number" step="0.01" name="paiementMensuel" value="${acc.paiementMensuel ?? ""}"></div>
       <div class="form-row"><div class="form-label">Date renouvellement</div><input class="form-input" type="date" name="dateRenouvellement" value="${acc.dateRenouvellement || ""}"></div>
       <div class="form-row"><div class="form-label">Frequence (mensuel/2sem)</div><select class="form-select" name="frequence"><option value="mensuel" ${acc.frequence === "mensuel" ? "selected" : ""}>Mensuel</option><option value="bimensuel" ${acc.frequence === "bimensuel" ? "selected" : ""}>2 semaines</option><option value="hebdo" ${acc.frequence === "hebdo" ? "selected" : ""}>Hebdomadaire</option></select></div>
@@ -2932,8 +2932,8 @@ function updateAccountFormFields(typeId) {
   if (at?.isProperty) {
     extraHTML += `<div class="form-grid">
       <div class="form-row full"><div class="form-label">Adresse</div><input class="form-input" name="adresse" value="${escapeHTML(acc.adresse || "")}"></div>
-      <div class="form-row"><div class="form-label">Annee construction</div><input class="form-input" type="number" name="anneeConstruction" value="${acc.anneeConstruction ?? ""}"></div>
-      <div class="form-row"><div class="form-label">Nombre d'unites</div><input class="form-input" type="number" name="nbUnites" value="${acc.nbUnites ?? ""}"></div>
+      <div class="form-row"><div class="form-label">année construction</div><input class="form-input" type="number" name="anneeConstruction" value="${acc.anneeConstruction ?? ""}"></div>
+      <div class="form-row"><div class="form-label">Nombre d'unités</div><input class="form-input" type="number" name="nbUnites" value="${acc.nbUnites ?? ""}"></div>
       <div class="form-row"><div class="form-label">Loyers annuels bruts ($)</div><input class="form-input" type="number" step="0.01" name="loyersAnnuels" value="${acc.loyersAnnuels ?? ""}"></div>
       <div class="form-row"><div class="form-label">Valeur marche ($)</div><input class="form-input" type="number" step="0.01" name="valeurMarche" value="${acc.valeurMarche ?? ""}"></div>
       <div class="form-row"><div class="form-label">Prix d'achat ($)</div><input class="form-input" type="number" step="0.01" name="prixAchat" value="${acc.prixAchat ?? ""}"></div>
@@ -3012,7 +3012,7 @@ function escapeHTML(s) {
 let _budgetView = "saisie"; // saisie | reglages
 let _budgetMonth = currentMonth();
 
-/* Map de couleurs par groupe (utilise pour l'accent visuel des sous-categories) */
+/* Map de couleurs par groupe (utilise pour l'accent visuel des sous-catégories) */
 const GROUP_COLORS = {
   revenus: "green",
   logement: "blue",
@@ -3036,9 +3036,9 @@ const GROUP_COLORS = {
   epargne: "blue"
 };
 
-/* ---- Unites de temps : stockage canonique en MENSUEL, affichage selon prefs user ---- */
+/* ---- unités de temps : stockage canonique en MENSUEL, affichage selon prefs user ---- */
 const UNIT_FACTOR = { day: 30.4375, week: 4.34524, biweek: 2.17262, month: 1, year: 1/12 };
-const UNIT_LABEL  = { day: "/jour", week: "/sem", biweek: "/2sem", month: "/mois", year: "/annee" };
+const UNIT_LABEL  = { day: "/jour", week: "/sem", biweek: "/2sem", month: "/mois", year: "/année" };
 const UNIT_ORDER  = ["day", "week", "biweek", "month", "year"];
 
 function getCategoryUnit(profileData, catId) {
@@ -3063,7 +3063,7 @@ function formatStepperValue(v) {
   return n.toFixed(2).replace(/\.?0+$/, "");
 }
 
-/* ---- Composant stepper (- / + + selecteur d'unite) ---- */
+/* ---- Composant stepper (- / + + selecteur d'unité) ---- */
 function renderStepper(catId, kind, monthlyValue, unit) {
   const display = formatStepperValue(fromMonthly(monthlyValue, unit));
   const opts = UNIT_ORDER.map(u => `<option value="${u}" ${u === unit ? "selected" : ""}>${UNIT_LABEL[u]}</option>`).join("");
@@ -3080,7 +3080,7 @@ function stepperDelta(btn, delta) {
   const input = stepper.querySelector(".num-stepper-input");
   const unit = stepper.dataset.unit;
   let v = parseFloat(input.value || "0") || 0;
-  // step adaptatif selon ordre de grandeur de la categorie
+  // step adaptatif selon ordre de grandeur de la catégorie
   const step = unit === "year" ? 100 : unit === "month" ? 5 : unit === "biweek" ? 5 : unit === "week" ? 5 : 1;
   v = Math.max(0, v + delta * step);
   input.value = formatStepperValue(v);
@@ -3118,7 +3118,7 @@ function stepperUnitChanged(select) {
   const newRaw = fromMonthly(monthly, newUnit);
   input.value = formatStepperValue(newRaw);
   stepper.dataset.unit = newUnit;
-  // Sync l'autre stepper de la meme categorie a la meme unite (visuel coherent)
+  // Sync l'autre stepper de la meme catégorie a la meme unité (visuel coherent)
   const catId = stepper.dataset.cat;
   document.querySelectorAll(`.num-stepper[data-cat="${catId}"]`).forEach(other => {
     if (other === stepper) return;
@@ -3150,11 +3150,11 @@ function updateBudgetKPIs() {
   }
   const flux = totRev - totDep - totEpa;
 
-  // Periode courante (compact: respecte choix user; calcule en mensuel canonique)
+  // Periode courante (compact: respecte choix user; calculé en mensuel canonique)
   const period = APP.data.meta.budgetCompactPeriod || "month";
   const mainMult = period === "year" ? 12 : 1;
   const subMult  = period === "year" ? 1 : 12;
-  const subLabel = period === "year" ? "/ mois" : "/ annee";
+  const subLabel = period === "year" ? "/ mois" : "/ année";
 
   const updateVal = (id, monthlyVal, klass) => {
     const e = document.getElementById(id);
@@ -3170,9 +3170,9 @@ function updateBudgetKPIs() {
     if (e) e.textContent = fmt.money(monthlyVal * subMult) + " " + subLabel;
   };
   updateVal("kpi-rev", totRev, totRev > 0 ? "positive" : "");
-  updateVal("kpi-dep", totDep, totDep > 0 ? "negative" : "");
+  updateVal("kpi-dep", totDep, totDep > 0 ? "négative" : "");
   updateVal("kpi-epa", totEpa, "");
-  updateVal("kpi-flux", flux, flux >= 0 ? "positive" : "negative");
+  updateVal("kpi-flux", flux, flux >= 0 ? "positive" : "négative");
   const fluxCard = document.getElementById("kpi-flux-card");
   if (fluxCard) fluxCard.className = "bs-kpi-card " + (flux >= 0 ? "kpi-flux-pos" : "kpi-flux-neg");
   updateSub("kpi-rev-an", totRev);
@@ -3277,7 +3277,7 @@ function updateBudgetInsights(totRev, totDep, totEpa, flux) {
   const baseEl = document.getElementById("bs-alloc-base");
   if (baseEl) baseEl.textContent = `Base : ${fmt.money(totRev)} / mois`;
 
-  // 1. Allocation = barres separees Depenses / Epargne / Total utilise
+  // 1. Allocation = barres separees dépenses / Epargne / Total utilise
   const rowsEl = document.getElementById("bs-alloc-rows");
   if (rowsEl) {
     if (totRev <= 0) {
@@ -3292,7 +3292,7 @@ function updateBudgetInsights(totRev, totDep, totEpa, flux) {
       const visTot = Math.min(100, pctTot);
       rowsEl.innerHTML = `
         <div class="bs-alloc-row dep">
-          <div class="bs-alloc-row-label"><span class="dot"></span>Depenses</div>
+          <div class="bs-alloc-row-label"><span class="dot"></span>dépenses</div>
           <div class="bs-alloc-track ${pctDep > 100 ? "over" : ""}"><div class="bs-alloc-fill ${pctDep > 100 ? "over" : "dep"}" style="width:${visDep.toFixed(1)}%"></div></div>
           <div class="bs-alloc-row-value">${fmt.money(totDep)}<span class="pct">${pctDep.toFixed(1)} %</span></div>
         </div>
@@ -3312,7 +3312,7 @@ function updateBudgetInsights(totRev, totDep, totEpa, flux) {
 
   // 2. Taux d'epargne
   const rateEl = document.getElementById("bs-rate");
-  const rateDetEl = document.getElementById("bs-rate-detail");
+  const rateDetEl = document.getElementById("bs-rate-détail");
   if (rateEl) {
     if (totRev <= 0) {
       rateEl.textContent = "—";
@@ -3332,20 +3332,20 @@ function updateBudgetInsights(totRev, totDep, totEpa, flux) {
     }
   }
 
-  // 3. Top 3 depenses
+  // 3. Top 3 dépenses
   const topEl = document.getElementById("bs-top");
   if (topEl) {
     const cats = getEffectiveCategories(data);
     const expenses = [];
     for (const [groupId, cat] of Object.entries(cats)) {
-      if (cat.type !== "depense") continue;
+      if (cat.type !== "dépense") continue;
       const total = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
       if (total > 0) expenses.push({ label: cat.label, value: total, pct: totRev > 0 ? (total / totRev) * 100 : 0 });
     }
     expenses.sort((a, b) => b.value - a.value);
     const top3 = expenses.slice(0, 3);
     if (top3.length === 0) {
-      topEl.innerHTML = `<span class="muted text-sm">Aucune depense definie</span>`;
+      topEl.innerHTML = `<span class="muted text-sm">Aucune dépense definie</span>`;
     } else {
       topEl.innerHTML = top3.map((e, i) =>
         `<div class="bs-top-item"><span class="bs-top-item-rank">#${i+1}</span><span class="bs-top-item-label">${e.label}</span><span class="bs-top-item-value">${fmt.money(e.value)}</span>${e.pct > 0 ? `<span class="bs-top-item-pct">${e.pct.toFixed(0)} %</span>` : ""}</div>`
@@ -3361,7 +3361,7 @@ function updateBudgetInsights(totRev, totDep, totEpa, flux) {
       const rate = (totEpa / totRev) * 100;
       if (totDep + totEpa > totRev) {
         const deficit = (totDep + totEpa) - totRev;
-        html = `<div class="bs-suggestion bad"><div class="bs-suggestion-icon">!</div><div><strong class="amount">Deficit de ${fmt.money(deficit)} / mois</strong> (${fmt.money(deficit * 12)} / annee). Tu utilises ${(((totDep + totEpa) / totRev) * 100).toFixed(1)} % de tes revenus. Reduis depenses ou epargne pour equilibrer.</div></div>`;
+        html = `<div class="bs-suggestion bad"><div class="bs-suggestion-icon">!</div><div><strong class="amount">Deficit de ${fmt.money(deficit)} / mois</strong> (${fmt.money(deficit * 12)} / année). Tu utilises ${(((totDep + totEpa) / totRev) * 100).toFixed(1)} % de tes revenus. Reduis dépenses ou epargne pour equilibrer.</div></div>`;
       } else if (rate < 10 && totRev > 1000) {
         const need = totRev * 0.2 - totEpa;
         html = `<div class="bs-suggestion bad"><div class="bs-suggestion-icon">!</div><div>Taux d'epargne faible (<strong>${rate.toFixed(1)} %</strong>). Cible recommandee jeunes 21-30 ans : <strong>20-30 %</strong>. Cotise <strong class="amount">${fmt.money(need)} / mois</strong> de plus pour atteindre 20 %.</div></div>`;
@@ -3369,7 +3369,7 @@ function updateBudgetInsights(totRev, totDep, totEpa, flux) {
         const need = totRev * 0.25 - totEpa;
         html = `<div class="bs-suggestion warn"><div class="bs-suggestion-icon">i</div><div>Bon depart (<strong>${rate.toFixed(1)} %</strong>). Pour accelerer le projet immobilier, vise 25 % : difference <strong class="amount">${fmt.money(need)} / mois</strong>.</div></div>`;
       } else if (rate >= 20 && rate < 25 && flux > 50) {
-        html = `<div class="bs-suggestion warn"><div class="bs-suggestion-icon">i</div><div>Taux solide (<strong>${rate.toFixed(1)} %</strong>). Tu as encore <strong class="amount">${fmt.money(flux)} / mois</strong> de solde libre - augmente FHSA/CELI ou constitue le fonds urgence (cible 6 mois de depenses).</div></div>`;
+        html = `<div class="bs-suggestion warn"><div class="bs-suggestion-icon">i</div><div>Taux solide (<strong>${rate.toFixed(1)} %</strong>). Tu as encore <strong class="amount">${fmt.money(flux)} / mois</strong> de solde libre - augmente FHSA/CELI ou constitue le fonds urgence (cible 6 mois de dépenses).</div></div>`;
       } else if (rate >= 25 && flux > 100) {
         html = `<div class="bs-suggestion good"><div class="bs-suggestion-icon">+</div><div>Excellent taux (<strong>${rate.toFixed(1)} %</strong>). Solde libre <strong class="amount">${fmt.money(flux)} / mois</strong> a allouer : FHSA d'abord (8 000 $/an max), puis CELI (7 000 $/an), puis non enregistre.</div></div>`;
       } else if (rate >= 30) {
@@ -3399,7 +3399,7 @@ function updateBudgetGroupTotals(catId) {
   if (!cat) return;
   const subBudget = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
   const totEl = document.getElementById(`grp-tot-${groupId}`);
-  if (totEl) totEl.textContent = `${fmt.money(subBudget)} / mois - ${fmt.money(subBudget * 12)} / annee`;
+  if (totEl) totEl.textContent = `${fmt.money(subBudget)} / mois - ${fmt.money(subBudget * 12)} / année`;
 }
 
 function renderBudget() {
@@ -3411,11 +3411,11 @@ function renderBudget() {
   const header = el("div", { class: "page-header" }, [
     el("div", {}, [
       el("div", { class: "page-title", text: `Budget - ${PROFILES[APP.currentProfile].name}` }),
-      el("div", { class: "page-subtitle", text: isCouple ? "Vue couple consolidee (Mathis + Conjointe + Communs) - lecture seule" : "Budget previsionnel par categorie. Profil isole : tes valeurs ne se melent pas a celles de la conjointe." })
+      el("div", { class: "page-subtitle", text: isCouple ? "Vue couple consolidee (Mathis + Conjointe + Communs) - lecture seule" : "Budget previsionnel par catégorie. Profil isole : tes valeurs ne se melent pas a celles de la conjointe." })
     ]),
     el("div", { class: "page-actions" }, [
       el("button", { class: "btn", onclick: () => exportBudgetCsv(), text: "Exporter CSV" }),
-      !isCouple ? el("button", { class: "btn", onclick: () => openCustomCategoryModal(), text: "+ Categorie perso" }) : null,
+      !isCouple ? el("button", { class: "btn", onclick: () => openCustomCategoryModal(), text: "+ catégorie perso" }) : null,
       !isCouple ? el("button", { class: "btn btn-danger", onclick: () => resetBudgetToZero(), text: "Reset budget a zero" }) : null
     ].filter(Boolean))
   ]);
@@ -3439,17 +3439,17 @@ function tabBtn(id, label) {
 }
 
 function getEffectiveCategories(profileData) {
-  // Combine BUDGET_CATEGORIES + categories perso (stockees dans profileData.budget.customCategories)
+  // Combine BUDGET_CATEGORIES + catégories perso (stockees dans profileData.budget.customCategories)
   const out = JSON.parse(JSON.stringify(BUDGET_CATEGORIES));
   const custom = profileData.budget.customCategories || [];
   for (const c of custom) {
     if (!out[c.group]) {
-      out[c.group] = { label: c.groupLabel || c.group, type: c.type || "depense", sub: [] };
+      out[c.group] = { label: c.groupLabel || c.group, type: c.type || "dépense", sub: [] };
     }
     out[c.group].sub.push(c);
   }
-  // Filtrer categories desactivees
-  const overrides = profileData.budget.categories || {};
+  // Filtrer catégories desactivees
+  const overrides = profileData.budget.catégories || {};
   for (const cat of Object.values(out)) {
     cat.sub = cat.sub.filter(s => overrides[s.id]?.active !== false);
   }
@@ -3483,15 +3483,15 @@ function renderBudgetSaisie(root) {
   const period = APP.data.meta.budgetCompactPeriod || "month";
   const mainMult = period === "year" ? 12 : 1;
   const subMult  = period === "year" ? 1 : 12;
-  const subLabel = period === "year" ? "/ mois" : "/ annee";
+  const subLabel = period === "year" ? "/ mois" : "/ année";
   const summary = el("div", { class: "budget-summary" + (startCollapsed ? " collapsed" : ""), id: "budget-summary" });
   summary.innerHTML = `
     <span class="bs-current-group" id="bs-current-group"></span>
     <div class="bs-period-toggle">
       <button class="${(APP.data.meta.budgetCompactPeriod || "month") === "month" ? "active" : ""}" onclick="setBudgetCompactPeriod('month')">Mois</button>
-      <button class="${APP.data.meta.budgetCompactPeriod === "year" ? "active" : ""}" onclick="setBudgetCompactPeriod('year')">Annee</button>
+      <button class="${APP.data.meta.budgetCompactPeriod === "year" ? "active" : ""}" onclick="setBudgetCompactPeriod('year')">année</button>
     </div>
-    <button class="bs-toggle-floating" onclick="toggleBudgetSummary()">Details</button>
+    <button class="bs-toggle-floating" onclick="toggleBudgetSummary()">détails</button>
     <div class="bs-header">
       <div class="bs-header-title">Synthese en temps reel</div>
       <button class="bs-collapse-btn" onclick="toggleBudgetSummary()">Reduire</button>
@@ -3504,7 +3504,7 @@ function renderBudgetSaisie(root) {
         <div class="bs-kpi-sub" id="kpi-rev-an">${fmt.money(totRev * subMult)} ${subLabel}</div>
       </div>
       <div class="bs-kpi-card kpi-dep">
-        <div class="bs-kpi-label">Depenses</div>
+        <div class="bs-kpi-label">dépenses</div>
         <div class="bs-kpi-value negative" id="kpi-dep">${fmt.money(totDep * mainMult)}</div>
         <div class="bs-kpi-sub" id="kpi-dep-an">${fmt.money(totDep * subMult)} ${subLabel}</div>
       </div>
@@ -3515,7 +3515,7 @@ function renderBudgetSaisie(root) {
       </div>
       <div class="bs-kpi-card ${flux >= 0 ? "kpi-flux-pos" : "kpi-flux-neg"}" id="kpi-flux-card">
         <div class="bs-kpi-label">Solde libre</div>
-        <div class="bs-kpi-value ${flux >= 0 ? "positive" : "negative"}" id="kpi-flux">${fmt.money(flux * mainMult)}</div>
+        <div class="bs-kpi-value ${flux >= 0 ? "positive" : "négative"}" id="kpi-flux">${fmt.money(flux * mainMult)}</div>
         <div class="bs-kpi-sub" id="kpi-flux-an">${fmt.money(flux * subMult)} ${subLabel}</div>
       </div>
     </div>
@@ -3535,7 +3535,7 @@ function renderBudgetSaisie(root) {
         <div class="bs-stat-detail" id="bs-rate-detail">cible 20-30 %</div>
       </div>
       <div class="bs-stat">
-        <div class="bs-stat-label">Top depenses (mois)</div>
+        <div class="bs-stat-label">Top dépenses (mois)</div>
         <div class="bs-top-list" id="bs-top"></div>
       </div>
     </div>
@@ -3544,7 +3544,7 @@ function renderBudgetSaisie(root) {
   `;
   root.appendChild(summary);
 
-  // Saisie par categorie groupe
+  // Saisie par catégorie groupe
   for (const [groupId, cat] of Object.entries(cats)) {
     const card = el("div", { class: "collapse-card open", id: `cb-${groupId}` });
     const subBudgetTotal = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
@@ -3556,12 +3556,12 @@ function renderBudgetSaisie(root) {
         el("div", {}, [
           el("div", { class: "collapse-title" }, [
             el("span", { class: `badge badge-${groupColor}`, text: cat.label }),
-            el("span", { style: "margin-left:8px;", class: "muted text-sm", text: `${cat.sub.length} categorie(s)` })
+            el("span", { style: "margin-left:8px;", class: "muted text-sm", text: `${cat.sub.length} catégorie(s)` })
           ])
         ])
       ]),
       el("div", { class: "flex gap-16 items-center" }, [
-        el("span", { class: "muted text-sm", id: `grp-tot-${groupId}`, text: `${fmt.money(subBudgetTotal)} / mois - ${fmt.money(subBudgetTotal * 12)} / annee` }),
+        el("span", { class: "muted text-sm", id: `grp-tot-${groupId}`, text: `${fmt.money(subBudgetTotal)} / mois - ${fmt.money(subBudgetTotal * 12)} / année` }),
         el("span", { class: "collapse-arrow", text: ">" })
       ])
     ]);
@@ -3571,14 +3571,14 @@ function renderBudgetSaisie(root) {
     const tbl = el("div", { class: "table-wrap" });
     const t = el("table");
     t.innerHTML = `<thead><tr>
-      <th>Categorie</th>
-      <th class="num">Budget<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">choisis l'unite a droite</div></th>
+      <th>catégorie</th>
+      <th class="num">Budget<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">choisis l'unité a droite</div></th>
       <th class="num">Mensuel<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">$ / mois</div></th>
-      <th class="num">Annuel<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">$ / annee</div></th>
+      <th class="num">Annuel<div class="text-sm muted" style="font-weight:400;text-transform:none;letter-spacing:0;">$ / année</div></th>
       <th></th>
     </tr></thead>`;
     const tbody = el("tbody");
-    const calcClass = cat.type === "revenu" ? "calc-revenu" : cat.type === "epargne" ? "calc-epargne" : "calc-depense";
+    const calcClass = cat.type === "revenu" ? "calc-revenu" : cat.type === "epargne" ? "calc-epargne" : "calc-dépense";
     for (const sub of cat.sub) {
       const budget = getBudgetMensuel(data, sub.id);
       const unit = getCategoryUnit(data, sub.id);
@@ -3602,8 +3602,8 @@ function renderBudgetSaisie(root) {
 
   // Aide
   root.appendChild(el("div", { class: "fs-info mt-16", html: `
-    <strong>Comment lire</strong> &mdash; tu entres ton budget dans l'unite qui te convient (/jour, /sem, /2sem, /mois, /annee). Les colonnes <strong>Mensuel</strong> et <strong>Annuel</strong> sont calculees automatiquement en temps reel. Exemple : 75 $/sem = 325 $/mois = 3 900 $/annee.<br><br>
-    <strong>Donnees pre-remplies (mai 2026)</strong> &mdash; valeurs initiales depuis <code>SOURCE_DE_VERITE.md</code> sections 2 (revenus) et 4 (depenses). Restaure les defauts via <a href="javascript:_budgetView='reglages';renderBudget();">Reglages</a>.
+    <strong>Comment lire</strong> &mdash; tu entres ton budget dans l'unité qui te convient (/jour, /sem, /2sem, /mois, /année). Les colonnes <strong>Mensuel</strong> et <strong>Annuel</strong> sont calculées automatiquement en temps reel. Exemple : 75 $/sem = 325 $/mois = 3 900 $/année.<br><br>
+    <strong>Donnees pre-remplies (mai 2026)</strong> &mdash; valeurs initiales depuis <code>SOURCE_DE_VERITE.md</code> sections 2 (revenus) et 4 (dépenses). Restaure les defauts via <a href="javascript:_budgetView='reglages';renderBudget();">Reglages</a>.
   ` }));
 
   // Initialiser les insights live au premier rendu (sinon la barre alloc est vide)
@@ -3630,27 +3630,27 @@ function renderBudgetSaisieCouple(root) {
     el("div", { class: "kpi" }, [
       el("div", { class: "kpi-label", text: "Revenus couple" }),
       el("div", { class: "kpi-value " + (agg.revenus > 0 ? "positive" : ""), text: fmt.money(agg.revenus) }),
-      el("div", { class: "kpi-sub", text: fmt.money(agg.revenus * 12) + " / annee" })
+      el("div", { class: "kpi-sub", text: fmt.money(agg.revenus * 12) + " / année" })
     ]),
     el("div", { class: "kpi" }, [
-      el("div", { class: "kpi-label", text: "Depenses couple" }),
-      el("div", { class: "kpi-value " + (agg.depenses > 0 ? "negative" : ""), text: fmt.money(agg.depenses) }),
-      el("div", { class: "kpi-sub", text: fmt.money(agg.depenses * 12) + " / annee" })
+      el("div", { class: "kpi-label", text: "dépenses couple" }),
+      el("div", { class: "kpi-value " + (agg.dépenses > 0 ? "négative" : ""), text: fmt.money(agg.dépenses) }),
+      el("div", { class: "kpi-sub", text: fmt.money(agg.dépenses * 12) + " / année" })
     ]),
     el("div", { class: "kpi" }, [
       el("div", { class: "kpi-label", text: "Epargne couple" }),
       el("div", { class: "kpi-value " + (agg.epargne > 0 ? "positive" : ""), text: fmt.money(agg.epargne) }),
-      el("div", { class: "kpi-sub", text: fmt.money(agg.epargne * 12) + " / annee" })
+      el("div", { class: "kpi-sub", text: fmt.money(agg.epargne * 12) + " / année" })
     ]),
     el("div", { class: "kpi" }, [
       el("div", { class: "kpi-label", text: "Solde couple" }),
-      el("div", { class: "kpi-value " + (agg.flux >= 0 ? "positive" : "negative"), text: fmt.money(agg.flux) }),
-      el("div", { class: "kpi-sub", text: fmt.money(agg.flux * 12) + " / annee" })
+      el("div", { class: "kpi-value " + (agg.flux >= 0 ? "positive" : "négative"), text: fmt.money(agg.flux) }),
+      el("div", { class: "kpi-sub", text: fmt.money(agg.flux * 12) + " / année" })
     ])
   ]);
   root.appendChild(kpis);
 
-  // Detail par categorie groupe (lignes accordeon comme la vue solo)
+  // détail par catégorie groupe (lignes accordeon comme la vue solo)
   for (const [groupId, cat] of Object.entries(BUDGET_CATEGORIES)) {
     const groupLines = agg.byCat[groupId];
     if (!groupLines) continue;
@@ -3667,7 +3667,7 @@ function renderBudgetSaisieCouple(root) {
         ])
       ]),
       el("div", { class: "flex gap-16 items-center" }, [
-        el("span", { class: "muted text-sm", text: `${fmt.money(totalGroup)} / mois - ${fmt.money(totalGroup * 12)} / annee` }),
+        el("span", { class: "muted text-sm", text: `${fmt.money(totalGroup)} / mois - ${fmt.money(totalGroup * 12)} / année` }),
         el("span", { class: "collapse-arrow", text: ">" })
       ])
     ]);
@@ -3677,7 +3677,7 @@ function renderBudgetSaisieCouple(root) {
     const tbl = el("div", { class: "table-wrap" });
     const t = el("table");
     t.innerHTML = `<thead><tr>
-      <th>Sous-categorie</th>
+      <th>Sous-catégorie</th>
       <th class="num">Mathis</th>
       <th class="num">Conjointe</th>
       <th class="num">Commun</th>
@@ -3714,16 +3714,16 @@ function renderBudgetSaisieCouple(root) {
 
 function mergeBudgetCouple() {
   // Aggrege les budgets MENSUELS PREVISIONNELS des 3 profils.
-  // Resultat: { revenus, depenses, epargne, flux, byCat: {groupId: {mathis,conjointe,couple}}, bySub: {profile: {catId: monthly}} }
+  // Resultat: { revenus, dépenses, epargne, flux, byCat: {groupId: {mathis,conjointe,couple}}, bySub: {profile: {catId: monthly}} }
   const result = {
-    revenus: 0, depenses: 0, epargne: 0, flux: 0,
+    revenus: 0, dépenses: 0, epargne: 0, flux: 0,
     byCat: {},
     bySub: { mathis: {}, conjointe: {}, couple: {} }
   };
   for (const profileId of ["mathis", "conjointe", "couple"]) {
     const data = APP.data.profiles[profileId];
-    if (!data || !data.budget?.categories) continue;
-    for (const [catId, entry] of Object.entries(data.budget.categories)) {
+    if (!data || !data.budget?.catégories) continue;
+    for (const [catId, entry] of Object.entries(data.budget.catégories)) {
       const monthly = Number(entry?.budget) || 0;
       if (monthly === 0) continue;
       const c = findCategorie(catId) || customFindCat(data, catId);
@@ -3731,12 +3731,12 @@ function mergeBudgetCouple() {
       result.bySub[profileId][catId] = monthly;
       if (c.groupType === "revenu") result.revenus += monthly;
       else if (c.groupType === "epargne") result.epargne += monthly;
-      else result.depenses += monthly;
+      else result.dépenses += monthly;
       if (!result.byCat[c.group]) result.byCat[c.group] = { mathis: 0, conjointe: 0, couple: 0 };
       result.byCat[c.group][profileId] += monthly;
     }
   }
-  result.flux = result.revenus - result.depenses - result.epargne;
+  result.flux = result.revenus - result.dépenses - result.epargne;
   return result;
 }
 
@@ -3755,12 +3755,12 @@ function renderBudgetComparaison(root) {
   card.appendChild(el("div", { class: "card-header" }, [
     el("div", {}, [
       el("div", { class: "card-title", text: `Budget vs Reel - ${fmt.monthLabel(month)}` }),
-      el("div", { class: "card-subtitle", text: "Compare ton budget previsionnel mensuel avec ce que tu as reellement depense." })
+      el("div", { class: "card-subtitle", text: "Compare ton budget previsionnel mensuel avec ce que tu as reellement dépense." })
     ])
   ]));
   const tbl = el("div", { class: "table-wrap" });
   const t = el("table");
-  t.innerHTML = `<thead><tr><th>Categorie</th><th class="num">Budget</th><th class="num">Reel</th><th class="num">Ecart</th><th class="num">% utilise</th><th>Progression</th></tr></thead>`;
+  t.innerHTML = `<thead><tr><th>catégorie</th><th class="num">Budget</th><th class="num">Reel</th><th class="num">Ecart</th><th class="num">% utilise</th><th>Progression</th></tr></thead>`;
   const tbody = el("tbody");
   for (const [groupId, cat] of Object.entries(cats)) {
     const subBudget = cat.sub.reduce((s, sub) => s + getBudgetMensuel(data, sub.id), 0);
@@ -3773,7 +3773,7 @@ function renderBudgetComparaison(root) {
     tr.innerHTML = `<td><strong>${cat.label}</strong></td>
       <td class="num">${fmt.money(subBudget)}</td>
       <td class="num">${fmt.money(subReel)}</td>
-      <td class="num ${ecart > 0 && cat.type === "depense" ? "negative" : "positive"}">${fmt.money(ecart)}</td>
+      <td class="num ${ecart > 0 && cat.type === "dépense" ? "négative" : "positive"}">${fmt.money(ecart)}</td>
       <td class="num">${subBudget > 0 ? (pct * 100).toFixed(0) + " %" : "-"}</td>
       <td style="min-width:140px;"><div class="progress"><div class="progress-bar ${klass}" style="width:${Math.min(pct * 100, 100).toFixed(1)}%"></div></div></td>`;
     tbody.appendChild(tr);
@@ -3787,7 +3787,7 @@ function renderBudgetComparaison(root) {
 function renderBudgetAnnuel(root) {
   const data = p();
   const isCouple = APP.currentProfile === "couple";
-  // Mois de l'annee courante
+  // Mois de l'année courante
   const year = (new Date()).getFullYear();
   const months = [];
   for (let m = 1; m <= 12; m++) months.push(`${year}-${String(m).padStart(2, "0")}`);
@@ -3801,7 +3801,7 @@ function renderBudgetAnnuel(root) {
   ]));
   const tbl = el("div", { class: "table-wrap" });
   const t = el("table");
-  let header = `<thead><tr><th>Categorie</th>` + months.map(m => `<th class="num">${fmt.monthLabel(m).split(" ")[0]}</th>`).join("") + `<th class="num">Total YTD</th><th class="num">Moy/mois</th></tr></thead>`;
+  let header = `<thead><tr><th>catégorie</th>` + months.map(m => `<th class="num">${fmt.monthLabel(m).split(" ")[0]}</th>`).join("") + `<th class="num">Total YTD</th><th class="num">Moy/mois</th></tr></thead>`;
   t.innerHTML = header;
   const tbody = el("tbody");
   for (const [groupId, cat] of Object.entries(BUDGET_CATEGORIES)) {
@@ -3834,7 +3834,7 @@ function renderBudgetAnnuel(root) {
 function renderBudgetTendances(root) {
   const data = p();
   const isCouple = APP.currentProfile === "couple";
-  // Calcul moyennes 3/6/12 mois pour chaque categorie
+  // Calcul moyennes 3/6/12 mois pour chaque catégorie
   const refMonth = _budgetMonth;
   const last3 = lastNMonths(refMonth, 3);
   const last6 = lastNMonths(refMonth, 6);
@@ -3843,13 +3843,13 @@ function renderBudgetTendances(root) {
   const card = el("div", { class: "card" });
   card.appendChild(el("div", { class: "card-header" }, [
     el("div", {}, [
-      el("div", { class: "card-title", text: "Tendances par categorie" }),
+      el("div", { class: "card-title", text: "Tendances par catégorie" }),
       el("div", { class: "card-subtitle", text: `Moyennes glissantes 3 / 6 / 12 mois jusqu'a ${fmt.monthLabel(refMonth)}` })
     ])
   ]));
   const tbl = el("div", { class: "table-wrap" });
   const t = el("table");
-  t.innerHTML = `<thead><tr><th>Categorie</th><th class="num">Moy 3 mois</th><th class="num">Moy 6 mois</th><th class="num">Moy 12 mois</th><th>Tendance</th></tr></thead>`;
+  t.innerHTML = `<thead><tr><th>catégorie</th><th class="num">Moy 3 mois</th><th class="num">Moy 6 mois</th><th class="num">Moy 12 mois</th><th>Tendance</th></tr></thead>`;
   const tbody = el("tbody");
   for (const [groupId, cat] of Object.entries(BUDGET_CATEGORIES)) {
     const m3 = avgForCategory(data, groupId, last3, isCouple);
@@ -3857,7 +3857,7 @@ function renderBudgetTendances(root) {
     const m12 = avgForCategory(data, groupId, last12, isCouple);
     if (m3 === 0 && m6 === 0 && m12 === 0) continue;
     const trend = m3 > m12 * 1.1 ? "↑ Hausse" : m3 < m12 * 0.9 ? "↓ Baisse" : "→ Stable";
-    const trendClass = m3 > m12 * 1.1 ? "negative" : m3 < m12 * 0.9 ? "positive" : "muted";
+    const trendClass = m3 > m12 * 1.1 ? "négative" : m3 < m12 * 0.9 ? "positive" : "muted";
     const tr = el("tr");
     tr.innerHTML = `<td><strong>${cat.label}</strong></td>
       <td class="num">${fmt.money(m3)}</td>
@@ -3903,7 +3903,7 @@ function renderBudgetReglages(root) {
   cardRestore.appendChild(el("div", { class: "card-header" }, [
     el("div", {}, [
       el("div", { class: "card-title", text: "Restaurer defauts mai 2026 (depuis SOURCE_DE_VERITE.md)" }),
-      el("div", { class: "card-subtitle", text: APP.currentProfile === "mathis" ? "Recharge les budgets Mathis depuis le plan : revenus 632 $/sem, vehicule, sorties 75 $/sem, etc." : "Recharge les budgets conjointe : hypothese 100 % identique a Mathis (revenus + depenses similaires)." })
+      el("div", { class: "card-subtitle", text: APP.currentProfile === "mathis" ? "Recharge les budgets Mathis depuis le plan : revenus 632 $/sem, vehicule, sorties 75 $/sem, etc." : "Recharge les budgets conjointe : hypothese 100 % identique a Mathis (revenus + dépenses similaires)." })
     ])
   ]));
   const defaults = APP.currentProfile === "mathis" ? MATHIS_BUDGET_DEFAULTS : CONJOINTE_BUDGET_DEFAULTS;
@@ -3911,15 +3911,15 @@ function renderBudgetReglages(root) {
     el("button", { class: "btn", onclick: () => {
       const added = applyBudgetDefaults(data, defaults, false);
       scheduleSave();
-      showSuccess(`${added} categorie(s) remplie(s) (sans ecraser tes valeurs).`);
+      showSuccess(`${added} catégorie(s) remplie(s) (sans ecraser tes valeurs).`);
       _budgetView = "saisie"; renderBudget();
-    }, text: "Remplir categories vides seulement (recommande)" }),
+    }, text: "Remplir catégories vides seulement (recommande)" }),
     el("button", { class: "btn btn-danger", onclick: () => {
-      confirmModal("Ecraser tes valeurs ?", "Tous les budgets previsionnels ET les unites preferees seront remplaces par les defauts SDV mai 2026. Tes <strong>saisies reelles</strong> mensuelles ne sont PAS touchees.", () => {
+      confirmModal("Ecraser tes valeurs ?", "Tous les budgets previsionnels ET les unités preferees seront remplaces par les defauts SDV mai 2026. Tes <strong>saisies reelles</strong> mensuelles ne sont PAS touchees.", () => {
         const added = applyBudgetDefaults(data, defaults, true);
         scheduleSave();
         closeModal();
-        showSuccess(`${added} categorie(s) ecrasee(s).`);
+        showSuccess(`${added} catégorie(s) ecrasee(s).`);
         _budgetView = "saisie"; renderBudget();
       }, "Ecraser");
     }, text: "Ecraser tout (force)" })
@@ -3929,8 +3929,8 @@ function renderBudgetReglages(root) {
   const card = el("div", { class: "card" });
   card.appendChild(el("div", { class: "card-header" }, [
     el("div", {}, [
-      el("div", { class: "card-title", text: "Reglages des categories" }),
-      el("div", { class: "card-subtitle", text: "Active/desactive les categories que tu n'utilises pas. Les categories desactivees disparaissent de la saisie." })
+      el("div", { class: "card-title", text: "Reglages des catégories" }),
+      el("div", { class: "card-subtitle", text: "Active/desactive les catégories que tu n'utilises pas. Les catégories desactivees disparaissent de la saisie." })
     ])
   ]));
   for (const [groupId, cat] of Object.entries(BUDGET_CATEGORIES)) {
@@ -3942,18 +3942,18 @@ function renderBudgetReglages(root) {
     sub.appendChild(head);
     const body = el("div", { class: "collapse-body" });
     for (const s of cat.sub) {
-      const active = data.budget.categories[s.id]?.active !== false;
+      const active = data.budget.catégories[s.id]?.active !== false;
       const row = el("label", { style: "display:flex; gap:10px; padding:6px 0; cursor:pointer; align-items:center;" }, [
-        el("input", { type: "checkbox", checked: active, onchange: (e) => { if (!data.budget.categories[s.id]) data.budget.categories[s.id] = { active: true, budget: 0 }; data.budget.categories[s.id].active = e.target.checked; scheduleSave(); } }),
+        el("input", { type: "checkbox", checked: active, onchange: (e) => { if (!data.budget.catégories[s.id]) data.budget.catégories[s.id] = { active: true, budget: 0 }; data.budget.catégories[s.id].active = e.target.checked; scheduleSave(); } }),
         el("span", { text: s.label }),
         el("span", { class: "muted text-sm", style: "margin-left:auto;", text: s.id })
       ]);
       body.appendChild(row);
     }
-    // Categories perso de ce groupe
+    // catégories perso de ce groupe
     const customs = (data.budget.customCategories || []).filter(c => c.group === groupId);
     if (customs.length > 0) {
-      body.appendChild(el("div", { class: "muted text-sm mt-16", text: "Categories perso :" }));
+      body.appendChild(el("div", { class: "muted text-sm mt-16", text: "catégories perso :" }));
       for (const c of customs) {
         const row = el("div", { style: "display:flex; gap:10px; padding:6px 0; align-items:center;" }, [
           el("span", { text: c.label }),
@@ -3970,7 +3970,7 @@ function renderBudgetReglages(root) {
 
 function customFindCat(data, catId) {
   const customs = data.budget.customCategories || [];
-  for (const c of customs) if (c.id === catId) return { group: c.group, groupLabel: c.groupLabel || c.group, groupType: c.type || "depense", sub: c };
+  for (const c of customs) if (c.id === catId) return { group: c.group, groupLabel: c.groupLabel || c.group, groupType: c.type || "dépense", sub: c };
   return null;
 }
 
@@ -3989,15 +3989,15 @@ function resetBudgetToZero() {
   confirmModal(
     `Reset budget a zero - ${profileName}`,
     `Tous les montants budget de ce profil vont etre remis a <strong>0 $</strong>.<br><br>` +
-    `<strong>Conserve :</strong> les categories actives/desactivees, les categories perso ajoutees, les unites preferees, les notes mensuelles.<br>` +
+    `<strong>Conserve :</strong> les catégories actives/desactivees, les catégories perso ajoutees, les unités preferees, les notes mensuelles.<br>` +
     `<strong>Efface :</strong> les montants budget previsionnels (toutes lignes -> 0 $).<br><br>` +
     `Cette action est <strong>reversible</strong> via "Restaurer defauts mai 2026" dans Reglages.`,
     () => {
       const data = p();
       // Vider toutes les valeurs budget mais garder la structure
-      if (data.budget.categories) {
-        for (const catId in data.budget.categories) {
-          data.budget.categories[catId].budget = 0;
+      if (data.budget.catégories) {
+        for (const catId in data.budget.catégories) {
+          data.budget.catégories[catId].budget = 0;
         }
       }
       // Optionnel : aussi vider les sources SDV pour eviter de garder du texte qui suggere des montants
@@ -4037,7 +4037,7 @@ function openCustomCategoryModal() {
   promptModal("Nouvelle categorie perso", [
     { label: "Nom de la categorie", name: "label", required: true },
     { label: "Groupe parent", name: "group", type: "select", options: Object.entries(BUDGET_CATEGORIES).map(([k, v]) => ({ value: k, label: v.label })) },
-    { label: "Type", name: "type", type: "select", options: [{ value: "depense", label: "Depense" }, { value: "revenu", label: "Revenu" }, { value: "epargne", label: "Epargne" }] },
+    { label: "Type", name: "type", type: "select", options: [{ value: "dépense", label: "dépense" }, { value: "revenu", label: "Revenu" }, { value: "epargne", label: "Epargne" }] },
     { label: "Budget mensuel ($, optionnel)", name: "budget", type: "number" }
   ], (vals) => {
     const data = p();
@@ -4046,7 +4046,7 @@ function openCustomCategoryModal() {
     data.budget.customCategories.push({ id, label: vals.label, group: vals.group, type: vals.type });
     if (vals.budget) setBudgetMensuel(data, id, vals.budget);
     closeModal();
-    showSuccess("Categorie ajoutee.");
+    showSuccess("catégorie ajoutee.");
     scheduleSave();
     renderBudget();
   });
@@ -4114,17 +4114,17 @@ function renderPros() {
   if (pros.length === 0) {
     root.appendChild(el("div", { class: "empty" }, [
       el("div", { class: "empty-title", text: "Aucun professionnel" }),
-      el("div", { text: "Ajoute tes contacts (notaire, comptable, fiscaliste, courtier hypothecaire, etc.)" }),
+      el("div", { text: "Ajoute tes contacts (notaire, comptable, fiscaliste, courtier hypothécaire, etc.)" }),
       !isCouple ? el("button", { class: "btn btn-primary mt-16", onclick: () => openProModal(null), text: "+ Ajouter" }) : null
     ]));
     return;
   }
 
-  // Grouper par categorie
+  // Grouper par catégorie
   const byCat = { Routine: [], Critique: [], Autre: [] };
   for (const pr of pros) {
-    if (pr.categorie === "Routine") byCat.Routine.push(pr);
-    else if (pr.categorie === "Critique") byCat.Critique.push(pr);
+    if (pr.catégorie === "Routine") byCat.Routine.push(pr);
+    else if (pr.catégorie === "Critique") byCat.Critique.push(pr);
     else byCat.Autre.push(pr);
   }
 
@@ -4165,13 +4165,13 @@ function renderPros() {
 function openProModal(proId) {
   const data = p();
   const isNew = !proId;
-  const pr = isNew ? { id: uid(), nom: "", cabinet: "", categorie: "Routine", source: "", services: "", phone: "", email: "", tarification: "", dateContact: "", prochainContact: "", notes: "", evalPrix: 0, evalQualite: 0, evalChimie: 0, evalReseau: 0 } : data.pros.find(x => x.id === proId);
+  const pr = isNew ? { id: uid(), nom: "", cabinet: "", catégorie: "Routine", source: "", services: "", phone: "", email: "", tarification: "", dateContact: "", prochainContact: "", notes: "", evalPrix: 0, evalQualite: 0, evalChimie: 0, evalReseau: 0 } : data.pros.find(x => x.id === proId);
   if (!pr) return;
 
   let html = `<form id="pro-form" onsubmit="event.preventDefault(); saveProForm('${pr.id}');"><div class="form-grid">
     <div class="form-row"><div class="form-label">Nom <span class="req">*</span></div><input class="form-input" name="nom" required value="${escapeHTML(pr.nom)}"></div>
     <div class="form-row"><div class="form-label">Cabinet</div><input class="form-input" name="cabinet" value="${escapeHTML(pr.cabinet || "")}"></div>
-    <div class="form-row"><div class="form-label">Categorie</div><select class="form-select" name="categorie">
+    <div class="form-row"><div class="form-label">catégorie</div><select class="form-select" name="categorie">
       <option value="Routine" ${pr.categorie === "Routine" ? "selected" : ""}>Routine (reseau VMD familial)</option>
       <option value="Critique" ${pr.categorie === "Critique" ? "selected" : ""}>Critique (independant top-tier)</option>
       <option value="Autre" ${pr.categorie === "Autre" ? "selected" : ""}>Autre</option>
@@ -4231,7 +4231,7 @@ function renderSettings() {
   root.appendChild(el("div", { class: "page-header" }, [
     el("div", {}, [
       el("div", { class: "page-title", text: "Parametres" }),
-      el("div", { class: "page-subtitle", text: "Configuration globale du systeme FinancePerso" })
+      el("div", { class: "page-subtitle", text: "Configuration globale du système FinancePerso" })
     ])
   ]));
 
@@ -4336,10 +4336,10 @@ function renderSettings() {
   }
   root.appendChild(cardProf);
 
-  // Section 6 : Infos systeme
+  // Section 6 : Infos système
   const cardInfo = el("div", { class: "card" });
   cardInfo.appendChild(el("div", { class: "card-header" }, [
-    el("div", { class: "card-title", text: "Informations systeme" })
+    el("div", { class: "card-title", text: "Informations système" })
   ]));
   cardInfo.appendChild(el("div", { html: `
     <p class="muted text-sm">Version : ${APP.version}</p>

@@ -74,13 +74,24 @@ html, body {
   padding: 10px 16px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .topbar h1 {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  flex: 1;
+  flex: 1 1 100%;
+  order: -1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
   letter-spacing: -0.01em;
+}
+@media (min-width: 560px) {
+  .topbar { flex-wrap: nowrap; }
+  .topbar h1 { flex: 1; order: 0; margin-bottom: 0; }
 }
 .btn-text {
   background: transparent;
@@ -445,7 +456,7 @@ button.action:hover { background: var(--accent-2); }
 <!-- =================== MENSUALITE =================== -->
 <div class="tool" id="tool-mensualite">
   <h2>Mensualité hypothécaire</h2>
-  <p class="desc">Calcule le paiement mensuel principal + intérêts, et te montre la répartition au fil du temps.</p>
+  <p class="desc">calculé le paiement mensuel principal + intérêts, et te montre la répartition au fil du temps.</p>
 
   <div class="card">
     <div class="card-title">Paramètres du prêt</div>
@@ -474,7 +485,7 @@ button.action:hover { background: var(--accent-2); }
 
 <!-- =================== SCHL =================== -->
 <div class="tool" id="tool-schl">
-  <h2>Prime SCHL (assurance hypothecaire)</h2>
+  <h2>Prime SCHL (assurance hypothécaire)</h2>
   <p class="desc">Estime la prime SCHL selon le type de prêt et le LTV. <strong>Important :</strong> la TVQ 9,975% est payable cash au closing, la prime elle-meme est ajoutee au pret.</p>
 
   <div class="card">
@@ -482,10 +493,10 @@ button.action:hover { background: var(--accent-2); }
     <div class="field">
       <label>Programme SCHL</label>
       <select id="schl-prog" onchange="calcSCHL()">
-        <option value="resid">Residentiel 1-4 unites (proprietaire-occupant)</option>
-        <option value="resid_loc">Residentiel 1-4 unites (locatif pur)</option>
-        <option value="multi_std">Multi-Logement Standard (5+ unites)</option>
-        <option value="multi_aph">Multi-Logement APH Select (5+ unites, abordable)</option>
+        <option value="resid">Résidentiel 1-4 unités (propriétaire-occupant)</option>
+        <option value="resid_loc">Résidentiel 1-4 unités (locatif pur)</option>
+        <option value="multi_std">Multi-Logement Standard (5+ unités)</option>
+        <option value="multi_aph">Multi-Logement APH Select (5+ unités, abordable)</option>
       </select>
     </div>
     <div class="field-row">
@@ -515,7 +526,7 @@ button.action:hover { background: var(--accent-2); }
 <!-- =================== MUTATION =================== -->
 <div class="tool" id="tool-mutation">
   <h2>Taxe de bienvenue (droits de mutation)</h2>
-  <p class="desc">Calcule la taxe de bienvenue selon le bareme du Quebec (echelle progressive par tranches).</p>
+  <p class="desc">calculé la taxe de bienvenue selon le bareme du Québec (echelle progressive par tranches).</p>
 
   <div class="card">
     <div class="card-title">Prix d'achat</div>
@@ -528,7 +539,7 @@ button.action:hover { background: var(--accent-2); }
   <div class="result" id="mut-result"></div>
 
   <div class="note">
-    <strong>Bareme provincial Quebec 2025-2026 :</strong>
+    <strong>Bareme provincial Québec 2025-2026 :</strong>
     <br>&bull; 0 - 58 900 $ : 0,5%
     <br>&bull; 58 900 - 294 600 $ : 1,0%
     <br>&bull; 294 600 - 500 000 $ : 1,5%
@@ -542,7 +553,7 @@ button.action:hover { background: var(--accent-2); }
 <!-- =================== CROISSANCE =================== -->
 <div class="tool" id="tool-croissance">
   <h2>FHSA / CELI / REER &mdash; Croissance composee</h2>
-  <p class="desc">Projette ce que ton placement vaudra dans X annees avec des cotisations regulieres.</p>
+  <p class="desc">Projette ce que ton placement vaudra dans X années avec des cotisations régulières.</p>
 
   <div class="card">
     <div class="card-title">Parametres</div>
@@ -563,7 +574,7 @@ button.action:hover { background: var(--accent-2); }
         <span class="help">Conservatif: 5-6%. Aggressif: 7-9%</span>
       </div>
       <div class="field">
-        <label>Duree (annees)</label>
+        <label>Durée (années)</label>
         <input type="number" id="cr-duree" placeholder="5" value="5" oninput="calcCroissance()">
       </div>
     </div>
@@ -582,7 +593,7 @@ button.action:hover { background: var(--accent-2); }
 <!-- =================== COMPARATEUR =================== -->
 <div class="tool" id="tool-comparateur">
   <h2>Comparateur 3 immeubles</h2>
-  <p class="desc">Saisis les chiffres de 3 immeubles candidats. L'app calcule DCR, mensualite, cashflow et te dit lequel est le meilleur deal.</p>
+  <p class="desc">Saisis les chiffres de 3 immeubles candidats. L'app calculé DCR, mensualite, cashflow et te dit lequel est le meilleur deal.</p>
 
   <div class="comp-grid" id="comp-grid">
     <!-- Genere par JS -->
@@ -592,7 +603,7 @@ button.action:hover { background: var(--accent-2); }
 
   <div class="note">
     <strong>Hypotheses du comparateur :</strong>
-    <br>&bull; Mise de fonds : 15% (SCHL Multi-Log) ou 5% si propriétaire-occupant 1-4 unites
+    <br>&bull; Mise de fonds : 15% (SCHL Multi-Log) ou 5% si propriétaire-occupant 1-4 unités
     <br>&bull; Taux : 5,5% / amortissement 25 ans
     <br>&bull; Vacance : 5%
     <br>&bull; Dépenses si non saisies : 35% des revenus bruts (estimation conservatrice)
@@ -650,10 +661,10 @@ const fmt$2 = n => isNaN(n) ? '-' : n.toLocaleString('fr-CA', {style:'currency',
 const fmtPct = n => isNaN(n) ? '-' : n.toFixed(2) + ' %';
 const fmtNum = n => isNaN(n) ? '-' : n.toFixed(2);
 
-// ============== HYPOTHEQUE (utilité commune) ==============
+// ============== hypothèque (utilité commune) ==============
 function paiementMensuel(principal, tauxAnnuel, anneesAmort) {
   if (!principal || !tauxAnnuel || !anneesAmort) return 0;
-  // Hypotheque canadienne : taux semi-annuel composé, mensualité
+  // hypothèque canadienne : taux semi-annuel composé, mensualité
   const tauxSemestriel = Math.pow(1 + (tauxAnnuel/100)/2, 1/6) - 1;
   const n = anneesAmort * 12;
   return principal * tauxSemestriel / (1 - Math.pow(1 + tauxSemestriel, -n));
@@ -663,13 +674,13 @@ function paiementMensuel(principal, tauxAnnuel, anneesAmort) {
 function calcDCR() {
   const revenus = +document.getElementById('dcr-revenus').value || 0;
   const vacance = +document.getElementById('dcr-vacance').value || 0;
-  const depenses = +document.getElementById('dcr-depenses').value || 0;
+  const dépenses = +document.getElementById('dcr-dépenses').value || 0;
   const prêt = +document.getElementById('dcr-prêt').value || 0;
   const taux = +document.getElementById('dcr-taux').value || 0;
   const amort = +document.getElementById('dcr-amort').value || 0;
 
   const revenusNets = revenus * (1 - vacance/100);
-  const noi = revenusNets - depenses;
+  const noi = revenusNets - dépenses;
   const mensualite = paiementMensuel(prêt, taux, amort);
   const annualMortgage = mensualite * 12;
   const dcr = annualMortgage > 0 ? noi / annualMortgage : 0;
@@ -683,9 +694,9 @@ function calcDCR() {
   else { interpretation = 'Saisis les chiffres pour calculer'; cls = ''; }
 
   document.getElementById('dcr-result').innerHTML = `
-    <div class="result-row"><span class="label">Revenus nets (apres vacance)</span><span class="value">${fmt$(revenusNets)}</span></div>
-    <div class="result-row"><span class="label">NOI (revenus nets &minus; depenses)</span><span class="value">${fmt$(noi)}</span></div>
-    <div class="result-row"><span class="label">Mensualite hypothecaire</span><span class="value">${fmt$(mensualite)}/mois</span></div>
+    <div class="result-row"><span class="label">Revenus nets (après vacance)</span><span class="value">${fmt$(revenusNets)}</span></div>
+    <div class="result-row"><span class="label">NOI (revenus nets &minus; dépenses)</span><span class="value">${fmt$(noi)}</span></div>
+    <div class="result-row"><span class="label">Mensualité hypothécaire</span><span class="value">${fmt$(mensualite)}/mois</span></div>
     <div class="result-row"><span class="label">Service de la dette annuel</span><span class="value">${fmt$(annualMortgage)}</span></div>
     <div class="result-row highlight ${cls}"><span class="label">DCR</span><span class="value">${fmtNum(dcr)}</span></div>
     <div class="result-row ${cls}"><span class="label">Verdict</span><span class="value">${interpretation}</span></div>
@@ -712,7 +723,7 @@ function calcMensualite() {
   const tauxStress = Math.max(taux + 2, 5.25);
   const mensualiteStress = paiementMensuel(prêt, tauxStress, amort);
 
-  // Repartition annee 1 (approximation)
+  // Repartition année 1 (approximation)
   const interetsAn1 = prêt * (taux/100);
   const capitalAn1 = annuel - interetsAn1;
 
@@ -754,7 +765,7 @@ function calcSCHL() {
     else { warning = 'Mise de fonds < 5% non admissible (residentiel)'; }
   } else if (prog === 'resid_loc') {
     if (downPct >= 20) { primeRate = 1.45; }
-    else { warning = 'Locatif pur 1-4 unites exige minimum 20% down'; }
+    else { warning = 'Locatif pur 1-4 unités exige minimum 20% down'; }
   } else if (prog === 'multi_std') {
     if (downPct >= 25) { primeRate = 3.0; }
     else if (downPct >= 20) { primeRate = 4.0; }
@@ -793,7 +804,7 @@ function calcMutation() {
     return;
   }
 
-  // Bareme provincial Quebec 2025-2026 (aligne sur scripts/dealfinder/analyzer.py droits_mutation).
+  // Bareme provincial Québec 2025-2026 (aligne sur scripts/dealfinder/analyzer.py droits_mutation).
   // Tranches officielles (Loi sur les droits sur les mutations immobilieres) :
   const tranches = [
     {jusqua: 58900,    taux: 0.005},
@@ -804,7 +815,7 @@ function calcMutation() {
     {jusqua: Infinity, taux: 0.030},
   ];
   let total = 0;
-  let detail = [];
+  let détail = [];
   let prev = 0;
   for (const t of tranches) {
     if (prix <= prev) break;
@@ -834,7 +845,7 @@ function calcCroissance() {
   const rend = (+document.getElementById('cr-rendement').value || 0) / 100;
   const duree = +document.getElementById('cr-duree').value || 0;
 
-  // Croissance composee avec cotisations annuelles en debut d'annee
+  // Croissance composee avec cotisations annuelles en debut d'année
   let solde = debut;
   let cotisationsTotal = 0;
   for (let i = 0; i < duree; i++) {
@@ -868,7 +879,7 @@ function initComparateur() {
         <input type="number" data-comp="logs" data-i="${i}" placeholder="4" oninput="calcComparateur()">
         <label>Loyers mensuels totaux ($)</label>
         <input type="number" data-comp="loyers" data-i="${i}" placeholder="4200" oninput="calcComparateur()">
-        <label>Depenses operationnelles annuelles ($, optionnel)</label>
+        <label>Dépenses opérationnelles annuelles ($, optionnel)</label>
         <input type="number" data-comp="dep" data-i="${i}" placeholder="auto: 35% loyers" oninput="calcComparateur()">
         <label>Mise de fonds (%)</label>
         <input type="number" data-comp="down" data-i="${i}" value="5" step="1" oninput="calcComparateur()">
@@ -915,8 +926,8 @@ function calcComparateur() {
     const revenusBruts = loyers * 12;
     const vacance = revenusBruts * 0.05;
     const revenusNets = revenusBruts - vacance;
-    const depenses = depSaisi || (revenusBruts * 0.35);
-    const noi = revenusNets - depenses;
+    const dépenses = depSaisi || (revenusBruts * 0.35);
+    const noi = revenusNets - dépenses;
 
     const down = prix * (downPct / 100);
     const prêt = prix - down;
@@ -969,7 +980,7 @@ function calcComparateur() {
       {label: 'Loyers mensuels', key: 'loyers', fmt: fmt$, dir: 'max'},
       {label: 'NOI annuel', key: 'noi', fmt: fmt$, dir: 'max'},
       {label: 'Mise de fonds', key: 'down', fmt: fmt$, dir: 'min'},
-      {label: 'Mensualite hypothecaire', key: 'mensualite', fmt: fmt$2, dir: 'min'},
+      {label: 'Mensualité hypothécaire', key: 'mensualite', fmt: fmt$2, dir: 'min'},
       {label: 'Cashflow / mois', key: 'cashflowMensuel', fmt: fmt$2, dir: 'max', best: bestCashflow, highlight: true},
       {label: 'Cashflow / an', key: 'cashflowAnnuel', fmt: fmt$, dir: 'max'},
       {label: 'DCR', key: 'dcr', fmt: fmtNum, dir: 'max', best: bestDCR, highlight: true},
