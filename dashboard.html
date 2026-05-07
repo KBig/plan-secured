@@ -284,6 +284,8 @@ canvas {
 .chart-legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-2); }
 .chart-legend-color { width: 14px; height: 3px; border-radius: 1px; }
 .chart-legend-color.dot { width: 8px; height: 8px; border-radius: 50%; }
+.chart-jalons { margin-top: 8px; padding: 8px 10px; background: var(--bg-3); border-radius: 6px; font-size: 11.5px; color: var(--text-2); line-height: 1.6; }
+.chart-jalons strong { color: var(--text); }
 
 /* HEADER STAT */
 .stat-grid {
@@ -532,6 +534,14 @@ button.action.secondary:hover { background: var(--bg-4); }
         <span class="chart-legend-color dot" style="background:#f0883e;"></span>
         Ta réalité
       </div>
+    </div>
+    <div class="chart-jalons">
+      <strong>Jalons clés :</strong>
+      25 ans = 1er achat (quadruplex 700k$) •
+      27 ans = 1er APH Select •
+      29 ans = 2e APH Select •
+      30 ans = Compagnon CCQ + ImmoCo •
+      40 ans = ~10 immeubles
     </div>
   </div>
 
@@ -949,6 +959,38 @@ function drawChart() {
   drawCurve(CIBLES.A, '#a371f7', false);
   // Plancher (en vert pointillé)
   drawCurve(CIBLES.PLANCHER, '#3fb950', true);
+
+  // Jalons clés du plan (annotations)
+  const JALONS = [
+    {age: 25, label: '1er achat\n(quadruplex 700k$)'},
+    {age: 27, label: '1er APH Select\n(sextuplex/8-plex)'},
+    {age: 29, label: '2e APH Select\n(12-plex)'},
+    {age: 30, label: 'Compagnon CCQ\n+ ImmoCo'},
+    {age: 40, label: '~10 immeubles\n+100 portes'},
+  ];
+  ctx.fillStyle = colorText2;
+  ctx.font = '10px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  JALONS.forEach(j => {
+    const x = xPos(j.age);
+    // Petit triangle au-dessus du graphique
+    ctx.fillStyle = isLight ? '#888' : '#666';
+    ctx.beginPath();
+    ctx.moveTo(x - 4, PAD_T - 4);
+    ctx.lineTo(x + 4, PAD_T - 4);
+    ctx.lineTo(x, PAD_T);
+    ctx.closePath();
+    ctx.fill();
+    // Ligne pointillée verticale légère
+    ctx.strokeStyle = isLight ? 'rgba(136,136,136,0.25)' : 'rgba(180,180,180,0.18)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(x, PAD_T);
+    ctx.lineTo(x, H - PAD_B);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
 
   // Point réalité (si données saisies)
   const age = +userData.age || 0;
