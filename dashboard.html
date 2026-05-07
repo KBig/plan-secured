@@ -136,6 +136,16 @@ html, body {
   border-bottom-color: var(--accent);
   font-weight: 600;
 }
+.coach-checklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.coach-checklist li { background: var(--bg-3); border-radius: 6px; padding: 10px 12px; border-left: 3px solid var(--text-3); }
+.coach-checklist li.done { border-left-color: var(--green); }
+.coach-checklist li.failed { border-left-color: var(--red); opacity: 0.85; }
+.coach-checklist label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; }
+.coach-checklist input[type=checkbox] { margin-top: 3px; flex-shrink: 0; transform: scale(1.15); cursor: pointer; }
+.coach-checklist small { color: var(--text-3); font-size: 11.5px; }
+.coach-checklist .auto-status { font-weight: 600; margin-left: auto; padding: 2px 8px; border-radius: 999px; font-size: 11px; }
+.coach-checklist .auto-status.green { background: var(--green-bg); color: var(--green); }
+.coach-checklist .auto-status.red { background: var(--red-bg); color: var(--red); }
 
 /* MAIN */
 main {
@@ -392,6 +402,7 @@ button.action.secondary:hover { background: var(--bg-4); }
   <button class="tab active" onclick="showTool('saisie')">Mes chiffres</button>
   <button class="tab" onclick="showTool('comparaison')">Comparaison vs cibles</button>
   <button class="tab" onclick="showTool('graphique')">Graphique 21-50 ans</button>
+  <button class="tab" onclick="showTool('coach')">Coach préparation</button>
 </div>
 
 <main>
@@ -581,6 +592,48 @@ button.action.secondary:hover { background: var(--bg-4); }
 
   <div class="note">
     <strong>Source :</strong> Section 24 (les 2 paths) + SOURCE_DE_VERITE.md. Les cibles sont en milliers de dollars (k$). Patrimoine couple = ta part x 2 (Mode B 50/50).
+  </div>
+</div>
+
+<!-- =================== COACH PRÉPARATION =================== -->
+<div class="tool" id="tool-coach">
+  <h2>Coach préparation à l'achat — Score 0/100</h2>
+  <p class="desc">Évalue ta préparation à l'achat 1er multiplex (jan 2030). Coche ce que tu as déjà fait. Le système te dit ce qui manque et l'urgence.</p>
+
+  <div class="card">
+    <div class="card-title">Ton score : <span id="coach-score" style="color:var(--accent);font-size:24px">—</span> / 100</div>
+    <div id="coach-bar" style="background:var(--bg-3);border-radius:6px;height:12px;overflow:hidden;margin:8px 0">
+      <div id="coach-bar-fill" style="background:var(--accent);height:100%;width:0%;transition:width 0.3s"></div>
+    </div>
+    <div id="coach-verdict" class="note" style="margin-top:8px">Coche les items pour calculer ton score.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Critères financiers (auto-détectés depuis "Mes chiffres")</div>
+    <ul id="coach-financial" class="coach-checklist"></ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Critères opérationnels (à cocher manuellement)</div>
+    <p class="desc" style="margin-bottom:10px">Ces items sont à compléter d'ici jan 2030. Coche au fur et à mesure.</p>
+    <ul class="coach-checklist">
+      <li><label><input type="checkbox" data-coach-item="prequal" data-coach-pts="12"> Pré-qualification hypothécaire faite (multi-log) <small>— d'ici 2027 | 12 pts</small></label></li>
+      <li><label><input type="checkbox" data-coach-item="visites" data-coach-pts="8"> Visité 5+ multiplex similaires en personne <small>— 2027-2029 | 8 pts</small></label></li>
+      <li><label><input type="checkbox" data-coach-item="inspecteur" data-coach-pts="5"> Inspecteur en bâtiment identifié + budget réservé <small>— 2028 | 5 pts</small></label></li>
+      <li><label><input type="checkbox" data-coach-item="notaire" data-coach-pts="3"> Notaire spécialisé multi-log identifié <small>— 2029 | 3 pts</small></label></li>
+      <li><label><input type="checkbox" data-coach-item="comptable" data-coach-pts="3"> Comptable spécialisé immobilier identifié <small>— 2029 | 3 pts</small></label></li>
+      <li><label><input type="checkbox" data-coach-item="courtier" data-coach-pts="5"> Courtier hypothécaire multi-log identifié <small>— 2027 | 5 pts</small></label></li>
+      <li><label><input type="checkbox" data-coach-item="formation" data-coach-pts="6"> Formation CIIQ ou équivalent multi-log <small>— 2027-2028 | 6 pts</small></label></li>
+      <li><label><input type="checkbox" data-coach-item="rdl" data-coach-pts="4"> Comprendre RDL + clause F + baux QC <small>— Section 4 | 4 pts</small></label></li>
+      <li><label><input type="checkbox" data-coach-item="reseau" data-coach-pts="4"> Réseau professionnel actif (parents flippers, courtiers) <small>— 2027+ | 4 pts</small></label></li>
+      <li><label><input type="checkbox" data-coach-item="convention" data-coach-pts="5"> Convention notariée 50/50 signée avec conjointe <small>— Section 8 — avant achat | 5 pts</small></label></li>
+      <li><label><input type="checkbox" data-coach-item="urgence" data-coach-pts="5"> Fonds urgence 6 mois dépenses (séparé du cash 1er achat) <small>— 2029 | 5 pts</small></label></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Recommandations action immédiate</div>
+    <div id="coach-recommendations" class="note">Coche les items pour recevoir des recommandations.</div>
   </div>
 </div>
 
@@ -1106,6 +1159,133 @@ function showTool(id) {
   window.scrollTo({top: 0, behavior: 'instant'});
   if (id === 'graphique') setTimeout(drawChart, 50);
   if (id === 'comparaison') renderComparaison();
+  if (id === 'coach') updateCoachScore();
+}
+
+// ============== COACH PRÉPARATION ==============
+const COACH_KEY = 'dashboard_coach_v1';
+function loadCoach() {
+  try { return JSON.parse(localStorage.getItem(COACH_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+function saveCoach(o) {
+  try { localStorage.setItem(COACH_KEY, JSON.stringify(o)); } catch(e) {}
+}
+
+const COACH_FINANCIAL = [
+  {id:'credit',  pts:8,  label:'Cote crédit ≥ 750',
+    check: u => (+u.credit||0) >= 750},
+  {id:'fhsa',    pts:8,  label:'FHSA ≥ 25 000$ accumulé',
+    check: u => (+u.fhsa||0) >= 25000},
+  {id:'celi',    pts:6,  label:'CELI ≥ 15 000$ accumulé',
+    check: u => (+u.celi||0) >= 15000},
+  {id:'cash',    pts:5,  label:'Cash + fonds urgence ≥ 5 000$',
+    check: u => (+u.cash||0) >= 5000},
+  {id:'dette',   pts:8,  label:'Dette consommation < 5 000$',
+    check: u => (+u.dette||0) < 5000},
+  {id:'liq25',   pts:10, label:'Capital total ≥ 100 000$ (toi seul, cible 25 ans)',
+    check: u => ((+u.fhsa||0)+(+u.celi||0)+(+u.reer||0)+(+u.cash||0)+(+u.nonreg||0)) >= 100000},
+];
+
+function _clearChildren(node) {
+  while (node && node.firstChild) node.removeChild(node.firstChild);
+}
+
+function updateCoachScore() {
+  var u = userData || {};
+  var totalScore = 0;
+  var maxScore = 0;
+  var failedFinancial = [];
+  var failedManual = [];
+
+  var financialList = document.getElementById('coach-financial');
+  if (financialList) {
+    _clearChildren(financialList);
+    COACH_FINANCIAL.forEach(function(c) {
+      maxScore += c.pts;
+      var ok = c.check(u);
+      if (ok) totalScore += c.pts;
+      else failedFinancial.push(c.label);
+      var li = document.createElement('li');
+      if (ok) li.classList.add('done'); else li.classList.add('failed');
+      var lbl = document.createElement('label');
+      var statusSpan = document.createElement('span');
+      statusSpan.className = 'auto-status ' + (ok ? 'green' : 'red');
+      statusSpan.textContent = (ok ? '✓' : '✗') + ' ' + c.pts + ' pts';
+      lbl.appendChild(document.createTextNode(c.label + ' '));
+      lbl.appendChild(statusSpan);
+      li.appendChild(lbl);
+      financialList.appendChild(li);
+    });
+  }
+
+  var coach = loadCoach();
+  document.querySelectorAll('[data-coach-item]').forEach(function(cb) {
+    var key = cb.dataset.coachItem;
+    var pts = parseInt(cb.dataset.coachPts) || 0;
+    maxScore += pts;
+    cb.checked = !!coach[key];
+    if (cb.checked) {
+      totalScore += pts;
+      cb.closest('li').classList.add('done');
+    } else {
+      cb.closest('li').classList.remove('done');
+      failedManual.push(cb.parentNode.textContent.trim().split('—')[0].trim());
+    }
+    cb.onchange = function() {
+      coach[key] = cb.checked;
+      saveCoach(coach);
+      updateCoachScore();
+    };
+  });
+
+  var pct = maxScore > 0 ? Math.round(totalScore * 100 / maxScore) : 0;
+  document.getElementById('coach-score').textContent = pct;
+  var fill = document.getElementById('coach-bar-fill');
+  if (fill) {
+    fill.style.width = pct + '%';
+    fill.style.background = pct >= 80 ? 'var(--green)' : (pct >= 50 ? 'var(--orange)' : 'var(--red)');
+  }
+
+  var verdict = document.getElementById('coach-verdict');
+  if (verdict) {
+    _clearChildren(verdict);
+    var msg;
+    if (pct >= 90) msg = "Préparation excellente — prêt à acheter dès qu'un deal apparaît.";
+    else if (pct >= 75) msg = "Préparation solide — finalise les derniers items, tu es presque prêt.";
+    else if (pct >= 60) msg = "Préparation moyenne — il reste du travail mais tu progresses.";
+    else if (pct >= 40) msg = "Préparation insuffisante — ne pas acheter avant de monter à 75+.";
+    else msg = "Préparation faible — focus sur les fondations financières d'abord.";
+    var s1 = document.createElement('strong');
+    s1.textContent = 'Verdict : ';
+    verdict.appendChild(s1);
+    verdict.appendChild(document.createTextNode(msg));
+  }
+
+  var recos = document.getElementById('coach-recommendations');
+  if (recos) {
+    _clearChildren(recos);
+    if (failedFinancial.length === 0 && failedManual.length === 0) {
+      recos.appendChild(document.createTextNode("Tous les critères sont validés. Tu es prêt à agir dès qu'un deal apparaît."));
+      return;
+    }
+    var s2 = document.createElement('strong');
+    s2.textContent = 'Prochaines actions prioritaires :';
+    recos.appendChild(s2);
+    var ul = document.createElement('ul');
+    ul.style.margin = '8px 0 0 20px';
+    failedFinancial.slice(0, 3).forEach(function(f) {
+      var li = document.createElement('li');
+      li.textContent = f;
+      ul.appendChild(li);
+    });
+    failedManual.slice(0, 4).forEach(function(f) {
+      var li = document.createElement('li');
+      li.textContent = f;
+      ul.appendChild(li);
+    });
+    recos.appendChild(ul);
+  }
 }
 
 // ============== THEME ==============
