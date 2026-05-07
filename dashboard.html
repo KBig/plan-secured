@@ -552,23 +552,25 @@ button.action.secondary:hover { background: var(--bg-4); }
 // Cibles patrimoine couple (k$) selon path, par âge
 // Source: Section 24 + SDV
 const CIBLES = {
-  // Path A (avec maison perso 350-400k$)
+  // Path A (avec maison perso 350-500k$ — voir Section 24)
   A: [
     {age: 21, value: 35},     // 17,6k toi + 17,6k conjointe = 35k$ couple (approximation)
-    {age: 25, value: 60},     // 1er achat quadruplex
-    {age: 28, value: 150},    // post-maison
-    {age: 30, value: 350},    // post-quintuplex
+    {age: 25, value: 60},     // 1er achat quadruplex 700k$ proprio-occupant (SDV §10)
+    {age: 27, value: 220},    // 1er APH Select (sextuplex/8-plex) (SDV §10 : 440k$ couple)
+    {age: 28, value: 350},    // achat maison personnelle
+    {age: 30, value: 700},    // 2e APH + transition ImmoCo
     {age: 35, value: 1750},   // 5+ immeubles
     {age: 40, value: 6000},   // 10+ immeubles
     {age: 45, value: 17500},
     {age: 50, value: 34000},  // cible Path A: 30-38M$
   ],
-  // Path B (sans maison perso)
+  // Path B (sans maison perso, max patrimoine — voir Section 24)
   B: [
     {age: 21, value: 35},
     {age: 25, value: 60},
-    {age: 28, value: 200},    // sans maison, plus de cash
-    {age: 30, value: 500},    // post-quintuplex précoce
+    {age: 27, value: 250},    // 1er APH Select plus tôt (cash libre)
+    {age: 29, value: 500},    // 2e APH Select (SDV §10 : 830k$ couple à 29)
+    {age: 30, value: 700},    // transition ImmoCo
     {age: 35, value: 2250},
     {age: 40, value: 8000},
     {age: 45, value: 22500},

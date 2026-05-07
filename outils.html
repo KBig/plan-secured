@@ -523,26 +523,19 @@ button.action:hover { background: var(--accent-2); }
       <label>Prix d'achat de l'immeuble ($)</label>
       <input type="number" id="mut-prix" placeholder="Ex: 700000" oninput="calcMutation()">
     </div>
-    <div class="field">
-      <label>Taux municipal au-dela de 500k$ (optionnel)</label>
-      <select id="mut-taux" onchange="calcMutation()">
-        <option value="1.5">1,5% (standard hors Montreal)</option>
-        <option value="2.0">2,0% (certaines villes)</option>
-        <option value="2.5">2,5% (Montreal &gt; 500k)</option>
-        <option value="3.0">3,0% (Montreal &gt; 1M)</option>
-      </select>
-      <span class="help">Lac-Sergent / Portneuf : 1,5%. Montreal a des paliers plus eleves.</span>
-    </div>
   </div>
 
   <div class="result" id="mut-result"></div>
 
   <div class="note">
-    <strong>Bareme Quebec 2024-2026 :</strong>
-    <br>&bull; 0 - 62 900 $ : 0,5%
-    <br>&bull; 62 900 - 314 100 $ : 1,0%
-    <br>&bull; Au-dela de 314 100 $ : 1,5% (ou plus selon municipalite)
-    <br><br>Payable au notaire dans les 90 jours post-closing.
+    <strong>Bareme provincial Quebec 2025-2026 :</strong>
+    <br>&bull; 0 - 58 900 $ : 0,5%
+    <br>&bull; 58 900 - 294 600 $ : 1,0%
+    <br>&bull; 294 600 - 500 000 $ : 1,5%
+    <br>&bull; 500 000 - 1 000 000 $ : 2,0%
+    <br>&bull; 1 000 000 - 2 000 000 $ : 2,5%
+    <br>&bull; Au-dela de 2 000 000 $ : 3,0%
+    <br><br>Payable au notaire dans les 90 jours post-closing. Aligne sur le calculateur Python du Dealfinder.
   </div>
 </div>
 
@@ -794,39 +787,35 @@ function calcSCHL() {
 // ============== CALCUL MUTATION ==============
 function calcMutation() {
   const prix = +document.getElementById('mut-prix').value || 0;
-  const tauxHigh = +document.getElementById('mut-taux').value || 1.5;
 
   if (!prix) {
     document.getElementById('mut-result').innerHTML = '<div class="result-row"><span class="label">Saisis le prix</span><span class="value">-</span></div>';
     return;
   }
 
-  // Bareme Quebec 2024-2026
-  const t1 = 62900;
-  const t2 = 314100;
+  // Bareme provincial Quebec 2025-2026 (aligne sur scripts/dealfinder/analyzer.py droits_mutation).
+  // Tranches officielles (Loi sur les droits sur les mutations immobilieres) :
+  const tranches = [
+    {jusqua: 58900,    taux: 0.005},
+    {jusqua: 294600,   taux: 0.010},
+    {jusqua: 500000,   taux: 0.015},
+    {jusqua: 1000000,  taux: 0.020},
+    {jusqua: 2000000,  taux: 0.025},
+    {jusqua: Infinity, taux: 0.030},
+  ];
   let total = 0;
   let detail = [];
-
-  // Tranche 1 : 0 a 62 900 a 0,5%
-  const tranche1 = Math.min(prix, t1);
-  const tax1 = tranche1 * 0.005;
-  total += tax1;
-  detail.push({label: `0 - ${fmt$(t1)} a 0,5%`, value: tax1});
-
-  // Tranche 2 : 62 900 a 314 100 a 1,0%
-  if (prix > t1) {
-    const tranche2 = Math.min(prix, t2) - t1;
-    const tax2 = tranche2 * 0.01;
-    total += tax2;
-    detail.push({label: `${fmt$(t1)} - ${fmt$(t2)} a 1,0%`, value: tax2});
-  }
-
-  // Tranche 3 : au-dela de 314 100 a tauxHigh%
-  if (prix > t2) {
-    const tranche3 = prix - t2;
-    const tax3 = tranche3 * (tauxHigh/100);
-    total += tax3;
-    detail.push({label: `${fmt$(t2)}+ a ${tauxHigh}%`, value: tax3});
+  let prev = 0;
+  for (const t of tranches) {
+    if (prix <= prev) break;
+    const tranchePrix = Math.min(prix, t.jusqua) - prev;
+    const tax = tranchePrix * t.taux;
+    total += tax;
+    const label = t.jusqua === Infinity
+      ? `${fmt$(prev)}+ a ${(t.taux*100).toFixed(1)}%`
+      : `${fmt$(prev)} - ${fmt$(t.jusqua)} a ${(t.taux*100).toFixed(1)}%`;
+    detail.push({label, value: tax});
+    prev = t.jusqua;
   }
 
   let html = '';
