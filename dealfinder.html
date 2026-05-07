@@ -98,7 +98,62 @@ main { max-width:820px; margin:0 auto; padding:20px 16px 100px; }
 </div>
 <main>
 <div class="intro">
-Saisis les informations dune annonce (Centris, DuProprio, Kijiji, etc.). Loutil calcule les ratios financiers (MRB, TGA, DCR, cashflow), estime les frais dacquisition, verifie les criteres du secteur cible (Section 14.4 du plan) et produit un score 0-100 avec verdict. Les chiffres restent localement dans ton navigateur.
+<strong>Comment ca marche :</strong><br>
+1. Tu vois une annonce interessante (Centris, DuProprio, Kijiji, parents flippers, etc.)<br>
+2. Tu remplis le formulaire ci-dessous (3 minutes max)<br>
+3. L'outil calcule tout : ratios financiers, mise + frais d'acquisition, score 0-100, verdict<br>
+4. Tu sauvegardes pour comparer plusieurs deals plus tard<br>
+<br>
+<em>Tous les chiffres restent dans ton navigateur. Aucun champ obligatoire a part le prix + au moins 1 unite.</em>
+</div>
+
+<div class="card" id="glossary-card" style="background:var(--bg-2)">
+<h2 onclick="this.parentElement.classList.toggle('open');var c=document.getElementById('glossary-content');c.style.display=c.style.display==='block'?'none':'block'" style="cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center;margin-bottom:0">
+<span>Comment lire le resultat (glossaire + bareme score)</span>
+<span style="font-size:14px">&#9660;</span>
+</h2>
+<div id="glossary-content" style="display:none;font-size:13px;line-height:1.6;margin-top:14px">
+
+<h3>Score 0-100 et verdict</h3>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px">
+<span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:var(--green-bg);color:var(--green)">80-100 Visite prioritaire</span>
+<span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:var(--orange-bg);color:var(--orange)">60-79 A surveiller</span>
+<span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:var(--red-bg);color:var(--red)">0-59 Pass</span>
+</div>
+
+<p>Le score combine 10 criteres ponderes. En mode <strong>proprietaire-occupant</strong> :</p>
+<ul style="margin:6px 0 12px 20px">
+<li><strong>Patrimoine net Y1 (35 pts)</strong> = equite remboursee + appreciation 5%/an + cashflow apres impot. La metrique principale (SDV section 9).</li>
+<li><strong>Prix dans fourchette secteur (15 pts)</strong> vs cible Section 14.4 du plan.</li>
+<li><strong>ROI Y1 sur cash investi (15 pts)</strong> = patrimoine cree Y1 / (mise + frais).</li>
+<li><strong>DCR (10 pts)</strong> = NOI / service de la dette. Tolerance 0.80+ acceptee en proprio-occupant.</li>
+<li><strong>Loyers vs marche (10 pts)</strong> - marge de hausse aux renouvellements.</li>
+<li><strong>Priorite secteur (8 pts)</strong> selon Section 14.4 (Val-Belair=10, Pont-Rouge=9, Sainte-Foy=4).</li>
+<li><strong>Annee construction (5 +/- 5 pts)</strong> bonus si >=1990, penalite si pre-1960.</li>
+<li><strong>MRB bonus (2 pts)</strong> + drapeaux qualitatifs.</li>
+</ul>
+
+<h3>Glossaire des ratios</h3>
+<p><strong>NOI (Net Operating Income)</strong> : revenus locatifs - depenses operationnelles, AVANT hypotheque.</p>
+<p><strong>TGA / Cap rate</strong> : NOI / prix d'achat. Cible plan 5-7% selon secteur.</p>
+<p><strong>DCR (Debt Coverage Ratio)</strong> : NOI / service dette. >=1.10 strict pour investisseurs, plus tolerant en proprio-occupant.</p>
+<p><strong>MRB (Multiplicateur Revenu Brut)</strong> : prix / revenu brut annuel. Cible <=10.</p>
+<p><strong>Cashflow / mois</strong> : revenus - toutes depenses incluant hypotheque. Negatif = tu mets de l'argent chaque mois.</p>
+<p><strong>Patrimoine net Y1</strong> : equite remboursee (capital P+I) + appreciation 5%/an + cashflow apres impot. La VRAIE richesse creee Y1.</p>
+<p><strong>ROI Y1 sur cash</strong> : patrimoine net Y1 / cash investi. 30%+ excellent.</p>
+
+<h3>Hypotheses (SDV section 9)</h3>
+<ul style="margin:6px 0 0 20px">
+<li>Mise 5% proprietaire-occupant, 20% investisseur</li>
+<li>Taux 5.5% defaut, amortissement 25 ans (modifiable)</li>
+<li>Vacance 3% (prio 9-10) / 5% (7-8) / 7% (autres)</li>
+<li>Appreciation 5%/an (moyenne historique QC)</li>
+<li>Taux marginal impot 36% (compagnon CCQ) x ratio locatif</li>
+<li>Depenses : 10 categories Section 18</li>
+<li>Frais : Section 18.9 (mutation Quebec progressive, notaire 3000$, inspection 500$/unite, Phase 1 si pre-1985, etc.)</li>
+</ul>
+
+</div>
 </div>
 <div class="card" id="form-card">
 <h2>Saisie du deal</h2>

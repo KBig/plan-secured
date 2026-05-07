@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d0d0d">
-<title>Scan Dealfinder — 2026-05-06-2003</title>
+<title>Scan Dealfinder — 2026-05-06-1955</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -41,10 +41,8 @@ main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
 .score-pill .lbl { font-size:9px; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; opacity:0.8; }
 .metrics { display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; margin:10px 0; }
 .metric { background:var(--bg-3); border-radius:var(--radius); padding:8px 10px; }
-.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; font-weight:600; }
-.metric-value { font-size:17px; font-weight:700; font-variant-numeric:tabular-nums; margin:4px 0 6px; }
-.metric-sub { font-size:10.5px; color:var(--text-3); line-height:1.45; }
-.metric { padding:10px 11px; }
+.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; }
+.metric-value { font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; }
 .metric.good .metric-value { color:var(--green); }
 .metric.bad .metric-value { color:var(--red); }
 .metric.warn .metric-value { color:var(--orange); }
@@ -115,19 +113,19 @@ main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
 <div class="topbar">
 <a href="index.html" class="btn-text">&larr; Plan</a>
 <a href="dealfinder.html" class="btn-text">Analyseur manuel</a>
-<h1>Scan auto — 06 May 2026, 20h03</h1>
+<h1>Scan auto — 06 May 2026, 19h55</h1>
 <button class="btn-text" id="theme-toggle">Sombre</button>
 </div>
 <main>
 <div class="summary">
 <div class="stat"><div class="stat-value">25</div><div class="stat-label">Annonces scrapées</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--green)">0</div><div class="stat-label">Nouvelles</div></div>
+<div class="stat"><div class="stat-value" style="color:var(--green)">1</div><div class="stat-label">Nouvelles</div></div>
 <div class="stat"><div class="stat-value" style="color:var(--orange)">0</div><div class="stat-label">Prix modifié</div></div>
 <div class="stat"><div class="stat-value">24</div><div class="stat-label">Filtrées (hors critères)</div></div>
 <div class="stat"><div class="stat-value" style="color:var(--accent)">1</div><div class="stat-label">Retenues à analyser</div></div>
 </div>
 
-<div class="rejections"><h3>Pourquoi seulement 1 retenues sur 25 scrapées</h3><table><tr><td>Prix &gt; 800 000$</td><td>13 annonces</td></tr><tr><td>Bâti pré-1960 (vieux)</td><td>11 annonces</td></tr><tr><td>Total filtrées</td><td>24</td></tr></table><p style="font-size:12px;color:var(--text-3);margin-top:10px">Pour voir plus de deals : élargis <code>max_price</code>, baisse <code>year_built_min</code>, ou augmente <code>max_drive_hours_from_quebec</code> dans <code>scripts/dealfinder/config.json</code>.</p></div>
+<div class="rejections"><h3>Pourquoi seulement 1 retenues sur 25 scrapées</h3><table><tr><td>Prix &gt; 800 000$</td><td>12 annonces</td></tr><tr><td>Bâti pré-1960 (vieux)</td><td>12 annonces</td></tr><tr><td>Total filtrées</td><td>24</td></tr></table><p style="font-size:12px;color:var(--text-3);margin-top:10px">Pour voir plus de deals : élargis <code>max_price</code>, baisse <code>year_built_min</code>, ou augmente <code>max_drive_hours_from_quebec</code> dans <code>scripts/dealfinder/config.json</code>.</p></div>
 
 <div class="glossary" id="glossary">
 <div class="glossary-toggle" onclick="this.parentElement.classList.toggle('open')">Comment lire ce rapport (glossaire + barème score)</div>
@@ -198,12 +196,12 @@ main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
 
 <div id="deals">
 
-<div class="deal verdict-red ">
+<div class="deal verdict-red flag-new">
   <div class="deal-header">
     <div class="info">
       <h2>715, Avenue de Norvège, Québec (Sainte-Foy/Sillery/Cap-Rouge)</h2>
       <div class="meta">Sainte-Foy / Sillery / Cap-Rouge • 4 unités • Bâti 1965</div>
-      <div class="badges"></div>
+      <div class="badges"><span class="badge new">Nouveau</span></div>
     </div>
     <div class="score-pill red">
       <div class="num">59</div>
@@ -214,46 +212,14 @@ main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
   <img class="deal-photo" src="https://mspublic.centris.ca/media.ashx?id=ADDD250DDD1ADA4DDDDDDDDDDB&amp;t=c&amp;w=190&amp;h=220&amp;sm=m" alt="Photo annonce" loading="lazy">
   <div class="deal-quick-facts"><div class="fact"><div class="fact-label">Style</div><div class="fact-value">Jumelé</div></div><div class="fact"><div class="fact-label">Sup. habitable</div><div class="fact-value">2 213 pi²</div></div><div class="fact"><div class="fact-label">Terrain</div><div class="fact-value">5 160 pi²</div></div><div class="fact"><div class="fact-label">Stationnement</div><div class="fact-value">6 (Allée)</div></div><div class="fact"><div class="fact-label">Unités</div><div class="fact-value">1 x 1 ½, 1 x 2 ½, 2 x 5 ½</div></div></div>
   <div class="metrics-grid">
-    <div class="metric">
-      <div class="metric-label">Prix demandé</div>
-      <div class="metric-value">699 500$</div>
-      <div class="metric-sub">prix affiché par le vendeur</div>
-    </div>
-    <div class="metric warn">
-      <div class="metric-label">Patrimoine net Y1</div>
-      <div class="metric-value">+27 188$</div>
-      <div class="metric-sub" style="font-style:italic">richesse créée Y1<br>= équité + appréciation 5% + cashflow après impôt</div>
-    </div>
-    <div class="metric good">
-      <div class="metric-label">ROI Y1 sur cash investi</div>
-      <div class="metric-value">40%</div>
-      <div class="metric-sub" style="font-style:italic">patrimoine net Y1 ÷ cash investi (mise + frais)<br>cible ≥30%</div>
-    </div>
-    <div class="metric bad">
-      <div class="metric-label">TGA (Cap rate)</div>
-      <div class="metric-value">1.44%</div>
-      <div class="metric-sub" style="font-style:italic">NOI ÷ prix d'achat<br>cible secteur 3.80%</div>
-    </div>
-    <div class="metric bad">
-      <div class="metric-label">DCR (Couverture dette)</div>
-      <div class="metric-value">0.20</div>
-      <div class="metric-sub" style="font-style:italic">NOI ÷ service hypothécaire<br>cible ≥0.80 (proprio-occupant)</div>
-    </div>
-    <div class="metric bad">
-      <div class="metric-label">Cashflow / mois</div>
-      <div class="metric-value">−3 403$</div>
-      <div class="metric-sub" style="font-style:italic">revenus − toutes dépenses (incl. hypothèque)<br>avant déduction fiscale</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Cash requis au closing</div>
-      <div class="metric-value">67 546$</div>
-      <div class="metric-sub" style="font-style:italic">mise de fonds 5% + frais d'acquisition<br>(notaire, mutation, inspection, etc.)</div>
-    </div>
-    <div class="metric bad">
-      <div class="metric-label">MRB (Multiplicateur)</div>
-      <div class="metric-value">14.2</div>
-      <div class="metric-sub" style="font-style:italic">prix ÷ revenu brut annuel<br>cible ≤10 (plus bas = mieux)</div>
-    </div>
+    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">699 500$</div></div>
+    <div class="metric warn"><div class="metric-label">Patrimoine net Y1</div><div class="metric-value">+27 188$</div><div class="metric-sub">équité + appréc. + cf après impôt</div></div>
+    <div class="metric good"><div class="metric-label">ROI Y1 sur cash</div><div class="metric-value">40%</div><div class="metric-sub">patrimoine / cash investi</div></div>
+    <div class="metric bad"><div class="metric-label">TGA (cap rate)</div><div class="metric-value">1.44%</div><div class="metric-sub">cible secteur 3.80%</div></div>
+    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.20</div><div class="metric-sub">≥0.80 occupant</div></div>
+    <div class="metric bad"><div class="metric-label">Cashflow / mois</div><div class="metric-value">−3 403$</div><div class="metric-sub">avant impôt</div></div>
+    <div class="metric"><div class="metric-label">Cash requis closing</div><div class="metric-value">67 546$</div><div class="metric-sub">mise + frais</div></div>
+    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">14.2</div><div class="metric-sub">prix / revenu brut</div></div>
   </div>
   <div class="deal-actions">
     <a href="https://www.centris.ca/fr/quadruplex~a-vendre~quebec-sainte-foy-sillery-cap-rouge/20449168" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
@@ -310,7 +276,7 @@ main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
 </div>
 
 <div class="notes">
-Scan effectué le 2026-05-06 20:03:31 • Source : Centris (triplex/quadruplex) • Critères config : prix max 800 000$, 3-4 unités, 1.5h max de Québec.<br>
+Scan effectué le 2026-05-06 19:55:31 • Source : Centris (triplex/quadruplex) • Critères config : prix max 800 000$, 3-4 unités, 1.5h max de Québec.<br>
 Les ratios financiers (TGA / DCR / MRB / cashflow) sont calculés selon les hypothèses du plan (Section 9 SDV + Section 18). Vacance, dépenses opérationnelles et frais d'acquisition sont estimés — à valider sur place.
 </div>
 </main>

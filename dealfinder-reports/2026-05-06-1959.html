@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d0d0d">
-<title>Scan Dealfinder — 2026-05-06-2003</title>
+<title>Scan Dealfinder — 2026-05-06-1959</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -41,10 +41,8 @@ main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
 .score-pill .lbl { font-size:9px; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; opacity:0.8; }
 .metrics { display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; margin:10px 0; }
 .metric { background:var(--bg-3); border-radius:var(--radius); padding:8px 10px; }
-.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; font-weight:600; }
-.metric-value { font-size:17px; font-weight:700; font-variant-numeric:tabular-nums; margin:4px 0 6px; }
-.metric-sub { font-size:10.5px; color:var(--text-3); line-height:1.45; }
-.metric { padding:10px 11px; }
+.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; }
+.metric-value { font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; }
 .metric.good .metric-value { color:var(--green); }
 .metric.bad .metric-value { color:var(--red); }
 .metric.warn .metric-value { color:var(--orange); }
@@ -115,7 +113,7 @@ main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
 <div class="topbar">
 <a href="index.html" class="btn-text">&larr; Plan</a>
 <a href="dealfinder.html" class="btn-text">Analyseur manuel</a>
-<h1>Scan auto — 06 May 2026, 20h03</h1>
+<h1>Scan auto — 06 May 2026, 19h59</h1>
 <button class="btn-text" id="theme-toggle">Sombre</button>
 </div>
 <main>
@@ -127,7 +125,7 @@ main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
 <div class="stat"><div class="stat-value" style="color:var(--accent)">1</div><div class="stat-label">Retenues à analyser</div></div>
 </div>
 
-<div class="rejections"><h3>Pourquoi seulement 1 retenues sur 25 scrapées</h3><table><tr><td>Prix &gt; 800 000$</td><td>13 annonces</td></tr><tr><td>Bâti pré-1960 (vieux)</td><td>11 annonces</td></tr><tr><td>Total filtrées</td><td>24</td></tr></table><p style="font-size:12px;color:var(--text-3);margin-top:10px">Pour voir plus de deals : élargis <code>max_price</code>, baisse <code>year_built_min</code>, ou augmente <code>max_drive_hours_from_quebec</code> dans <code>scripts/dealfinder/config.json</code>.</p></div>
+<div class="rejections"><h3>Pourquoi seulement 1 retenues sur 25 scrapées</h3><table><tr><td>Bâti pré-1960 (vieux)</td><td>13 annonces</td></tr><tr><td>Prix &gt; 800 000$</td><td>11 annonces</td></tr><tr><td>Total filtrées</td><td>24</td></tr></table><p style="font-size:12px;color:var(--text-3);margin-top:10px">Pour voir plus de deals : élargis <code>max_price</code>, baisse <code>year_built_min</code>, ou augmente <code>max_drive_hours_from_quebec</code> dans <code>scripts/dealfinder/config.json</code>.</p></div>
 
 <div class="glossary" id="glossary">
 <div class="glossary-toggle" onclick="this.parentElement.classList.toggle('open')">Comment lire ce rapport (glossaire + barème score)</div>
@@ -310,7 +308,7 @@ main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
 </div>
 
 <div class="notes">
-Scan effectué le 2026-05-06 20:03:31 • Source : Centris (triplex/quadruplex) • Critères config : prix max 800 000$, 3-4 unités, 1.5h max de Québec.<br>
+Scan effectué le 2026-05-06 19:59:34 • Source : Centris (triplex/quadruplex) • Critères config : prix max 800 000$, 3-4 unités, 1.5h max de Québec.<br>
 Les ratios financiers (TGA / DCR / MRB / cashflow) sont calculés selon les hypothèses du plan (Section 9 SDV + Section 18). Vacance, dépenses opérationnelles et frais d'acquisition sont estimés — à valider sur place.
 </div>
 </main>
