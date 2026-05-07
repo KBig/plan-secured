@@ -2,486 +2,316 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0d0d0d">
-<title>Scan Dealfinder — 2026-05-06-1807</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="20260507-063056">
+<title>Dealfinder Scan (2026-05-06-1807) — Accès sécurisé</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-:root { --bg:#fff; --bg-2:#fafafa; --bg-3:#f0f0f0; --text:#111; --text-2:#444; --text-3:#777; --border:#e0e0e0; --border-2:#c8c8c8; --accent:#0066cc; --accent-2:#003d7a; --green:#1a7f37; --green-bg:#ddf4e1; --red:#cf222e; --red-bg:#ffe5e5; --orange:#d1841d; --orange-bg:#fff3dc; --radius:6px; --radius-lg:10px; }
-[data-theme="dark"] { --bg:#0d0d0d; --bg-2:#1a1a1a; --bg-3:#222; --text:#e8e8e8; --text-2:#b8b8b8; --text-3:#888; --border:#333; --border-2:#444; --accent:#66b3ff; --accent-2:#99ccff; --green:#3fb950; --green-bg:#14301c; --red:#f85149; --red-bg:#3a1414; --orange:#f0883e; --orange-bg:#3a2a14; }
-html, body { background:var(--bg); color:var(--text); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; font-size:14px; line-height:1.5; min-height:100vh; }
-.topbar { position:sticky; top:0; z-index:100; background:var(--bg-2); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px; }
-.topbar h1 { font-size:15px; font-weight:600; flex:1; }
-.btn-text { background:transparent; border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; text-decoration:none; }
-.btn-text:hover { background:var(--bg-3); border-color:var(--border-2); color:var(--text); }
-main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
-.summary { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:12px; }
-.summary .stat { text-align:center; }
-.summary .stat-value { font-size:24px; font-weight:700; letter-spacing:-0.02em; }
-.summary .stat-label { font-size:11px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
-.deal { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:14px; }
-.deal-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
-.deal-header .info { flex:1; min-width:0; }
-.deal-header h2 { font-size:16px; font-weight:600; line-height:1.3; margin-bottom:4px; }
-.deal-header .meta { font-size:12px; color:var(--text-3); }
-.deal-header .badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
-.badge { font-size:11px; font-weight:600; padding:3px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em; }
-.badge.new { background:var(--green-bg); color:var(--green); }
-.badge.changed { background:var(--orange-bg); color:var(--orange); }
-.badge.priority { background:var(--accent); color:#fff; opacity:0.9; }
-.score-pill { flex-shrink:0; width:64px; height:64px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; }
-.score-pill.green { background:var(--green-bg); color:var(--green); }
-.score-pill.orange { background:var(--orange-bg); color:var(--orange); }
-.score-pill.red { background:var(--red-bg); color:var(--red); }
-.score-pill .num { font-size:22px; line-height:1; }
-.score-pill .lbl { font-size:9px; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; opacity:0.8; }
-.metrics { display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; margin:10px 0; }
-.metric { background:var(--bg-3); border-radius:var(--radius); padding:8px 10px; }
-.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; }
-.metric-value { font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; }
-.metric.good .metric-value { color:var(--green); }
-.metric.bad .metric-value { color:var(--red); }
-.metric.warn .metric-value { color:var(--orange); }
-.deal-actions { display:flex; gap:8px; margin-top:10px; }
-.deal-actions a { background:var(--accent); color:white; padding:8px 14px; border-radius:var(--radius); text-decoration:none; font-size:13px; font-weight:500; }
-.deal-actions a.secondary { background:transparent; color:var(--text); border:1px solid var(--border-2); }
-.deal-details { display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); font-size:13px; }
-.deal.open .deal-details { display:block; }
-.toggle { cursor:pointer; user-select:none; font-size:12px; color:var(--accent); margin-top:8px; }
-.crit-list { list-style:none; display:flex; flex-direction:column; gap:4px; margin-top:8px; }
-.crit-list li { padding:6px 8px; background:var(--bg-3); border-radius:var(--radius); display:flex; gap:6px; font-size:12px; }
-.crit-list .marker { font-weight:700; flex-shrink:0; width:18px; }
-.crit-list .marker.pass { color:var(--green); }
-.crit-list .marker.fail { color:var(--red); }
-.crit-list .marker.warn { color:var(--orange); }
-.empty { text-align:center; color:var(--text-3); padding:40px; font-size:14px; }
-.filter-bar { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
-.filter-bar button { background:var(--bg-2); border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; }
-.filter-bar button.active { background:var(--accent); color:white; border-color:var(--accent); }
-.notes { font-size:12px; color:var(--text-3); margin-top:14px; padding:10px 12px; background:var(--bg-2); border-left:3px solid var(--text-3); border-radius:var(--radius); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    background: #f5f5f5;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.login-container {
+    background: #ffffff;
+    padding: 48px 40px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 32px;
+}
+
+.password-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.password-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    color: #111;
+    border-radius: 4px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 20px;
+    font-family: inherit;
+}
+
+.password-input:focus {
+    border-color: #1a1a1a;
+}
+
+.unlock-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: #1a1a1a;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.unlock-btn:hover {
+    background: #000;
+}
+
+.unlock-btn:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.error-msg {
+    color: #b00020;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+}
+
+.security-info {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.security-info strong {
+    color: #333;
+    font-weight: 500;
+}
+
+#content-container {
+    display: none;
+    width: 100%;
+    height: 100vh;
+}
+
+#content-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e5e5;
+    border-top: 2px solid #1a1a1a;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 16px auto 0;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
-<div class="topbar">
-<a href="index.html" class="btn-text">&larr; Plan</a>
-<a href="dealfinder.html" class="btn-text">Analyseur manuel</a>
-<h1>Scan auto — 06 May 2026, 18h07</h1>
-<button class="btn-text" id="theme-toggle">Sombre</button>
-</div>
-<main>
-<div class="summary">
-<div class="stat"><div class="stat-value">7</div><div class="stat-label">Annonces vues</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--green)">7</div><div class="stat-label">Nouvelles</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--orange)">0</div><div class="stat-label">Prix modifié</div></div>
-<div class="stat"><div class="stat-value">—</div><div class="stat-label">Filtrées (hors critères)</div></div>
-<div class="stat"><div class="stat-value">7</div><div class="stat-label">Retenues</div></div>
+
+<div id="login-container" class="login-container">
+    <h1 class="login-title">Dealfinder Scan (2026-05-06-1807)</h1>
+    <p class="login-subtitle">Document protégé. Mot de passe requis pour accéder au contenu.</p>
+
+    <label for="password" class="password-label">Mot de passe</label>
+    <input type="password" id="password" class="password-input" placeholder="" autofocus autocomplete="current-password">
+    <button id="unlock-btn" class="unlock-btn" onclick="unlock()">Accéder au document</button>
+
+    <div class="loader" id="loader"></div>
+    <div class="error-msg" id="error">Mot de passe incorrect</div>
+
+    <div class="security-info">
+        <strong>Chiffrement</strong> : AES-256-GCM<br>
+        <strong>Dérivation de clé</strong> : PBKDF2-SHA256, 100 000 itérations<br>
+        <strong>Confidentialité</strong> : déchiffrement local, aucune donnée transmise
+    </div>
 </div>
 
-<div class="filter-bar">
-<button class="active" data-filter="all">Toutes (7)</button>
-<button data-filter="green">Visite prioritaire</button>
-<button data-filter="orange">À surveiller</button>
-<button data-filter="new">Nouvelles uniquement</button>
-<button data-filter="changed">Prix modifié</button>
-</div>
+<div id="content-container"></div>
 
-<div id="deals">
-
-<div class="deal verdict-orange flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>715, Avenue de Norvège, Québec (Sainte-Foy/Sillery/Cap-Rouge)</h2>
-      <div class="meta">Quebec Sainte Foy Sillery Cap Rouge • Sainte-Foy / Sillery / Cap-Rouge • 4 unités • 1965</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill orange">
-      <div class="num">62</div>
-      <div class="lbl">À surveiller</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">699 500$</div></div>
-    <div class="metric warn"><div class="metric-label">TGA</div><div class="metric-value">2.87%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.39</div></div>
-    <div class="metric warn"><div class="metric-label">MRB</div><div class="metric-value">10.6</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−2 571$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">67 546$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~quebec-sainte-foy-sillery-cap-rouge/20449168" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 66 240$/an (estimés (loyer 4.5 × unités))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 4 244$/mois (P&I, prêt 691 106$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Jumelé
-Année de construction
-1965
-Superficie habitable
-2 213 pc
-Superficie du terrain
-5 160 pc
-Stationnement total
-Allée (6)
-Nombre d’unités
-Résidentiel (4)
-Unités résidentielles
-1 x 1 ½, 1 x 2 ½, 2 x 5 ½
-Uni…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 699,500$ dans la fourchette du secteur (500,000$-1,300,000$)</li><li><span class="marker warn">~</span>TGA 2.87% légèrement sous cible (3.80%)</li><li><span class="marker fail">X</span>DCR 0.39 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 100% du marché — peu de marge de hausse</li><li><span class="marker warn">~</span>Secteur priorité 4/10 — faible</li><li><span class="marker warn">~</span>MRB 10.6 — limite (cible &lt;10)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>553, 3e Rue, Québec (La Cité-Limoilou)</h2>
-      <div class="meta">Quebec La Cite Limoilou • La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">49</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">525 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.93%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.26</div></div>
-    <div class="metric warn"><div class="metric-label">MRB</div><div class="metric-value">11.7</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−2 343$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">51 123$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-cite-limoilou/10144394" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 45 000$/an (estimés (loyer 4.5 × unités))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 185$/mois (P&I, prêt 518 700$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-En rangée
-Année de construction
-Âge inconnu
-Superficie du terrain
-2 347 pc
-Stationnement total
-Allée (4)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-3 x 3 ½
-Unité principale
-3 pièces, 1 chambre, 1 s…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 525,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker fail">X</span>TGA 1.93% sous cible 4.50% — déficit 2.57 pts</li><li><span class="marker fail">X</span>DCR 0.26 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 100% du marché — peu de marge de hausse</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire dans le plan</li><li><span class="marker warn">~</span>MRB 11.7 — limite (cible &lt;10)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>4184, Route des Rivières, Lévis (Les Chutes-de-la-Chaudière-Ouest)</h2>
-      <div class="meta">Levis Les Chutes De La Chaudiere Ouest • Lévis / St-Romuald / Charny • 3 unités • 1978</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">49</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">539 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.77%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.24</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">12.3</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−2 474$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">54 240$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~levis-les-chutes-de-la-chaudiere-ouest/24222982" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 43 920$/an (estimés (loyer 4.5 × unités))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 270$/mois (P&I, prêt 532 532$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1978
-Superficie habitable
-1 075 pc
-Superficie du terrain
-9 272 pc
-Stationnement total
-Allée (6)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-1 x 2 ½, 1 x 4 ½, 1 x 5 ½
-Un…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 539,000$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 1.77% sous cible 6.00% — déficit 4.23 pts</li><li><span class="marker fail">X</span>DCR 0.24 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 100% du marché — peu de marge de hausse</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 12.3 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>27 - 27A, Rue Saint-Gilbert, Lévis (Desjardins)</h2>
-      <div class="meta">Levis Desjardins • Lévis / St-Romuald / Charny • 3 unités • 1964</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">49</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">549 900$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.66%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.23</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">12.5</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−2 575$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">55 109$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~levis-desjardins/19215069" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 43 920$/an (estimés (loyer 4.5 × unités))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 336$/mois (P&I, prêt 543 301$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1964
-Superficie du bâtiment (au sol)
-2 226 pc
-Superficie du terrain
-5 600 pc
-Stationnement total
-Allée (3)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-1 x 4 ½, 2 x 5 ½
-…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 549,900$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 1.66% sous cible 6.00% — déficit 4.34 pts</li><li><span class="marker fail">X</span>DCR 0.23 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 100% du marché — peu de marge de hausse</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 12.5 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>100 - 104, Rue de Cholet, Québec (Beauport)</h2>
-      <div class="meta">Quebec Beauport • Beauport • 3 unités • 1981</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">49</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">749 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.43%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.06</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">16.3</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−4 273$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">70 996$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-beauport/18630787" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 46 080$/an (estimés (loyer 4.5 × unités))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 4 544$/mois (P&I, prêt 740 012$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1981
-Superficie du bâtiment (au sol)
-1 194 pc
-Superficie du terrain
-6 791 pc
-Stationnement total
-Allée (6)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-2 x 4 ½, 1 x 5 ½
-…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 749,000$ dans la fourchette du secteur (400,000$-850,000$)</li><li><span class="marker fail">X</span>TGA 0.43% sous cible 5.50% — déficit 5.07 pts</li><li><span class="marker fail">X</span>DCR 0.06 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 100% du marché — peu de marge de hausse</li><li><span class="marker pass">OK</span>Secteur priorité 8/10 — solide</li><li><span class="marker fail">X</span>MRB 16.3 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>1218 - 1220, Avenue Saint-Pascal, Québec (La Cité-Limoilou)</h2>
-      <div class="meta">Quebec La Cite Limoilou • La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • 1962</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">46</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">624 900$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.00%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.14</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">13.9</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−3 271$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">61 093$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-cite-limoilou/16910569" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 45 000$/an (estimés (loyer 4.5 × unités))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 791$/mois (P&I, prêt 617 401$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1962
-Superficie du terrain
-5 948 pc
-Stationnement total
-Allée (6)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-1 x 3 ½, 1 x 4 ½, 1 x 7 ½
-Unité principale
-7 pièces, 3 cha…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 624,900$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker fail">X</span>TGA 1.00% sous cible 4.50% — déficit 3.50 pts</li><li><span class="marker fail">X</span>DCR 0.14 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 100% du marché — peu de marge de hausse</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire dans le plan</li><li><span class="marker fail">X</span>MRB 13.9 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>3003 - 3007, Rue Lemieux, Québec (Les Rivières)</h2>
-      <div class="meta">Quebec Les Rivieres • La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • 1991</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">46</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">749 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.19%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.03</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">16.6</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−4 424$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">68 996$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-les-rivieres/21906363" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 45 000$/an (estimés (loyer 4.5 × unités))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 4 544$/mois (P&I, prêt 740 012$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1991
-Superficie du bâtiment (au sol)
-1 048 pc
-Superficie habitable
-2 096 pc
-Superficie du terrain
-5 876 pc
-Stationnement total
-Allée (6)
-Nombre d’unités
-Résidentiel (3)
-Unités ré…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 749,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker fail">X</span>TGA 0.19% sous cible 4.50% — déficit 4.31 pts</li><li><span class="marker fail">X</span>DCR 0.03 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 100% du marché — peu de marge de hausse</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire dans le plan</li><li><span class="marker fail">X</span>MRB 16.6 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-</div>
-
-<div class="notes">
-Scan effectué le 2026-05-06 18:07:35 • Source : Centris (triplex/quadruplex) • Critères config : prix max 800 000$, 3-4 unités, 1.5h max de Québec.<br>
-Les ratios financiers (TGA / DCR / MRB / cashflow) sont calculés selon les hypothèses du plan (Section 9 SDV + Section 18). Vacance, dépenses opérationnelles et frais d'acquisition sont estimés — à valider sur place.
-</div>
-</main>
 <script>
-(function() {
-  document.querySelectorAll('.toggle').forEach(function(t) {
-    t.addEventListener('click', function() { t.closest('.deal').classList.toggle('open'); });
-  });
-  var btns = document.querySelectorAll('.filter-bar button');
-  btns.forEach(function(b) {
-    b.addEventListener('click', function() {
-      btns.forEach(function(x) { x.classList.remove('active'); });
-      b.classList.add('active');
-      var f = b.dataset.filter;
-      document.querySelectorAll('.deal').forEach(function(d) {
-        var show = f === 'all' || d.classList.contains('verdict-' + f) || d.classList.contains('flag-' + f);
-        d.style.display = show ? '' : 'none';
-      });
-    });
-  });
-  var theme = localStorage.getItem('dealfinder_theme');
-  if (!theme) theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', theme);
-  document.getElementById('theme-toggle').textContent = theme === 'dark' ? 'Clair' : 'Sombre';
-  document.getElementById('theme-toggle').addEventListener('click', function() {
-    var cur = document.documentElement.getAttribute('data-theme') || 'light';
-    var next = cur === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('dealfinder_theme', next);
-    document.documentElement.setAttribute('data-theme', next);
-    this.textContent = next === 'dark' ? 'Clair' : 'Sombre';
-  });
+// Données chiffrées (générées par secure_html.py)
+const ENCRYPTED_DATA = {
+    salt: "TWdGUsgP4kivwp4Dmn0R0g==",
+    iv: "3YaJ6SVg9P63X8+N",
+    ciphertext: "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"
+};
+
+// Iterations PBKDF2
+const PBKDF2_ITERATIONS = 100000;
+
+// Convert base64 to Uint8Array
+function base64ToBytes(b64) {
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+}
+
+async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(password),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+    );
+
+    return await crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: PBKDF2_ITERATIONS,
+            hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+    );
+}
+
+async function decryptData(password) {
+    try {
+        const salt = base64ToBytes(ENCRYPTED_DATA.salt);
+        const iv = base64ToBytes(ENCRYPTED_DATA.iv);
+        const ciphertext = base64ToBytes(ENCRYPTED_DATA.ciphertext);
+
+        const key = await deriveKey(password, salt);
+
+        const plaintextBuffer = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            ciphertext
+        );
+
+        // Décompression : le contenu est gzippé
+        const compressed = new Uint8Array(plaintextBuffer);
+
+        // Decompress using DecompressionStream (browser native)
+        const ds = new DecompressionStream("gzip");
+        const stream = new Blob([compressed]).stream().pipeThrough(ds);
+        const decompressed = await new Response(stream).text();
+
+        return decompressed;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function unlock() {
+    const passwordInput = document.getElementById('password');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const errorMsg = document.getElementById('error');
+    const loader = document.getElementById('loader');
+
+    const password = passwordInput.value.trim();
+    if (!password) return;
+
+    unlockBtn.disabled = true;
+    unlockBtn.style.display = 'none';
+    loader.style.display = 'block';
+    errorMsg.style.display = 'none';
+
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    const decrypted = await decryptData(password);
+
+    if (decrypted === null) {
+        unlockBtn.disabled = false;
+        unlockBtn.style.display = 'block';
+        loader.style.display = 'none';
+        errorMsg.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+        return;
+    }
+
+    // Sauvegarder le mot de passe :
+    // - sessionStorage : pour la session courante (toujours)
+    // - localStorage : pour partage entre onglets (Outils/Dashboard ouverts en target=_blank)
+    //   et persistance après fermeture du navigateur. Sécurité : le device de l'user est son
+    //   problème ; si quelqu'un a accès à Chrome déverrouillé, il peut déjà tout voir.
+    try { sessionStorage.setItem('plan_password', password); } catch (e) {}
+    try { localStorage.setItem('plan_password', password); } catch (e) {}
+
+    // Remplacer COMPLÈTEMENT la page par le HTML déchiffré
+    // (vs iframe qui cassait les liens anchor)
+    document.open();
+    document.write(decrypted);
+    document.close();
+}
+
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') unlock();
+});
+
+// Auto-unlock silencieux si mot de passe deja sauvegardé
+// Vérifier sessionStorage d'abord (priorité onglet courant), puis localStorage (autres onglets)
+(async () => {
+    try {
+        const saved = sessionStorage.getItem('plan_password') || localStorage.getItem('plan_password');
+        if (!saved) return;
+        document.getElementById('login-container').style.opacity = '0.4';
+        const decrypted = await decryptData(saved);
+        if (decrypted !== null) {
+            // Synchroniser les 2 stockages au cas où
+            try { sessionStorage.setItem('plan_password', saved); } catch(e) {}
+            try { localStorage.setItem('plan_password', saved); } catch(e) {}
+            document.open();
+            document.write(decrypted);
+            document.close();
+        } else {
+            // Mot de passe invalide (peut-être changé) -> nettoyer pour forcer re-saisie
+            sessionStorage.removeItem('plan_password');
+            localStorage.removeItem('plan_password');
+            document.getElementById('login-container').style.opacity = '1';
+        }
+    } catch (e) {}
 })();
 </script>
+
 </body>
 </html>

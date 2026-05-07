@@ -2,439 +2,316 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0d0d0d">
-<title>Scan Dealfinder — 2026-05-06-1858</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="20260507-063056">
+<title>Dealfinder Scan (2026-05-06-1858) — Accès sécurisé</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-:root { --bg:#fff; --bg-2:#fafafa; --bg-3:#f0f0f0; --text:#111; --text-2:#444; --text-3:#777; --border:#e0e0e0; --border-2:#c8c8c8; --accent:#0066cc; --accent-2:#003d7a; --green:#1a7f37; --green-bg:#ddf4e1; --red:#cf222e; --red-bg:#ffe5e5; --orange:#d1841d; --orange-bg:#fff3dc; --radius:6px; --radius-lg:10px; }
-[data-theme="dark"] { --bg:#0d0d0d; --bg-2:#1a1a1a; --bg-3:#222; --text:#e8e8e8; --text-2:#b8b8b8; --text-3:#888; --border:#333; --border-2:#444; --accent:#66b3ff; --accent-2:#99ccff; --green:#3fb950; --green-bg:#14301c; --red:#f85149; --red-bg:#3a1414; --orange:#f0883e; --orange-bg:#3a2a14; }
-html, body { background:var(--bg); color:var(--text); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; font-size:14px; line-height:1.5; min-height:100vh; }
-.topbar { position:sticky; top:0; z-index:100; background:var(--bg-2); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px; }
-.topbar h1 { font-size:15px; font-weight:600; flex:1; }
-.btn-text { background:transparent; border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; text-decoration:none; }
-.btn-text:hover { background:var(--bg-3); border-color:var(--border-2); color:var(--text); }
-main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
-.summary { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:12px; }
-.summary .stat { text-align:center; }
-.summary .stat-value { font-size:24px; font-weight:700; letter-spacing:-0.02em; }
-.summary .stat-label { font-size:11px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
-.deal { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:14px; }
-.deal-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
-.deal-header .info { flex:1; min-width:0; }
-.deal-header h2 { font-size:16px; font-weight:600; line-height:1.3; margin-bottom:4px; }
-.deal-header .meta { font-size:12px; color:var(--text-3); }
-.deal-header .badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
-.badge { font-size:11px; font-weight:600; padding:3px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em; }
-.badge.new { background:var(--green-bg); color:var(--green); }
-.badge.changed { background:var(--orange-bg); color:var(--orange); }
-.badge.priority { background:var(--accent); color:#fff; opacity:0.9; }
-.score-pill { flex-shrink:0; width:64px; height:64px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; }
-.score-pill.green { background:var(--green-bg); color:var(--green); }
-.score-pill.orange { background:var(--orange-bg); color:var(--orange); }
-.score-pill.red { background:var(--red-bg); color:var(--red); }
-.score-pill .num { font-size:22px; line-height:1; }
-.score-pill .lbl { font-size:9px; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; opacity:0.8; }
-.metrics { display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; margin:10px 0; }
-.metric { background:var(--bg-3); border-radius:var(--radius); padding:8px 10px; }
-.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; }
-.metric-value { font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; }
-.metric.good .metric-value { color:var(--green); }
-.metric.bad .metric-value { color:var(--red); }
-.metric.warn .metric-value { color:var(--orange); }
-.deal-actions { display:flex; gap:10px; margin-top:12px; align-items:center; }
-.deal-actions a.btn-primary-inline { background:var(--accent); color:white; padding:9px 16px; border-radius:var(--radius); text-decoration:none; font-size:13px; font-weight:600; flex:1; text-align:center; }
-.deal-actions a.btn-primary-inline:hover { background:var(--accent-2); }
-.deal-details { display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-size:13px; }
-.deal-details h4 { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-3); margin-top:18px; margin-bottom:8px; }
-.deal-details h4:first-child { margin-top:0; }
-.deal-details .breakdown { width:100%; border-collapse:collapse; font-size:12px; margin-bottom:6px; }
-.deal-details .breakdown td { padding:6px 8px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; }
-.deal-details .breakdown td:last-child { text-align:right; }
-.deal-details .breakdown tr.total td { font-weight:600; border-top:1px solid var(--border-2); border-bottom:1px solid var(--border-2); }
-.deal-details .breakdown tr.subtle td { color:var(--text-3); }
-.deal-details .breakdown tr.pos td:last-child { color:var(--green); }
-.deal-details .breakdown tr.neg td:last-child { color:var(--red); }
-.info-block { font-size:11.5px; color:var(--text-2); background:var(--bg-3); padding:8px 10px; border-radius:var(--radius); margin:8px 0 12px; line-height:1.5; }
-.info-block strong { color:var(--text); }
-.info-block-accent { background:var(--bg-3); border-left:3px solid var(--accent); }
-.deal.open .deal-details { display:block; }
-.toggle { cursor:pointer; user-select:none; font-size:12px; color:var(--accent); white-space:nowrap; padding:9px 12px; }
-.toggle:hover { background:var(--bg-3); border-radius:var(--radius); }
-.crit-list { list-style:none; display:flex; flex-direction:column; gap:4px; margin-top:8px; }
-.crit-list li { padding:6px 8px; background:var(--bg-3); border-radius:var(--radius); display:flex; gap:6px; font-size:12px; }
-.crit-list .marker { font-weight:700; flex-shrink:0; width:18px; }
-.crit-list .marker.pass { color:var(--green); }
-.crit-list .marker.fail { color:var(--red); }
-.crit-list .marker.warn { color:var(--orange); }
-.empty { text-align:center; color:var(--text-3); padding:40px; font-size:14px; }
-.filter-bar { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
-.filter-bar button { background:var(--bg-2); border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; }
-.filter-bar button.active { background:var(--accent); color:white; border-color:var(--accent); }
-.notes { font-size:12px; color:var(--text-3); margin-top:14px; padding:10px 12px; background:var(--bg-2); border-left:3px solid var(--text-3); border-radius:var(--radius); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    background: #f5f5f5;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.login-container {
+    background: #ffffff;
+    padding: 48px 40px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 32px;
+}
+
+.password-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.password-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    color: #111;
+    border-radius: 4px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 20px;
+    font-family: inherit;
+}
+
+.password-input:focus {
+    border-color: #1a1a1a;
+}
+
+.unlock-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: #1a1a1a;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.unlock-btn:hover {
+    background: #000;
+}
+
+.unlock-btn:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.error-msg {
+    color: #b00020;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+}
+
+.security-info {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.security-info strong {
+    color: #333;
+    font-weight: 500;
+}
+
+#content-container {
+    display: none;
+    width: 100%;
+    height: 100vh;
+}
+
+#content-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e5e5;
+    border-top: 2px solid #1a1a1a;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 16px auto 0;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
-<div class="topbar">
-<a href="index.html" class="btn-text">&larr; Plan</a>
-<a href="dealfinder.html" class="btn-text">Analyseur manuel</a>
-<h1>Scan auto — 06 May 2026, 18h58</h1>
-<button class="btn-text" id="theme-toggle">Sombre</button>
-</div>
-<main>
-<div class="summary">
-<div class="stat"><div class="stat-value">4</div><div class="stat-label">Annonces vues</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--green)">1</div><div class="stat-label">Nouvelles</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--orange)">0</div><div class="stat-label">Prix modifié</div></div>
-<div class="stat"><div class="stat-value">—</div><div class="stat-label">Filtrées (hors critères)</div></div>
-<div class="stat"><div class="stat-value">4</div><div class="stat-label">Retenues</div></div>
-</div>
 
-<div class="filter-bar">
-<button class="active" data-filter="all">Toutes (4)</button>
-<button data-filter="green">Visite prioritaire</button>
-<button data-filter="orange">À surveiller</button>
-<button data-filter="new">Nouvelles uniquement</button>
-<button data-filter="changed">Prix modifié</button>
+<div id="login-container" class="login-container">
+    <h1 class="login-title">Dealfinder Scan (2026-05-06-1858)</h1>
+    <p class="login-subtitle">Document protégé. Mot de passe requis pour accéder au contenu.</p>
+
+    <label for="password" class="password-label">Mot de passe</label>
+    <input type="password" id="password" class="password-input" placeholder="" autofocus autocomplete="current-password">
+    <button id="unlock-btn" class="unlock-btn" onclick="unlock()">Accéder au document</button>
+
+    <div class="loader" id="loader"></div>
+    <div class="error-msg" id="error">Mot de passe incorrect</div>
+
+    <div class="security-info">
+        <strong>Chiffrement</strong> : AES-256-GCM<br>
+        <strong>Dérivation de clé</strong> : PBKDF2-SHA256, 100 000 itérations<br>
+        <strong>Confidentialité</strong> : déchiffrement local, aucune donnée transmise
+    </div>
 </div>
 
-<div id="deals">
+<div id="content-container"></div>
 
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>1012 - 1014, boulevard Louis-XIV, Québec (Charlesbourg)</h2>
-      <div class="meta">Charlesbourg • 3 unités • Bâti 1987</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">49</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics-grid">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">699 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.84%</div><div class="metric-sub">cible 5.20%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.25</div><div class="metric-sub">cible ≥0.90</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">14.2</div><div class="metric-sub">cible ≤10</div></div>
-    <div class="metric bad"><div class="metric-label">Cashflow / mois</div><div class="metric-value">−3 166$</div><div class="metric-sub">−37 998$/an</div></div>
-    <div class="metric"><div class="metric-label">Cash requis closing</div><div class="metric-value">65 006$</div><div class="metric-sub">mise + frais</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-charlesbourg/14608755" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
-    <span class="toggle">Détails complets ▾</span>
-  </div>
-  <div class="deal-details">
-
-    <h4>Critères du plan vs ce deal</h4>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 699,000$ dans la fourchette du secteur (450,000$-950,000$)</li><li><span class="marker fail">X</span>TGA 1.84% sous cible 5.20% — déficit 3.36 pts</li><li><span class="marker fail">X</span>DCR 0.25 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 104% du marché — peu de marge de hausse</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 14.2 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-
-    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
-    <table class="breakdown">
-      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>49 200$</td></tr>
-      <tr class="subtle"><td>Vacance (5%)</td><td>−2 460$</td></tr>
-      <tr><td>Revenu net effectif</td><td>46 740$</td></tr>
-      <tr><td>Taxes muni + scolaires</td><td>4 505$</td></tr><tr><td>Assurances immeuble</td><td>4 194$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>3 936$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>8 388$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>1 230$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>4 893$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>33 846$</td></tr>
-      <tr class="total pos"><td>NOI (revenu net d'exploitation)</td><td>+12 894$</td></tr>
-      <tr><td>Service de la dette annuel (P+I)</td><td>−50 892$</td></tr>
-      <tr class="total neg"><td>Cashflow annuel net</td><td>−37 998$</td></tr>
-    </table>
-    <div class="info-block">
-      <strong>Hypothèses cashflow</strong> — Taxes : réelles (4,215$ muni + 290$ scol). Vacance : 5% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
-    </div>
-
-    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
-    <table class="breakdown">
-      <tr><td>Mise de fonds (5%)</td><td>34 950$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 650$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>9 712$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>4 194$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>65 006$</td></tr>
-    </table>
-    <div class="info-block">
-      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 664 050$ + prime SCHL 26 562$ = 690 612$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 4 241$</strong>.
-    </div>
-
-    
-    <div class="info-block"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1987
-Superficie du terrain
-5 724 pc
-Stationnement total
-Allée (5)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-3 x 4 ½
-Unité principale
-4 pièces, 2 c…</div>
-  </div>
-</div>
-
-<div class="deal verdict-red ">
-  <div class="deal-header">
-    <div class="info">
-      <h2>1218 - 1220, Avenue Saint-Pascal, Québec (La Cité-Limoilou)</h2>
-      <div class="meta">La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • Bâti 1962</div>
-      <div class="badges"></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">43</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics-grid">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">624 900$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.39%</div><div class="metric-sub">cible 4.50%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.05</div><div class="metric-sub">cible ≥0.90</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">17.0</div><div class="metric-sub">cible ≤10</div></div>
-    <div class="metric bad"><div class="metric-label">Cashflow / mois</div><div class="metric-value">−3 590$</div><div class="metric-sub">−43 084$/an</div></div>
-    <div class="metric"><div class="metric-label">Cash requis closing</div><div class="metric-value">61 093$</div><div class="metric-sub">mise + frais</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-cite-limoilou/16910569" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
-    <span class="toggle">Détails complets ▾</span>
-  </div>
-  <div class="deal-details">
-
-    <h4>Critères du plan vs ce deal</h4>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 624,900$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker fail">X</span>TGA 0.39% sous cible 4.50% — déficit 4.11 pts</li><li><span class="marker fail">X</span>DCR 0.05 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 82% du marché — marge de hausse aux renouvellements</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire dans le plan</li><li><span class="marker fail">X</span>MRB 17.0 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-
-    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
-    <table class="breakdown">
-      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>36 780$</td></tr>
-      <tr class="subtle"><td>Vacance (7%)</td><td>−2 575$</td></tr>
-      <tr><td>Revenu net effectif</td><td>34 205$</td></tr>
-      <tr><td>Taxes muni + scolaires</td><td>5 608$</td></tr><tr><td>Assurances immeuble</td><td>3 749$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>2 942$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>7 499$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>920$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>4 374$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>31 792$</td></tr>
-      <tr class="total pos"><td>NOI (revenu net d'exploitation)</td><td>+2 413$</td></tr>
-      <tr><td>Service de la dette annuel (P+I)</td><td>−45 497$</td></tr>
-      <tr class="total neg"><td>Cashflow annuel net</td><td>−43 084$</td></tr>
-    </table>
-    <div class="info-block">
-      <strong>Hypothèses cashflow</strong> — Taxes : réelles (5,296$ muni + 312$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
-    </div>
-
-    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
-    <table class="breakdown">
-      <tr><td>Mise de fonds (5%)</td><td>31 245$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 369$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>8 230$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Phase 1 environnementale (bâti pré-1985)</td><td>2 000$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>3 749$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>61 093$</td></tr>
-    </table>
-    <div class="info-block">
-      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 593 655$ + prime SCHL 23 746$ = 617 401$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 3 791$</strong>.
-    </div>
-
-    
-    <div class="info-block"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1962
-Superficie du terrain
-5 948 pc
-Stationnement total
-Allée (6)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-1 x 3 ½, 1 x 4 ½, 1 x 7 ½
-Unité princi…</div>
-  </div>
-</div>
-
-<div class="deal verdict-red ">
-  <div class="deal-header">
-    <div class="info">
-      <h2>553, 3e Rue, Québec (La Cité-Limoilou)</h2>
-      <div class="meta">La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités</div>
-      <div class="badges"></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">39</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics-grid">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">525 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.32%</div><div class="metric-sub">cible 4.50%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.04</div><div class="metric-sub">cible ≥0.90</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">16.2</div><div class="metric-sub">cible ≤10</div></div>
-    <div class="metric bad"><div class="metric-label">Cashflow / mois</div><div class="metric-value">−3 046$</div><div class="metric-sub">−36 555$/an</div></div>
-    <div class="metric"><div class="metric-label">Cash requis closing</div><div class="metric-value">51 123$</div><div class="metric-sub">mise + frais</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-cite-limoilou/10144394" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
-    <span class="toggle">Détails complets ▾</span>
-  </div>
-  <div class="deal-details">
-
-    <h4>Critères du plan vs ce deal</h4>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 525,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker fail">X</span>TGA 0.32% sous cible 4.50% — déficit 4.18 pts</li><li><span class="marker fail">X</span>DCR 0.04 — appoint mensuel très lourd</li><li><span class="marker warn">~</span>Loyers à 72% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire dans le plan</li><li><span class="marker fail">X</span>MRB 16.2 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-
-    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
-    <table class="breakdown">
-      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>32 460$</td></tr>
-      <tr class="subtle"><td>Vacance (7%)</td><td>−2 272$</td></tr>
-      <tr><td>Revenu net effectif</td><td>30 188$</td></tr>
-      <tr><td>Taxes muni + scolaires</td><td>5 286$</td></tr><tr><td>Assurances immeuble</td><td>3 150$</td></tr><tr><td>Hydro / eau espaces communs</td><td>1 700$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 600$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>2 597$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>6 300$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 400$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>812$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>3 675$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>28 520$</td></tr>
-      <tr class="total pos"><td>NOI (revenu net d'exploitation)</td><td>+1 668$</td></tr>
-      <tr><td>Service de la dette annuel (P+I)</td><td>−38 223$</td></tr>
-      <tr class="total neg"><td>Cashflow annuel net</td><td>−36 555$</td></tr>
-    </table>
-    <div class="info-block">
-      <strong>Hypothèses cashflow</strong> — Taxes : réelles (4,982$ muni + 304$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
-    </div>
-
-    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
-    <table class="breakdown">
-      <tr><td>Mise de fonds (5%)</td><td>26 250$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>1 990$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>6 232$</td></tr><tr><td>Inspection (3 unités)</td><td>1 500$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>3 150$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>51 123$</td></tr>
-    </table>
-    <div class="info-block">
-      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 498 750$ + prime SCHL 19 950$ = 518 700$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 3 185$</strong>.
-    </div>
-
-    
-    <div class="info-block"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-En rangée
-Année de construction
-Âge inconnu
-Superficie du terrain
-2 347 pc
-Stationnement total
-Allée (4)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-3 x 3 ½
-Unité principale
-3 pi…</div>
-  </div>
-</div>
-
-<div class="deal verdict-red ">
-  <div class="deal-header">
-    <div class="info">
-      <h2>715, Avenue de Norvège, Québec (Sainte-Foy/Sillery/Cap-Rouge)</h2>
-      <div class="meta">Sainte-Foy / Sillery / Cap-Rouge • 4 unités • Bâti 1965</div>
-      <div class="badges"></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">39</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics-grid">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">699 500$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.44%</div><div class="metric-sub">cible 3.80%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.20</div><div class="metric-sub">cible ≥0.90</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">14.2</div><div class="metric-sub">cible ≤10</div></div>
-    <div class="metric bad"><div class="metric-label">Cashflow / mois</div><div class="metric-value">−3 403$</div><div class="metric-sub">−40 838$/an</div></div>
-    <div class="metric"><div class="metric-label">Cash requis closing</div><div class="metric-value">67 546$</div><div class="metric-sub">mise + frais</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~quebec-sainte-foy-sillery-cap-rouge/20449168" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
-    <span class="toggle">Détails complets ▾</span>
-  </div>
-  <div class="deal-details">
-
-    <h4>Critères du plan vs ce deal</h4>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 699,500$ dans la fourchette du secteur (500,000$-1,300,000$)</li><li><span class="marker fail">X</span>TGA 1.44% sous cible 3.80% — déficit 2.36 pts</li><li><span class="marker fail">X</span>DCR 0.20 — appoint mensuel très lourd</li><li><span class="marker warn">~</span>Loyers à 74% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker warn">~</span>Secteur priorité 4/10 — faible</li><li><span class="marker fail">X</span>MRB 14.2 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-
-    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
-    <table class="breakdown">
-      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>49 200$</td></tr>
-      <tr class="subtle"><td>Vacance (7%)</td><td>−3 444$</td></tr>
-      <tr><td>Revenu net effectif</td><td>45 756$</td></tr>
-      <tr><td>Taxes muni + scolaires</td><td>5 513$</td></tr><tr><td>Assurances immeuble</td><td>4 197$</td></tr><tr><td>Hydro / eau espaces communs</td><td>2 000$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 800$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>3 936$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>8 394$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 700$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>1 230$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>4 896$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>35 666$</td></tr>
-      <tr class="total pos"><td>NOI (revenu net d'exploitation)</td><td>+10 090$</td></tr>
-      <tr><td>Service de la dette annuel (P+I)</td><td>−50 928$</td></tr>
-      <tr class="total neg"><td>Cashflow annuel net</td><td>−40 838$</td></tr>
-    </table>
-    <div class="info-block">
-      <strong>Hypothèses cashflow</strong> — Taxes : réelles (5,208$ muni + 305$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
-    </div>
-
-    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
-    <table class="breakdown">
-      <tr><td>Mise de fonds (5%)</td><td>34 975$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 651$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>9 722$</td></tr><tr><td>Inspection (4 unités)</td><td>2 000$</td></tr><tr><td>Phase 1 environnementale (bâti pré-1985)</td><td>2 000$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>4 197$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>67 546$</td></tr>
-    </table>
-    <div class="info-block">
-      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 664 525$ + prime SCHL 26 581$ = 691 106$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 4 244$</strong>.
-    </div>
-
-    <div class="info-block info-block-accent"><strong>Note secteur (Sainte-Foy / Sillery / Cap-Rouge) :</strong> Plus-value mais TGA bas — cashflow négatif probable.</div>
-    <div class="info-block"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Jumelé
-Année de construction
-1965
-Superficie habitable
-2 213 pc
-Superficie du terrain
-5 160 pc
-Stationnement total
-Allée (6)
-Nombre d’unités
-Résidentiel (4)
-Unités résidentielles
-1 x 1 ½, …</div>
-  </div>
-</div>
-
-</div>
-
-<div class="notes">
-Scan effectué le 2026-05-06 18:58:06 • Source : Centris (triplex/quadruplex) • Critères config : prix max 800 000$, 3-4 unités, 1.5h max de Québec.<br>
-Les ratios financiers (TGA / DCR / MRB / cashflow) sont calculés selon les hypothèses du plan (Section 9 SDV + Section 18). Vacance, dépenses opérationnelles et frais d'acquisition sont estimés — à valider sur place.
-</div>
-</main>
 <script>
-(function() {
-  document.querySelectorAll('.toggle').forEach(function(t) {
-    t.addEventListener('click', function() { t.closest('.deal').classList.toggle('open'); });
-  });
-  var btns = document.querySelectorAll('.filter-bar button');
-  btns.forEach(function(b) {
-    b.addEventListener('click', function() {
-      btns.forEach(function(x) { x.classList.remove('active'); });
-      b.classList.add('active');
-      var f = b.dataset.filter;
-      document.querySelectorAll('.deal').forEach(function(d) {
-        var show = f === 'all' || d.classList.contains('verdict-' + f) || d.classList.contains('flag-' + f);
-        d.style.display = show ? '' : 'none';
-      });
-    });
-  });
-  var theme = localStorage.getItem('dealfinder_theme');
-  if (!theme) theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', theme);
-  document.getElementById('theme-toggle').textContent = theme === 'dark' ? 'Clair' : 'Sombre';
-  document.getElementById('theme-toggle').addEventListener('click', function() {
-    var cur = document.documentElement.getAttribute('data-theme') || 'light';
-    var next = cur === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('dealfinder_theme', next);
-    document.documentElement.setAttribute('data-theme', next);
-    this.textContent = next === 'dark' ? 'Clair' : 'Sombre';
-  });
+// Données chiffrées (générées par secure_html.py)
+const ENCRYPTED_DATA = {
+    salt: "6UfBOHv8Rcu4RDyryslYCA==",
+    iv: "PjQqyNLOpIOpaURG",
+    ciphertext: "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"
+};
+
+// Iterations PBKDF2
+const PBKDF2_ITERATIONS = 100000;
+
+// Convert base64 to Uint8Array
+function base64ToBytes(b64) {
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+}
+
+async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(password),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+    );
+
+    return await crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: PBKDF2_ITERATIONS,
+            hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+    );
+}
+
+async function decryptData(password) {
+    try {
+        const salt = base64ToBytes(ENCRYPTED_DATA.salt);
+        const iv = base64ToBytes(ENCRYPTED_DATA.iv);
+        const ciphertext = base64ToBytes(ENCRYPTED_DATA.ciphertext);
+
+        const key = await deriveKey(password, salt);
+
+        const plaintextBuffer = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            ciphertext
+        );
+
+        // Décompression : le contenu est gzippé
+        const compressed = new Uint8Array(plaintextBuffer);
+
+        // Decompress using DecompressionStream (browser native)
+        const ds = new DecompressionStream("gzip");
+        const stream = new Blob([compressed]).stream().pipeThrough(ds);
+        const decompressed = await new Response(stream).text();
+
+        return decompressed;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function unlock() {
+    const passwordInput = document.getElementById('password');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const errorMsg = document.getElementById('error');
+    const loader = document.getElementById('loader');
+
+    const password = passwordInput.value.trim();
+    if (!password) return;
+
+    unlockBtn.disabled = true;
+    unlockBtn.style.display = 'none';
+    loader.style.display = 'block';
+    errorMsg.style.display = 'none';
+
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    const decrypted = await decryptData(password);
+
+    if (decrypted === null) {
+        unlockBtn.disabled = false;
+        unlockBtn.style.display = 'block';
+        loader.style.display = 'none';
+        errorMsg.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+        return;
+    }
+
+    // Sauvegarder le mot de passe :
+    // - sessionStorage : pour la session courante (toujours)
+    // - localStorage : pour partage entre onglets (Outils/Dashboard ouverts en target=_blank)
+    //   et persistance après fermeture du navigateur. Sécurité : le device de l'user est son
+    //   problème ; si quelqu'un a accès à Chrome déverrouillé, il peut déjà tout voir.
+    try { sessionStorage.setItem('plan_password', password); } catch (e) {}
+    try { localStorage.setItem('plan_password', password); } catch (e) {}
+
+    // Remplacer COMPLÈTEMENT la page par le HTML déchiffré
+    // (vs iframe qui cassait les liens anchor)
+    document.open();
+    document.write(decrypted);
+    document.close();
+}
+
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') unlock();
+});
+
+// Auto-unlock silencieux si mot de passe deja sauvegardé
+// Vérifier sessionStorage d'abord (priorité onglet courant), puis localStorage (autres onglets)
+(async () => {
+    try {
+        const saved = sessionStorage.getItem('plan_password') || localStorage.getItem('plan_password');
+        if (!saved) return;
+        document.getElementById('login-container').style.opacity = '0.4';
+        const decrypted = await decryptData(saved);
+        if (decrypted !== null) {
+            // Synchroniser les 2 stockages au cas où
+            try { sessionStorage.setItem('plan_password', saved); } catch(e) {}
+            try { localStorage.setItem('plan_password', saved); } catch(e) {}
+            document.open();
+            document.write(decrypted);
+            document.close();
+        } else {
+            // Mot de passe invalide (peut-être changé) -> nettoyer pour forcer re-saisie
+            sessionStorage.removeItem('plan_password');
+            localStorage.removeItem('plan_password');
+            document.getElementById('login-container').style.opacity = '1';
+        }
+    } catch (e) {}
 })();
 </script>
+
 </body>
 </html>

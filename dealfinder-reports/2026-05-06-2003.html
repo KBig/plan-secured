@@ -2,347 +2,316 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0d0d0d">
-<title>Scan Dealfinder — 2026-05-06-2003</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="20260507-063057">
+<title>Dealfinder Scan (2026-05-06-2003) — Accès sécurisé</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-:root { --bg:#fff; --bg-2:#fafafa; --bg-3:#f0f0f0; --text:#111; --text-2:#444; --text-3:#777; --border:#e0e0e0; --border-2:#c8c8c8; --accent:#0066cc; --accent-2:#003d7a; --green:#1a7f37; --green-bg:#ddf4e1; --red:#cf222e; --red-bg:#ffe5e5; --orange:#d1841d; --orange-bg:#fff3dc; --radius:6px; --radius-lg:10px; }
-[data-theme="dark"] { --bg:#0d0d0d; --bg-2:#1a1a1a; --bg-3:#222; --text:#e8e8e8; --text-2:#b8b8b8; --text-3:#888; --border:#333; --border-2:#444; --accent:#66b3ff; --accent-2:#99ccff; --green:#3fb950; --green-bg:#14301c; --red:#f85149; --red-bg:#3a1414; --orange:#f0883e; --orange-bg:#3a2a14; }
-html, body { background:var(--bg); color:var(--text); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; font-size:14px; line-height:1.5; min-height:100vh; }
-.topbar { position:sticky; top:0; z-index:100; background:var(--bg-2); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px; }
-.topbar h1 { font-size:15px; font-weight:600; flex:1; }
-.btn-text { background:transparent; border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; text-decoration:none; }
-.btn-text:hover { background:var(--bg-3); border-color:var(--border-2); color:var(--text); }
-main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
-.summary { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:12px; }
-.summary .stat { text-align:center; }
-.summary .stat-value { font-size:24px; font-weight:700; letter-spacing:-0.02em; }
-.summary .stat-label { font-size:11px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
-.deal { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:14px; }
-.deal-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
-.deal-header .info { flex:1; min-width:0; }
-.deal-header h2 { font-size:16px; font-weight:600; line-height:1.3; margin-bottom:4px; }
-.deal-header .meta { font-size:12px; color:var(--text-3); }
-.deal-header .badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
-.badge { font-size:11px; font-weight:600; padding:3px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em; }
-.badge.new { background:var(--green-bg); color:var(--green); }
-.badge.changed { background:var(--orange-bg); color:var(--orange); }
-.badge.priority { background:var(--accent); color:#fff; opacity:0.9; }
-.score-pill { flex-shrink:0; width:64px; height:64px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; }
-.score-pill.green { background:var(--green-bg); color:var(--green); }
-.score-pill.orange { background:var(--orange-bg); color:var(--orange); }
-.score-pill.red { background:var(--red-bg); color:var(--red); }
-.score-pill .num { font-size:22px; line-height:1; }
-.score-pill .lbl { font-size:9px; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; opacity:0.8; }
-.metrics { display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; margin:10px 0; }
-.metric { background:var(--bg-3); border-radius:var(--radius); padding:8px 10px; }
-.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; font-weight:600; }
-.metric-value { font-size:17px; font-weight:700; font-variant-numeric:tabular-nums; margin:4px 0 6px; }
-.metric-sub { font-size:10.5px; color:var(--text-3); line-height:1.45; }
-.metric { padding:10px 11px; }
-.metric.good .metric-value { color:var(--green); }
-.metric.bad .metric-value { color:var(--red); }
-.metric.warn .metric-value { color:var(--orange); }
-.deal-actions { display:flex; gap:10px; margin-top:12px; align-items:center; }
-.deal-actions a.btn-primary-inline { background:var(--accent); color:white; padding:9px 16px; border-radius:var(--radius); text-decoration:none; font-size:13px; font-weight:600; flex:1; text-align:center; }
-.deal-actions a.btn-primary-inline:hover { background:var(--accent-2); }
-.deal-details { display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-size:13px; }
-.deal-details h4 { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-3); margin-top:18px; margin-bottom:8px; }
-.deal-details h4:first-child { margin-top:0; }
-.deal-details .breakdown { width:100%; border-collapse:collapse; font-size:12px; margin-bottom:6px; }
-.deal-details .breakdown td { padding:6px 8px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; }
-.deal-details .breakdown td:last-child { text-align:right; }
-.deal-details .breakdown tr.total td { font-weight:600; border-top:1px solid var(--border-2); border-bottom:1px solid var(--border-2); }
-.deal-details .breakdown tr.subtle td { color:var(--text-3); }
-.deal-details .breakdown tr.pos td:last-child { color:var(--green); }
-.deal-details .breakdown tr.neg td:last-child { color:var(--red); }
-.info-block { font-size:11.5px; color:var(--text-2); background:var(--bg-3); padding:8px 10px; border-radius:var(--radius); margin:8px 0 12px; line-height:1.5; }
-.info-block strong { color:var(--text); }
-.info-block-accent { background:var(--bg-3); border-left:3px solid var(--accent); }
-.deal.open .deal-details { display:block; }
-.toggle { cursor:pointer; user-select:none; font-size:12px; color:var(--accent); white-space:nowrap; padding:9px 12px; }
-.toggle:hover { background:var(--bg-3); border-radius:var(--radius); }
-.crit-list { list-style:none; display:flex; flex-direction:column; gap:4px; margin-top:8px; }
-.crit-list li { padding:6px 8px; background:var(--bg-3); border-radius:var(--radius); display:flex; gap:6px; font-size:12px; }
-.crit-list .marker { font-weight:700; flex-shrink:0; width:18px; }
-.crit-list .marker.pass { color:var(--green); }
-.crit-list .marker.fail { color:var(--red); }
-.crit-list .marker.warn { color:var(--orange); }
-.empty { text-align:center; color:var(--text-3); padding:40px; font-size:14px; }
-.filter-bar { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
-.filter-bar button { background:var(--bg-2); border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; }
-.filter-bar button.active { background:var(--accent); color:white; border-color:var(--accent); }
-.notes { font-size:12px; color:var(--text-3); margin-top:14px; padding:10px 12px; background:var(--bg-2); border-left:3px solid var(--text-3); border-radius:var(--radius); }
-.glossary { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:0; margin-bottom:18px; overflow:hidden; }
-.glossary-toggle { padding:14px 18px; cursor:pointer; font-weight:600; display:flex; justify-content:space-between; align-items:center; user-select:none; }
-.glossary-toggle:hover { background:var(--bg-3); }
-.glossary-toggle::after { content:"▾"; transition:transform 0.15s; }
-.glossary.open .glossary-toggle::after { transform:rotate(180deg); }
-.glossary-content { display:none; padding:0 18px 16px; font-size:13px; line-height:1.6; }
-.glossary.open .glossary-content { display:block; }
-.glossary-content h4 { margin:14px 0 6px; font-size:13px; font-weight:600; color:var(--accent); }
-.glossary-content dl { margin:0 0 8px; }
-.glossary-content dt { font-weight:600; color:var(--text); display:inline; }
-.glossary-content dd { display:inline; margin:0 0 0 4px; color:var(--text-2); }
-.glossary-content dd::after { content:"\A"; white-space:pre; }
-.glossary-content .score-scale { display:flex; gap:6px; margin:6px 0; }
-.glossary-content .score-scale span { padding:3px 8px; border-radius:999px; font-size:11px; font-weight:600; }
-.rejections { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:14px 18px; margin-bottom:18px; }
-.rejections h3 { font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-2); text-transform:uppercase; letter-spacing:0.04em; }
-.rejections table { width:100%; font-size:13px; border-collapse:collapse; }
-.rejections td { padding:6px 0; border-bottom:1px solid var(--border); }
-.rejections td:last-child { text-align:right; font-variant-numeric:tabular-nums; color:var(--text-3); }
-.rejections tr:last-child td { border-bottom:none; font-weight:600; }
-.condition-banner { display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 4px; }
-.condition-banner .cond-badge { font-size:11px; font-weight:600; padding:4px 9px; border-radius:6px; }
-.cond-badge.good-state { background:var(--green-bg); color:var(--green); }
-.cond-badge.warn-state { background:var(--orange-bg); color:var(--orange); }
-.cond-badge.bad-state { background:var(--red-bg); color:var(--red); }
-.cond-badge.neutral-state { background:var(--bg-3); color:var(--text-2); }
-.deal-photo { width:100%; max-height:200px; object-fit:cover; border-radius:var(--radius); margin:10px 0; background:var(--bg-3); }
-.deal-quick-facts { display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:6px; margin:8px 0 10px; font-size:12px; }
-.deal-quick-facts .fact { background:var(--bg-3); padding:6px 8px; border-radius:var(--radius); }
-.deal-quick-facts .fact-label { color:var(--text-3); font-size:10px; text-transform:uppercase; letter-spacing:0.04em; }
-.deal-quick-facts .fact-value { color:var(--text); font-weight:500; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    background: #f5f5f5;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.login-container {
+    background: #ffffff;
+    padding: 48px 40px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 32px;
+}
+
+.password-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.password-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    color: #111;
+    border-radius: 4px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 20px;
+    font-family: inherit;
+}
+
+.password-input:focus {
+    border-color: #1a1a1a;
+}
+
+.unlock-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: #1a1a1a;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.unlock-btn:hover {
+    background: #000;
+}
+
+.unlock-btn:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.error-msg {
+    color: #b00020;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+}
+
+.security-info {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.security-info strong {
+    color: #333;
+    font-weight: 500;
+}
+
+#content-container {
+    display: none;
+    width: 100%;
+    height: 100vh;
+}
+
+#content-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e5e5;
+    border-top: 2px solid #1a1a1a;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 16px auto 0;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
-<div class="topbar">
-<a href="index.html" class="btn-text">&larr; Plan</a>
-<a href="dealfinder.html" class="btn-text">Analyseur manuel</a>
-<h1>Scan auto — 06 May 2026, 20h03</h1>
-<button class="btn-text" id="theme-toggle">Sombre</button>
-</div>
-<main>
-<div class="summary">
-<div class="stat"><div class="stat-value">25</div><div class="stat-label">Annonces scrapées</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--green)">0</div><div class="stat-label">Nouvelles</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--orange)">0</div><div class="stat-label">Prix modifié</div></div>
-<div class="stat"><div class="stat-value">24</div><div class="stat-label">Filtrées (hors critères)</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--accent)">1</div><div class="stat-label">Retenues à analyser</div></div>
-</div>
 
-<div class="rejections"><h3>Pourquoi seulement 1 retenues sur 25 scrapées</h3><table><tr><td>Prix &gt; 800 000$</td><td>13 annonces</td></tr><tr><td>Bâti pré-1960 (vieux)</td><td>11 annonces</td></tr><tr><td>Total filtrées</td><td>24</td></tr></table><p style="font-size:12px;color:var(--text-3);margin-top:10px">Pour voir plus de deals : élargis <code>max_price</code>, baisse <code>year_built_min</code>, ou augmente <code>max_drive_hours_from_quebec</code> dans <code>scripts/dealfinder/config.json</code>.</p></div>
+<div id="login-container" class="login-container">
+    <h1 class="login-title">Dealfinder Scan (2026-05-06-2003)</h1>
+    <p class="login-subtitle">Document protégé. Mot de passe requis pour accéder au contenu.</p>
 
-<div class="glossary" id="glossary">
-<div class="glossary-toggle" onclick="this.parentElement.classList.toggle('open')">Comment lire ce rapport (glossaire + barème score)</div>
-<div class="glossary-content">
+    <label for="password" class="password-label">Mot de passe</label>
+    <input type="password" id="password" class="password-input" placeholder="" autofocus autocomplete="current-password">
+    <button id="unlock-btn" class="unlock-btn" onclick="unlock()">Accéder au document</button>
 
-<h4>Score 0-100 et verdict</h4>
-<div class="score-scale">
-  <span style="background:var(--green-bg);color:var(--green)">80-100 Visite prioritaire</span>
-  <span style="background:var(--orange-bg);color:var(--orange)">60-79 À surveiller</span>
-  <span style="background:var(--red-bg);color:var(--red)">0-59 Pass</span>
-</div>
-<p>Le score combine 10 critères pondérés. Pondération en mode <strong>propriétaire-occupant</strong> (mise 5%) :</p>
-<dl>
-<dt>Patrimoine net Y1 (35 pts)</dt><dd>la métrique principale — équité forcée + appréciation 5%/an + cashflow après impôt. C'est ce qui compte vraiment selon SDV §9.</dd>
-<dt>Prix dans fourchette secteur (15 pts)</dt><dd>vs cible Section 14.4 du plan.</dd>
-<dt>ROI Y1 sur cash investi (15 pts)</dt><dd>patrimoine créé Y1 ÷ (mise + frais d'acquisition).</dd>
-<dt>DCR (10 pts)</dt><dd>NOI ÷ service de la dette. Tolérance 0.80+ acceptée en propriétaire-occupant.</dd>
-<dt>Loyers actuels vs marché (10 pts)</dt><dd>marge de hausse aux renouvellements.</dd>
-<dt>Priorité secteur (8 pts)</dt><dd>1-10 selon Section 14.4 (Val-Bélair=10, Pont-Rouge=9, Sainte-Foy=4).</dd>
-<dt>État rénovation (5 ± 8 pts)</dt><dd>détection automatique via mots-clés description.</dd>
-<dt>Année construction (5 ± 5 pts)</dt><dd>bonus si ≥1990, pénalité si pré-1960.</dd>
-<dt>MRB bonus (2 pts)</dt><dt>Drapeaux qualitatifs (variable)</dt>
-</dl>
+    <div class="loader" id="loader"></div>
+    <div class="error-msg" id="error">Mot de passe incorrect</div>
 
-<h4>Glossaire des ratios financiers</h4>
-<dl>
-<dt>NOI (Net Operating Income)</dt><dd>revenus locatifs − dépenses opérationnelles, avant hypothèque. Le "vrai" revenu de l'immeuble.</dd>
-<dt>TGA / Cap rate</dt><dd>NOI ÷ prix d'achat. Cible plan : 5-7% selon secteur.</dd>
-<dt>DCR (Debt Coverage Ratio)</dt><dd>NOI ÷ service de la dette annuel. Banques exigent ≥1.10 pour investisseurs purs, plus tolérantes en propriétaire-occupant.</dd>
-<dt>MRB (Multiplicateur Revenu Brut)</dt><dd>prix ÷ revenu brut annuel. Cible ≤10. Plus c'est haut, plus tu paies cher pour les revenus.</dd>
-<dt>Cashflow / mois</dt><dd>revenus − toutes dépenses incluant hypothèque. Négatif = tu mets de l'argent chaque mois.</dd>
-<dt>Patrimoine net Y1</dt><dd>équité forcée (capital remboursé) + appréciation 5%/an + cashflow après impôt. Mesure la richesse créée la 1ère année.</dd>
-<dt>ROI Y1 sur cash</dt><dd>patrimoine net Y1 ÷ cash investi (mise + frais). Un ROI 30%+ est excellent.</dd>
-</dl>
-
-<h4>Drapeaux automatiques (détectés depuis description)</h4>
-<dl>
-<dt>Rénové récent</dt><dd>"complètement rénové", "refait à neuf", "rénovations majeures effectuées".</dd>
-<dt>Travaux requis</dt><dd>"à rénover", "travaux majeurs requis" — capex non budgété, déduit 8 pts.</dd>
-<dt>Toiture/fenêtres récentes</dt><dd>capex différé, +3 pts.</dd>
-<dt>Unité vacante</dt><dd>opportunité fixer loyer marché OU drapeau rouge.</dd>
-<dt>Rentable / potentiel hausse loyers</dt><dd>vante par le vendeur — à valider avec les chiffres.</dd>
-</dl>
-
-<h4>Hypothèses de calcul (alignées SDV §9 + Section 18)</h4>
-<dl>
-<dt>Mise propriétaire-occupant</dt><dd>5% (SCHL résidentiel 1-4 unités).</dd>
-<dt>Mise investisseur</dt><dd>20% (pas d'assurance SCHL requise).</dd>
-<dt>Taux hypothécaire</dt><dd>5.5% (modifiable dans config.json).</dd>
-<dt>Amortissement</dt><dd>25 ans par défaut.</dd>
-<dt>Vacance</dt><dd>3% (secteur prio 9-10), 5% (prio 7-8), 7% (prio &lt;7).</dd>
-<dt>Appréciation</dt><dd>5%/an (moyenne historique QC).</dd>
-<dt>Taux marginal impôt</dt><dd>36% (compagnon CCQ typique). Ratio locatif déductible = (units-1)/units en propriétaire-occupant.</dd>
-<dt>Dépenses opérationnelles</dt><dd>10 catégories Section 18 — taxes réelles si scrapées sinon 1.37% du prix, assurances 0.6%, fonds réserve 1.2%, etc.</dd>
-<dt>Frais acquisition</dt><dd>Section 18.9 — droits mutation Québec progressifs, notaire 3000$, inspection 500$/unité, Phase 1 environnementale 2000$ si pré-1985, etc.</dd>
-</dl>
-
-</div>
+    <div class="security-info">
+        <strong>Chiffrement</strong> : AES-256-GCM<br>
+        <strong>Dérivation de clé</strong> : PBKDF2-SHA256, 100 000 itérations<br>
+        <strong>Confidentialité</strong> : déchiffrement local, aucune donnée transmise
+    </div>
 </div>
 
-<div class="filter-bar">
-<button class="active" data-filter="all">Toutes (1)</button>
-<button data-filter="green">Visite prioritaire</button>
-<button data-filter="orange">À surveiller</button>
-<button data-filter="new">Nouvelles uniquement</button>
-<button data-filter="changed">Prix modifié</button>
-</div>
+<div id="content-container"></div>
 
-<div id="deals">
-
-<div class="deal verdict-red ">
-  <div class="deal-header">
-    <div class="info">
-      <h2>715, Avenue de Norvège, Québec (Sainte-Foy/Sillery/Cap-Rouge)</h2>
-      <div class="meta">Sainte-Foy / Sillery / Cap-Rouge • 4 unités • Bâti 1965</div>
-      <div class="badges"></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">59</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="condition-banner"><span class="cond-badge neutral-state">Rentable selon vendeur</span></div>
-  <img class="deal-photo" src="https://mspublic.centris.ca/media.ashx?id=ADDD250DDD1ADA4DDDDDDDDDDB&amp;t=c&amp;w=190&amp;h=220&amp;sm=m" alt="Photo annonce" loading="lazy">
-  <div class="deal-quick-facts"><div class="fact"><div class="fact-label">Style</div><div class="fact-value">Jumelé</div></div><div class="fact"><div class="fact-label">Sup. habitable</div><div class="fact-value">2 213 pi²</div></div><div class="fact"><div class="fact-label">Terrain</div><div class="fact-value">5 160 pi²</div></div><div class="fact"><div class="fact-label">Stationnement</div><div class="fact-value">6 (Allée)</div></div><div class="fact"><div class="fact-label">Unités</div><div class="fact-value">1 x 1 ½, 1 x 2 ½, 2 x 5 ½</div></div></div>
-  <div class="metrics-grid">
-    <div class="metric">
-      <div class="metric-label">Prix demandé</div>
-      <div class="metric-value">699 500$</div>
-      <div class="metric-sub">prix affiché par le vendeur</div>
-    </div>
-    <div class="metric warn">
-      <div class="metric-label">Patrimoine net Y1</div>
-      <div class="metric-value">+27 188$</div>
-      <div class="metric-sub" style="font-style:italic">richesse créée Y1<br>= équité + appréciation 5% + cashflow après impôt</div>
-    </div>
-    <div class="metric good">
-      <div class="metric-label">ROI Y1 sur cash investi</div>
-      <div class="metric-value">40%</div>
-      <div class="metric-sub" style="font-style:italic">patrimoine net Y1 ÷ cash investi (mise + frais)<br>cible ≥30%</div>
-    </div>
-    <div class="metric bad">
-      <div class="metric-label">TGA (Cap rate)</div>
-      <div class="metric-value">1.44%</div>
-      <div class="metric-sub" style="font-style:italic">NOI ÷ prix d'achat<br>cible secteur 3.80%</div>
-    </div>
-    <div class="metric bad">
-      <div class="metric-label">DCR (Couverture dette)</div>
-      <div class="metric-value">0.20</div>
-      <div class="metric-sub" style="font-style:italic">NOI ÷ service hypothécaire<br>cible ≥0.80 (proprio-occupant)</div>
-    </div>
-    <div class="metric bad">
-      <div class="metric-label">Cashflow / mois</div>
-      <div class="metric-value">−3 403$</div>
-      <div class="metric-sub" style="font-style:italic">revenus − toutes dépenses (incl. hypothèque)<br>avant déduction fiscale</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Cash requis au closing</div>
-      <div class="metric-value">67 546$</div>
-      <div class="metric-sub" style="font-style:italic">mise de fonds 5% + frais d'acquisition<br>(notaire, mutation, inspection, etc.)</div>
-    </div>
-    <div class="metric bad">
-      <div class="metric-label">MRB (Multiplicateur)</div>
-      <div class="metric-value">14.2</div>
-      <div class="metric-sub" style="font-style:italic">prix ÷ revenu brut annuel<br>cible ≤10 (plus bas = mieux)</div>
-    </div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~quebec-sainte-foy-sillery-cap-rouge/20449168" target="_blank" rel="noopener" class="btn-primary-inline">Voir l'annonce sur Centris →</a>
-    <span class="toggle">Détails complets ▾</span>
-  </div>
-  <div class="deal-details">
-
-    <h4>Critères du plan vs ce deal</h4>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 699,500$ dans la fourchette du secteur (500,000$-1,300,000$)</li><li><span class="marker warn">~</span>Patrimoine net Y1 +27,188$ — moyen</li><li><span class="marker pass">OK</span>Rendement Y1 sur cash investi : 40% — bon ROI</li><li><span class="marker warn">~</span>DCR 0.20 — appoint lourd, valider que économie vs loyer compense</li><li><span class="marker warn">~</span>Loyers à 74% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker warn">~</span>Secteur priorité 4/10 — faible</li><li><span class="marker warn">~</span>Bâti 1965 — vérifier toiture/électricité/plomberie</li><li><span class="marker warn">~</span>MRB 14.2 — élevé, prix exigeant vs revenus</li><li><span class="marker pass">OK</span>Description vante la rentabilité (à valider avec les chiffres)</li></ul>
-
-    <h4>Patrimoine net créé Année 1 (la métrique clé)</h4>
-    <table class="breakdown">
-      <tr><td>Équité forcée (capital remboursé via P+I)</td><td>+13 248$</td></tr>
-      <tr><td>Appréciation estimée 5%/an (moyenne historique QC)</td><td>+34 975$</td></tr>
-      <tr><td>Cashflow brut annuel (avant impôt)</td><td>−40 838$</td></tr>
-      <tr class="subtle"><td>Retour fiscal (déduction intérêts + opex)</td><td>+19 803$</td></tr>
-      <tr><td>Cashflow après impôt</td><td>−21 035$</td></tr>
-      <tr class="total pos"><td>Patrimoine net créé Y1 (couple)</td><td>+27 188$</td></tr>
-      <tr class="total"><td>Rendement Y1 sur cash investi (mise + frais)</td><td>40.3%</td></tr>
-    </table>
-    <div class="info-block">
-      C'est la <strong>vraie métrique de qualité</strong> selon SDV §9 : un deal propriétaire-occupant peut avoir cashflow Y1 négatif et rester excellent si patrimoine net positif (équité forcée + appréciation 5%/an dépassent la perte cashflow). Sur 5 ans, ce patrimoine se compose et l'écart vs louer devient massif.
-    </div>
-
-    <h4>Caractéristiques de l'immeuble</h4><table class="breakdown"><tr><td style="color:var(--text-3)">Style bâtiment</td><td>Jumelé</td></tr><tr><td style="color:var(--text-3)">Superficie habitable</td><td>2 213 pi²</td></tr><tr><td style="color:var(--text-3)">Superficie terrain</td><td>5 160 pi²</td></tr><tr><td style="color:var(--text-3)">Stationnement</td><td>6 (Allée)</td></tr><tr><td style="color:var(--text-3)">Composition unités</td><td>1 x 1 ½, 1 x 2 ½, 2 x 5 ½</td></tr><tr><td style="color:var(--text-3)">Unité principale</td><td>5 pièces, 3 chambres, 1 salle de bain</td></tr><tr><td style="color:var(--text-3)">Caractéristiques additionnelles</td><td>Sous-sol 6 pieds +</td></tr><tr><td style="color:var(--text-3)">Évaluation municipale</td><td>211 000$ (2026)</td></tr><tr><td style="color:var(--text-3)">Date d&#x27;emménagement</td><td>30 jours après l’acceptation de la promesse d’achat ou de location</td></tr></table>
-
-    <h4>Cashflow annuel détaillé (Section 18 — référence)</h4>
-    <table class="breakdown">
-      <tr><td>Loyers bruts annuels (actuels (scrapés))</td><td>49 200$</td></tr>
-      <tr class="subtle"><td>Vacance (7%)</td><td>−3 444$</td></tr>
-      <tr><td>Revenu net effectif</td><td>45 756$</td></tr>
-      <tr><td>Taxes muni + scolaires</td><td>5 513$</td></tr><tr><td>Assurances immeuble</td><td>4 197$</td></tr><tr><td>Hydro / eau espaces communs</td><td>2 000$</td></tr><tr><td>Déneigement + entretien terrain</td><td>2 800$</td></tr><tr><td>Entretien préventif + réparations (8% revenu)</td><td>3 936$</td></tr><tr><td>Fonds de réserve / capex (1.2% prix)</td><td>8 394$</td></tr><tr><td>Admin / comptabilité / juridique</td><td>2 700$</td></tr><tr><td>Pertes locatives (impayés + dommages)</td><td>1 230$</td></tr><tr><td>Améliorations capitalisées (0.7% prix)</td><td>4 896$</td></tr><tr class="total"><td>Total dépenses opérationnelles</td><td>35 666$</td></tr>
-      <tr class="total pos"><td>NOI (revenu net d'exploitation)</td><td>+10 090$</td></tr>
-      <tr><td>Service de la dette annuel (P+I)</td><td>−50 928$</td></tr>
-      <tr class="total neg"><td>Cashflow annuel net</td><td>−40 838$</td></tr>
-    </table>
-    <div class="info-block">
-      <strong>Hypothèses cashflow</strong> — Taxes : réelles (5,208$ muni + 305$ scol). Vacance : 7% (selon priorité secteur). Entretien et capex estimés. Toujours valider sur place avec relevés réels.
-    </div>
-
-    <h4>Frais d'acquisition au closing (Section 18.9)</h4>
-    <table class="breakdown">
-      <tr><td>Mise de fonds (5%)</td><td>34 975$</td></tr><tr><td>TVQ sur prime SCHL (9.975%)</td><td>2 651$</td></tr><tr><td>Notaire</td><td>3 000$</td></tr><tr><td>Droits de mutation (taxe de bienvenue Québec)</td><td>9 722$</td></tr><tr><td>Inspection (4 unités)</td><td>2 000$</td></tr><tr><td>Phase 1 environnementale (bâti pré-1985)</td><td>2 000$</td></tr><tr><td>Certificat de localisation</td><td>1 000$</td></tr><tr><td>Ajustements taxes / loyers à closing</td><td>3 000$</td></tr><tr><td>Assurance immeuble (1ère année)</td><td>4 197$</td></tr><tr><td>Coussin urgence post-closing</td><td>5 000$</td></tr><tr class="total"><td>Cash total requis (mise + frais)</td><td>67 546$</td></tr>
-    </table>
-    <div class="info-block">
-      <strong>Hypothèses financement</strong> — Mode <strong>proprio</strong> (5% mise). Prêt 664 525$ + prime SCHL 26 581$ = 691 106$, amorti sur 25 ans à 5.5%. <strong>Paiement mensuel P+I : 4 244$</strong>.
-    </div>
-
-    <div class="info-block info-block-accent"><strong>Note secteur (Sainte-Foy / Sillery / Cap-Rouge) :</strong> Plus-value mais TGA bas — cashflow négatif probable.</div>
-    <div class="info-block"><strong>Description :</strong> Opportunité rare à Ste-Foy! Superbe 4 logements entretenu avec soins, situé dans un secteur recherché, à proximité des services, des écoles et des transports en commun. Stationnement disponible pour chaque logement. Excellente rentabilité et potentiel de revenus. Ne manquez pas c…</div>
-  </div>
-</div>
-
-</div>
-
-<div class="notes">
-Scan effectué le 2026-05-06 20:03:31 • Source : Centris (triplex/quadruplex) • Critères config : prix max 800 000$, 3-4 unités, 1.5h max de Québec.<br>
-Les ratios financiers (TGA / DCR / MRB / cashflow) sont calculés selon les hypothèses du plan (Section 9 SDV + Section 18). Vacance, dépenses opérationnelles et frais d'acquisition sont estimés — à valider sur place.
-</div>
-</main>
 <script>
-(function() {
-  document.querySelectorAll('.toggle').forEach(function(t) {
-    t.addEventListener('click', function() { t.closest('.deal').classList.toggle('open'); });
-  });
-  var btns = document.querySelectorAll('.filter-bar button');
-  btns.forEach(function(b) {
-    b.addEventListener('click', function() {
-      btns.forEach(function(x) { x.classList.remove('active'); });
-      b.classList.add('active');
-      var f = b.dataset.filter;
-      document.querySelectorAll('.deal').forEach(function(d) {
-        var show = f === 'all' || d.classList.contains('verdict-' + f) || d.classList.contains('flag-' + f);
-        d.style.display = show ? '' : 'none';
-      });
-    });
-  });
-  var theme = localStorage.getItem('dealfinder_theme');
-  if (!theme) theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', theme);
-  document.getElementById('theme-toggle').textContent = theme === 'dark' ? 'Clair' : 'Sombre';
-  document.getElementById('theme-toggle').addEventListener('click', function() {
-    var cur = document.documentElement.getAttribute('data-theme') || 'light';
-    var next = cur === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('dealfinder_theme', next);
-    document.documentElement.setAttribute('data-theme', next);
-    this.textContent = next === 'dark' ? 'Clair' : 'Sombre';
-  });
+// Données chiffrées (générées par secure_html.py)
+const ENCRYPTED_DATA = {
+    salt: "wJYQP45dnMjncaJ9bj9GdA==",
+    iv: "q+ARJCioaBmGviQ2",
+    ciphertext: "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"
+};
+
+// Iterations PBKDF2
+const PBKDF2_ITERATIONS = 100000;
+
+// Convert base64 to Uint8Array
+function base64ToBytes(b64) {
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+}
+
+async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(password),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+    );
+
+    return await crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: PBKDF2_ITERATIONS,
+            hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+    );
+}
+
+async function decryptData(password) {
+    try {
+        const salt = base64ToBytes(ENCRYPTED_DATA.salt);
+        const iv = base64ToBytes(ENCRYPTED_DATA.iv);
+        const ciphertext = base64ToBytes(ENCRYPTED_DATA.ciphertext);
+
+        const key = await deriveKey(password, salt);
+
+        const plaintextBuffer = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            ciphertext
+        );
+
+        // Décompression : le contenu est gzippé
+        const compressed = new Uint8Array(plaintextBuffer);
+
+        // Decompress using DecompressionStream (browser native)
+        const ds = new DecompressionStream("gzip");
+        const stream = new Blob([compressed]).stream().pipeThrough(ds);
+        const decompressed = await new Response(stream).text();
+
+        return decompressed;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function unlock() {
+    const passwordInput = document.getElementById('password');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const errorMsg = document.getElementById('error');
+    const loader = document.getElementById('loader');
+
+    const password = passwordInput.value.trim();
+    if (!password) return;
+
+    unlockBtn.disabled = true;
+    unlockBtn.style.display = 'none';
+    loader.style.display = 'block';
+    errorMsg.style.display = 'none';
+
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    const decrypted = await decryptData(password);
+
+    if (decrypted === null) {
+        unlockBtn.disabled = false;
+        unlockBtn.style.display = 'block';
+        loader.style.display = 'none';
+        errorMsg.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+        return;
+    }
+
+    // Sauvegarder le mot de passe :
+    // - sessionStorage : pour la session courante (toujours)
+    // - localStorage : pour partage entre onglets (Outils/Dashboard ouverts en target=_blank)
+    //   et persistance après fermeture du navigateur. Sécurité : le device de l'user est son
+    //   problème ; si quelqu'un a accès à Chrome déverrouillé, il peut déjà tout voir.
+    try { sessionStorage.setItem('plan_password', password); } catch (e) {}
+    try { localStorage.setItem('plan_password', password); } catch (e) {}
+
+    // Remplacer COMPLÈTEMENT la page par le HTML déchiffré
+    // (vs iframe qui cassait les liens anchor)
+    document.open();
+    document.write(decrypted);
+    document.close();
+}
+
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') unlock();
+});
+
+// Auto-unlock silencieux si mot de passe deja sauvegardé
+// Vérifier sessionStorage d'abord (priorité onglet courant), puis localStorage (autres onglets)
+(async () => {
+    try {
+        const saved = sessionStorage.getItem('plan_password') || localStorage.getItem('plan_password');
+        if (!saved) return;
+        document.getElementById('login-container').style.opacity = '0.4';
+        const decrypted = await decryptData(saved);
+        if (decrypted !== null) {
+            // Synchroniser les 2 stockages au cas où
+            try { sessionStorage.setItem('plan_password', saved); } catch(e) {}
+            try { localStorage.setItem('plan_password', saved); } catch(e) {}
+            document.open();
+            document.write(decrypted);
+            document.close();
+        } else {
+            // Mot de passe invalide (peut-être changé) -> nettoyer pour forcer re-saisie
+            sessionStorage.removeItem('plan_password');
+            localStorage.removeItem('plan_password');
+            document.getElementById('login-container').style.opacity = '1';
+        }
+    } catch (e) {}
 })();
 </script>
+
 </body>
 </html>

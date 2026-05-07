@@ -2,230 +2,316 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0d0d0d">
-<title>Scan Dealfinder — 2026-05-06-1812</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="20260507-063056">
+<title>Dealfinder Scan (2026-05-06-1812) — Accès sécurisé</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-:root { --bg:#fff; --bg-2:#fafafa; --bg-3:#f0f0f0; --text:#111; --text-2:#444; --text-3:#777; --border:#e0e0e0; --border-2:#c8c8c8; --accent:#0066cc; --accent-2:#003d7a; --green:#1a7f37; --green-bg:#ddf4e1; --red:#cf222e; --red-bg:#ffe5e5; --orange:#d1841d; --orange-bg:#fff3dc; --radius:6px; --radius-lg:10px; }
-[data-theme="dark"] { --bg:#0d0d0d; --bg-2:#1a1a1a; --bg-3:#222; --text:#e8e8e8; --text-2:#b8b8b8; --text-3:#888; --border:#333; --border-2:#444; --accent:#66b3ff; --accent-2:#99ccff; --green:#3fb950; --green-bg:#14301c; --red:#f85149; --red-bg:#3a1414; --orange:#f0883e; --orange-bg:#3a2a14; }
-html, body { background:var(--bg); color:var(--text); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; font-size:14px; line-height:1.5; min-height:100vh; }
-.topbar { position:sticky; top:0; z-index:100; background:var(--bg-2); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px; }
-.topbar h1 { font-size:15px; font-weight:600; flex:1; }
-.btn-text { background:transparent; border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; text-decoration:none; }
-.btn-text:hover { background:var(--bg-3); border-color:var(--border-2); color:var(--text); }
-main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
-.summary { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:12px; }
-.summary .stat { text-align:center; }
-.summary .stat-value { font-size:24px; font-weight:700; letter-spacing:-0.02em; }
-.summary .stat-label { font-size:11px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
-.deal { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:14px; }
-.deal-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
-.deal-header .info { flex:1; min-width:0; }
-.deal-header h2 { font-size:16px; font-weight:600; line-height:1.3; margin-bottom:4px; }
-.deal-header .meta { font-size:12px; color:var(--text-3); }
-.deal-header .badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
-.badge { font-size:11px; font-weight:600; padding:3px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em; }
-.badge.new { background:var(--green-bg); color:var(--green); }
-.badge.changed { background:var(--orange-bg); color:var(--orange); }
-.badge.priority { background:var(--accent); color:#fff; opacity:0.9; }
-.score-pill { flex-shrink:0; width:64px; height:64px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; }
-.score-pill.green { background:var(--green-bg); color:var(--green); }
-.score-pill.orange { background:var(--orange-bg); color:var(--orange); }
-.score-pill.red { background:var(--red-bg); color:var(--red); }
-.score-pill .num { font-size:22px; line-height:1; }
-.score-pill .lbl { font-size:9px; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; opacity:0.8; }
-.metrics { display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; margin:10px 0; }
-.metric { background:var(--bg-3); border-radius:var(--radius); padding:8px 10px; }
-.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; }
-.metric-value { font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; }
-.metric.good .metric-value { color:var(--green); }
-.metric.bad .metric-value { color:var(--red); }
-.metric.warn .metric-value { color:var(--orange); }
-.deal-actions { display:flex; gap:8px; margin-top:10px; }
-.deal-actions a { background:var(--accent); color:white; padding:8px 14px; border-radius:var(--radius); text-decoration:none; font-size:13px; font-weight:500; }
-.deal-actions a.secondary { background:transparent; color:var(--text); border:1px solid var(--border-2); }
-.deal-details { display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); font-size:13px; }
-.deal.open .deal-details { display:block; }
-.toggle { cursor:pointer; user-select:none; font-size:12px; color:var(--accent); margin-top:8px; }
-.crit-list { list-style:none; display:flex; flex-direction:column; gap:4px; margin-top:8px; }
-.crit-list li { padding:6px 8px; background:var(--bg-3); border-radius:var(--radius); display:flex; gap:6px; font-size:12px; }
-.crit-list .marker { font-weight:700; flex-shrink:0; width:18px; }
-.crit-list .marker.pass { color:var(--green); }
-.crit-list .marker.fail { color:var(--red); }
-.crit-list .marker.warn { color:var(--orange); }
-.empty { text-align:center; color:var(--text-3); padding:40px; font-size:14px; }
-.filter-bar { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
-.filter-bar button { background:var(--bg-2); border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; }
-.filter-bar button.active { background:var(--accent); color:white; border-color:var(--accent); }
-.notes { font-size:12px; color:var(--text-3); margin-top:14px; padding:10px 12px; background:var(--bg-2); border-left:3px solid var(--text-3); border-radius:var(--radius); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    background: #f5f5f5;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.login-container {
+    background: #ffffff;
+    padding: 48px 40px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 32px;
+}
+
+.password-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.password-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    color: #111;
+    border-radius: 4px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 20px;
+    font-family: inherit;
+}
+
+.password-input:focus {
+    border-color: #1a1a1a;
+}
+
+.unlock-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: #1a1a1a;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.unlock-btn:hover {
+    background: #000;
+}
+
+.unlock-btn:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.error-msg {
+    color: #b00020;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+}
+
+.security-info {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.security-info strong {
+    color: #333;
+    font-weight: 500;
+}
+
+#content-container {
+    display: none;
+    width: 100%;
+    height: 100vh;
+}
+
+#content-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e5e5;
+    border-top: 2px solid #1a1a1a;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 16px auto 0;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
-<div class="topbar">
-<a href="index.html" class="btn-text">&larr; Plan</a>
-<a href="dealfinder.html" class="btn-text">Analyseur manuel</a>
-<h1>Scan auto — 06 May 2026, 18h12</h1>
-<button class="btn-text" id="theme-toggle">Sombre</button>
-</div>
-<main>
-<div class="summary">
-<div class="stat"><div class="stat-value">2</div><div class="stat-label">Annonces vues</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--green)">2</div><div class="stat-label">Nouvelles</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--orange)">0</div><div class="stat-label">Prix modifié</div></div>
-<div class="stat"><div class="stat-value">—</div><div class="stat-label">Filtrées (hors critères)</div></div>
-<div class="stat"><div class="stat-value">2</div><div class="stat-label">Retenues</div></div>
-</div>
 
-<div class="filter-bar">
-<button class="active" data-filter="all">Toutes (2)</button>
-<button data-filter="green">Visite prioritaire</button>
-<button data-filter="orange">À surveiller</button>
-<button data-filter="new">Nouvelles uniquement</button>
-<button data-filter="changed">Prix modifié</button>
-</div>
+<div id="login-container" class="login-container">
+    <h1 class="login-title">Dealfinder Scan (2026-05-06-1812)</h1>
+    <p class="login-subtitle">Document protégé. Mot de passe requis pour accéder au contenu.</p>
 
-<div id="deals">
+    <label for="password" class="password-label">Mot de passe</label>
+    <input type="password" id="password" class="password-input" placeholder="" autofocus autocomplete="current-password">
+    <button id="unlock-btn" class="unlock-btn" onclick="unlock()">Accéder au document</button>
 
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>1234 - 1238, 1re Avenue, Québec (La Cité-Limoilou)</h2>
-      <div class="meta">Quebec La Cite Limoilou • La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
+    <div class="loader" id="loader"></div>
+    <div class="error-msg" id="error">Mot de passe incorrect</div>
+
+    <div class="security-info">
+        <strong>Chiffrement</strong> : AES-256-GCM<br>
+        <strong>Dérivation de clé</strong> : PBKDF2-SHA256, 100 000 itérations<br>
+        <strong>Confidentialité</strong> : déchiffrement local, aucune donnée transmise
     </div>
-    <div class="score-pill red">
-      <div class="num">43</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">555 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.52%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.07</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">14.0</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−3 127$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">53 516$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-la-cite-limoilou/16423396" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 39 720$/an (actuels (scrapés))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 367$/mois (P&I, prêt 548 340$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle, Commerciale
-Style de bâtiment
-En rangée
-Année de construction
-Âge inconnu
-Superficie commerciale disponible
-1 023 pc
-Superficie du terrain
-2 160 pc
-Stationnement total
-Allée (4)
-Nombre d’unités
-Résidentiel (2), Commercial (1)…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 555,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker fail">X</span>TGA 0.52% sous cible 4.50% — déficit 3.98 pts</li><li><span class="marker fail">X</span>DCR 0.07 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 88% du marché — marge de hausse aux renouvellements</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire dans le plan</li><li><span class="marker fail">X</span>MRB 14.0 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
 </div>
 
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>715, Avenue de Norvège, Québec (Sainte-Foy/Sillery/Cap-Rouge)</h2>
-      <div class="meta">Quebec Sainte Foy Sillery Cap Rouge • Sainte-Foy / Sillery / Cap-Rouge • 4 unités • 1965</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">39</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">699 500$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.44%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.20</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">14.2</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−3 403$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">67 546$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~quebec-sainte-foy-sillery-cap-rouge/20449168" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 49 200$/an (actuels (scrapés))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 4 244$/mois (P&I, prêt 691 106$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Jumelé
-Année de construction
-1965
-Superficie habitable
-2 213 pc
-Superficie du terrain
-5 160 pc
-Stationnement total
-Allée (6)
-Nombre d’unités
-Résidentiel (4)
-Unités résidentielles
-1 x 1 ½, 1 x 2 ½, 2 x 5 ½
-Uni…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 699,500$ dans la fourchette du secteur (500,000$-1,300,000$)</li><li><span class="marker fail">X</span>TGA 1.44% sous cible 3.80% — déficit 2.36 pts</li><li><span class="marker fail">X</span>DCR 0.20 — appoint mensuel très lourd</li><li><span class="marker warn">~</span>Loyers à 74% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker warn">~</span>Secteur priorité 4/10 — faible</li><li><span class="marker fail">X</span>MRB 14.2 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
+<div id="content-container"></div>
 
-</div>
-
-<div class="notes">
-Scan effectué le 2026-05-06 18:12:56 • Source : Centris (triplex/quadruplex) • Critères config : prix max 800 000$, 3-4 unités, 1.5h max de Québec.<br>
-Les ratios financiers (TGA / DCR / MRB / cashflow) sont calculés selon les hypothèses du plan (Section 9 SDV + Section 18). Vacance, dépenses opérationnelles et frais d'acquisition sont estimés — à valider sur place.
-</div>
-</main>
 <script>
-(function() {
-  document.querySelectorAll('.toggle').forEach(function(t) {
-    t.addEventListener('click', function() { t.closest('.deal').classList.toggle('open'); });
-  });
-  var btns = document.querySelectorAll('.filter-bar button');
-  btns.forEach(function(b) {
-    b.addEventListener('click', function() {
-      btns.forEach(function(x) { x.classList.remove('active'); });
-      b.classList.add('active');
-      var f = b.dataset.filter;
-      document.querySelectorAll('.deal').forEach(function(d) {
-        var show = f === 'all' || d.classList.contains('verdict-' + f) || d.classList.contains('flag-' + f);
-        d.style.display = show ? '' : 'none';
-      });
-    });
-  });
-  var theme = localStorage.getItem('dealfinder_theme');
-  if (!theme) theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', theme);
-  document.getElementById('theme-toggle').textContent = theme === 'dark' ? 'Clair' : 'Sombre';
-  document.getElementById('theme-toggle').addEventListener('click', function() {
-    var cur = document.documentElement.getAttribute('data-theme') || 'light';
-    var next = cur === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('dealfinder_theme', next);
-    document.documentElement.setAttribute('data-theme', next);
-    this.textContent = next === 'dark' ? 'Clair' : 'Sombre';
-  });
+// Données chiffrées (générées par secure_html.py)
+const ENCRYPTED_DATA = {
+    salt: "Oi1+emb8MHMJ8vHJKDC87w==",
+    iv: "4e+n/CswPsMMcT3h",
+    ciphertext: "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"
+};
+
+// Iterations PBKDF2
+const PBKDF2_ITERATIONS = 100000;
+
+// Convert base64 to Uint8Array
+function base64ToBytes(b64) {
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+}
+
+async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(password),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+    );
+
+    return await crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: PBKDF2_ITERATIONS,
+            hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+    );
+}
+
+async function decryptData(password) {
+    try {
+        const salt = base64ToBytes(ENCRYPTED_DATA.salt);
+        const iv = base64ToBytes(ENCRYPTED_DATA.iv);
+        const ciphertext = base64ToBytes(ENCRYPTED_DATA.ciphertext);
+
+        const key = await deriveKey(password, salt);
+
+        const plaintextBuffer = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            ciphertext
+        );
+
+        // Décompression : le contenu est gzippé
+        const compressed = new Uint8Array(plaintextBuffer);
+
+        // Decompress using DecompressionStream (browser native)
+        const ds = new DecompressionStream("gzip");
+        const stream = new Blob([compressed]).stream().pipeThrough(ds);
+        const decompressed = await new Response(stream).text();
+
+        return decompressed;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function unlock() {
+    const passwordInput = document.getElementById('password');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const errorMsg = document.getElementById('error');
+    const loader = document.getElementById('loader');
+
+    const password = passwordInput.value.trim();
+    if (!password) return;
+
+    unlockBtn.disabled = true;
+    unlockBtn.style.display = 'none';
+    loader.style.display = 'block';
+    errorMsg.style.display = 'none';
+
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    const decrypted = await decryptData(password);
+
+    if (decrypted === null) {
+        unlockBtn.disabled = false;
+        unlockBtn.style.display = 'block';
+        loader.style.display = 'none';
+        errorMsg.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+        return;
+    }
+
+    // Sauvegarder le mot de passe :
+    // - sessionStorage : pour la session courante (toujours)
+    // - localStorage : pour partage entre onglets (Outils/Dashboard ouverts en target=_blank)
+    //   et persistance après fermeture du navigateur. Sécurité : le device de l'user est son
+    //   problème ; si quelqu'un a accès à Chrome déverrouillé, il peut déjà tout voir.
+    try { sessionStorage.setItem('plan_password', password); } catch (e) {}
+    try { localStorage.setItem('plan_password', password); } catch (e) {}
+
+    // Remplacer COMPLÈTEMENT la page par le HTML déchiffré
+    // (vs iframe qui cassait les liens anchor)
+    document.open();
+    document.write(decrypted);
+    document.close();
+}
+
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') unlock();
+});
+
+// Auto-unlock silencieux si mot de passe deja sauvegardé
+// Vérifier sessionStorage d'abord (priorité onglet courant), puis localStorage (autres onglets)
+(async () => {
+    try {
+        const saved = sessionStorage.getItem('plan_password') || localStorage.getItem('plan_password');
+        if (!saved) return;
+        document.getElementById('login-container').style.opacity = '0.4';
+        const decrypted = await decryptData(saved);
+        if (decrypted !== null) {
+            // Synchroniser les 2 stockages au cas où
+            try { sessionStorage.setItem('plan_password', saved); } catch(e) {}
+            try { localStorage.setItem('plan_password', saved); } catch(e) {}
+            document.open();
+            document.write(decrypted);
+            document.close();
+        } else {
+            // Mot de passe invalide (peut-être changé) -> nettoyer pour forcer re-saisie
+            sessionStorage.removeItem('plan_password');
+            localStorage.removeItem('plan_password');
+            document.getElementById('login-container').style.opacity = '1';
+        }
+    } catch (e) {}
 })();
 </script>
+
 </body>
 </html>

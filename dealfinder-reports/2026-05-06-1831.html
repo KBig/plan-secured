@@ -2,483 +2,316 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0d0d0d">
-<title>Scan Dealfinder — 2026-05-06-1831</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="20260507-063056">
+<title>Dealfinder Scan (2026-05-06-1831) — Accès sécurisé</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-:root { --bg:#fff; --bg-2:#fafafa; --bg-3:#f0f0f0; --text:#111; --text-2:#444; --text-3:#777; --border:#e0e0e0; --border-2:#c8c8c8; --accent:#0066cc; --accent-2:#003d7a; --green:#1a7f37; --green-bg:#ddf4e1; --red:#cf222e; --red-bg:#ffe5e5; --orange:#d1841d; --orange-bg:#fff3dc; --radius:6px; --radius-lg:10px; }
-[data-theme="dark"] { --bg:#0d0d0d; --bg-2:#1a1a1a; --bg-3:#222; --text:#e8e8e8; --text-2:#b8b8b8; --text-3:#888; --border:#333; --border-2:#444; --accent:#66b3ff; --accent-2:#99ccff; --green:#3fb950; --green-bg:#14301c; --red:#f85149; --red-bg:#3a1414; --orange:#f0883e; --orange-bg:#3a2a14; }
-html, body { background:var(--bg); color:var(--text); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif; font-size:14px; line-height:1.5; min-height:100vh; }
-.topbar { position:sticky; top:0; z-index:100; background:var(--bg-2); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px; }
-.topbar h1 { font-size:15px; font-weight:600; flex:1; }
-.btn-text { background:transparent; border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; text-decoration:none; }
-.btn-text:hover { background:var(--bg-3); border-color:var(--border-2); color:var(--text); }
-main { max-width:1100px; margin:0 auto; padding:20px 16px 100px; }
-.summary { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:12px; }
-.summary .stat { text-align:center; }
-.summary .stat-value { font-size:24px; font-weight:700; letter-spacing:-0.02em; }
-.summary .stat-label { font-size:11px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
-.deal { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-bottom:14px; }
-.deal-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
-.deal-header .info { flex:1; min-width:0; }
-.deal-header h2 { font-size:16px; font-weight:600; line-height:1.3; margin-bottom:4px; }
-.deal-header .meta { font-size:12px; color:var(--text-3); }
-.deal-header .badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
-.badge { font-size:11px; font-weight:600; padding:3px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em; }
-.badge.new { background:var(--green-bg); color:var(--green); }
-.badge.changed { background:var(--orange-bg); color:var(--orange); }
-.badge.priority { background:var(--accent); color:#fff; opacity:0.9; }
-.score-pill { flex-shrink:0; width:64px; height:64px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; }
-.score-pill.green { background:var(--green-bg); color:var(--green); }
-.score-pill.orange { background:var(--orange-bg); color:var(--orange); }
-.score-pill.red { background:var(--red-bg); color:var(--red); }
-.score-pill .num { font-size:22px; line-height:1; }
-.score-pill .lbl { font-size:9px; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; opacity:0.8; }
-.metrics { display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px; margin:10px 0; }
-.metric { background:var(--bg-3); border-radius:var(--radius); padding:8px 10px; }
-.metric-label { font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.04em; }
-.metric-value { font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; }
-.metric.good .metric-value { color:var(--green); }
-.metric.bad .metric-value { color:var(--red); }
-.metric.warn .metric-value { color:var(--orange); }
-.deal-actions { display:flex; gap:8px; margin-top:10px; }
-.deal-actions a { background:var(--accent); color:white; padding:8px 14px; border-radius:var(--radius); text-decoration:none; font-size:13px; font-weight:500; }
-.deal-actions a.secondary { background:transparent; color:var(--text); border:1px solid var(--border-2); }
-.deal-details { display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); font-size:13px; }
-.deal.open .deal-details { display:block; }
-.toggle { cursor:pointer; user-select:none; font-size:12px; color:var(--accent); margin-top:8px; }
-.crit-list { list-style:none; display:flex; flex-direction:column; gap:4px; margin-top:8px; }
-.crit-list li { padding:6px 8px; background:var(--bg-3); border-radius:var(--radius); display:flex; gap:6px; font-size:12px; }
-.crit-list .marker { font-weight:700; flex-shrink:0; width:18px; }
-.crit-list .marker.pass { color:var(--green); }
-.crit-list .marker.fail { color:var(--red); }
-.crit-list .marker.warn { color:var(--orange); }
-.empty { text-align:center; color:var(--text-3); padding:40px; font-size:14px; }
-.filter-bar { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
-.filter-bar button { background:var(--bg-2); border:1px solid var(--border); color:var(--text-2); padding:6px 12px; border-radius:var(--radius); font-family:inherit; font-size:12px; cursor:pointer; }
-.filter-bar button.active { background:var(--accent); color:white; border-color:var(--accent); }
-.notes { font-size:12px; color:var(--text-3); margin-top:14px; padding:10px 12px; background:var(--bg-2); border-left:3px solid var(--text-3); border-radius:var(--radius); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    background: #f5f5f5;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.login-container {
+    background: #ffffff;
+    padding: 48px 40px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 32px;
+}
+
+.password-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.password-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    color: #111;
+    border-radius: 4px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 20px;
+    font-family: inherit;
+}
+
+.password-input:focus {
+    border-color: #1a1a1a;
+}
+
+.unlock-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: #1a1a1a;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.unlock-btn:hover {
+    background: #000;
+}
+
+.unlock-btn:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.error-msg {
+    color: #b00020;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+}
+
+.security-info {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.security-info strong {
+    color: #333;
+    font-weight: 500;
+}
+
+#content-container {
+    display: none;
+    width: 100%;
+    height: 100vh;
+}
+
+#content-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e5e5;
+    border-top: 2px solid #1a1a1a;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 16px auto 0;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
-<div class="topbar">
-<a href="index.html" class="btn-text">&larr; Plan</a>
-<a href="dealfinder.html" class="btn-text">Analyseur manuel</a>
-<h1>Scan auto — 06 May 2026, 18h31</h1>
-<button class="btn-text" id="theme-toggle">Sombre</button>
-</div>
-<main>
-<div class="summary">
-<div class="stat"><div class="stat-value">7</div><div class="stat-label">Annonces vues</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--green)">7</div><div class="stat-label">Nouvelles</div></div>
-<div class="stat"><div class="stat-value" style="color:var(--orange)">0</div><div class="stat-label">Prix modifié</div></div>
-<div class="stat"><div class="stat-value">—</div><div class="stat-label">Filtrées (hors critères)</div></div>
-<div class="stat"><div class="stat-value">7</div><div class="stat-label">Retenues</div></div>
+
+<div id="login-container" class="login-container">
+    <h1 class="login-title">Dealfinder Scan (2026-05-06-1831)</h1>
+    <p class="login-subtitle">Document protégé. Mot de passe requis pour accéder au contenu.</p>
+
+    <label for="password" class="password-label">Mot de passe</label>
+    <input type="password" id="password" class="password-input" placeholder="" autofocus autocomplete="current-password">
+    <button id="unlock-btn" class="unlock-btn" onclick="unlock()">Accéder au document</button>
+
+    <div class="loader" id="loader"></div>
+    <div class="error-msg" id="error">Mot de passe incorrect</div>
+
+    <div class="security-info">
+        <strong>Chiffrement</strong> : AES-256-GCM<br>
+        <strong>Dérivation de clé</strong> : PBKDF2-SHA256, 100 000 itérations<br>
+        <strong>Confidentialité</strong> : déchiffrement local, aucune donnée transmise
+    </div>
 </div>
 
-<div class="filter-bar">
-<button class="active" data-filter="all">Toutes (7)</button>
-<button data-filter="green">Visite prioritaire</button>
-<button data-filter="orange">À surveiller</button>
-<button data-filter="new">Nouvelles uniquement</button>
-<button data-filter="changed">Prix modifié</button>
-</div>
+<div id="content-container"></div>
 
-<div id="deals">
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>4184, Route des Rivières, Lévis (Les Chutes-de-la-Chaudière-Ouest)</h2>
-      <div class="meta">Levis Les Chutes De La Chaudiere Ouest • Lévis / St-Romuald / Charny • 3 unités • 1978</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">46</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">539 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.43%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.20</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">14.1</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−2 628$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">54 240$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~levis-les-chutes-de-la-chaudiere-ouest/24222982" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 38 280$/an (actuels (scrapés))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 270$/mois (P&I, prêt 532 532$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1978
-Superficie habitable
-1 075 pc
-Superficie du terrain
-9 272 pc
-Stationnement total
-Allée (6)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-1 x 2 ½, 1 x 4 ½, 1 x 5 ½
-Un…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 539,000$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 1.43% sous cible 6.00% — déficit 4.57 pts</li><li><span class="marker fail">X</span>DCR 0.20 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 87% du marché — marge de hausse aux renouvellements</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 14.1 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>14, Rue Odesse, Lévis (Desjardins)</h2>
-      <div class="meta">Levis Desjardins • Lévis / St-Romuald / Charny • 4 unités • 1968</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">46</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">599 900$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">1.96%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.27</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">12.4</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−2 662$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">59 598$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~levis-desjardins/10472210" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 48 360$/an (actuels (scrapés))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 640$/mois (P&I, prêt 592 701$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1968
-Superficie du terrain
-9 571 pc
-Stationnement total
-Allée (8)
-Nombre d’unités
-Résidentiel (4)
-Unités résidentielles
-2 x 4 ½, 2 x 5 ½
-Unité principale
-5 pièces, 3 chambres, 1 …</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 599,900$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 1.96% sous cible 6.00% — déficit 4.04 pts</li><li><span class="marker fail">X</span>DCR 0.27 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 83% du marché — marge de hausse aux renouvellements</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 12.4 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>27 - 27A, Rue Saint-Gilbert, Lévis (Desjardins)</h2>
-      <div class="meta">Levis Desjardins • Lévis / St-Romuald / Charny • 3 unités • 1964</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">46</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">549 900$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.81%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.11</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">15.2</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−2 966$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">55 109$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~levis-desjardins/19215069" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 36 180$/an (actuels (scrapés))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 336$/mois (P&I, prêt 543 301$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1964
-Superficie du bâtiment (au sol)
-2 226 pc
-Superficie du terrain
-5 600 pc
-Stationnement total
-Allée (3)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-1 x 4 ½, 2 x 5 ½
-…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 549,900$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 0.81% sous cible 6.00% — déficit 5.19 pts</li><li><span class="marker fail">X</span>DCR 0.11 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 82% du marché — marge de hausse aux renouvellements</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 15.2 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>1331 - 1335, boulevard La Morille, Québec (Les Rivières)</h2>
-      <div class="meta">Quebec Les Rivieres • La Cité / Limoilou / Vieux-Québec / St-Roch • 3 unités • 1990</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">46</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">795 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.53%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.07</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">18.0</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−4 469$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">72 666$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/triplex~a-vendre~quebec-les-rivieres/27054613" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 44 100$/an (actuels (scrapés))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 4 823$/mois (P&I, prêt 785 460$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-En rangée
-Année de construction
-1990
-Superficie habitable
-2 060 pc
-Superficie du terrain
-4 706 pc
-Stationnement total
-Abri d&#x27;auto (2), Allée (3)
-Nombre d’unités
-Résidentiel (3)
-Unités résidentielles
-3 x 4 ½
-U…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 795,000$ dans la fourchette du secteur (400,000$-900,000$)</li><li><span class="marker fail">X</span>TGA 0.53% sous cible 4.50% — déficit 3.97 pts</li><li><span class="marker fail">X</span>DCR 0.07 — appoint mensuel très lourd</li><li><span class="marker pass">OK</span>Loyers à 98% du marché — peu de marge de hausse</li><li><span class="marker warn">~</span>Secteur priorité 6/10 — secondaire dans le plan</li><li><span class="marker fail">X</span>MRB 18.0 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>70, Avenue Bégin, Lévis (Desjardins)</h2>
-      <div class="meta">Levis Desjardins • Lévis / St-Romuald / Charny • 4 unités • 1965</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">42</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">599 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.43%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.06</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">15.3</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−3 420$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">59 527$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~levis-desjardins/19410146" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 39 252$/an (actuels (scrapés))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 3 634$/mois (P&I, prêt 591 812$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle, Commerciale
-Style de bâtiment
-Détaché
-Année de construction
-1965
-Superficie commerciale disponible
-680 pc
-Superficie habitable
-3 020 pc
-Superficie du terrain
-3 510 pc
-Stationnement total
-Allée (7)
-Nombre d’unités
-Résidentiel …</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 599,000$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 0.43% sous cible 6.00% — déficit 5.57 pts</li><li><span class="marker fail">X</span>DCR 0.06 — appoint mensuel très lourd</li><li><span class="marker warn">~</span>Loyers à 67% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 15.3 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>863 - 865, Rue des Prunelles, Lévis (Les Chutes-de-la-Chaudière-Est)</h2>
-      <div class="meta">Levis Les Chutes De La Chaudiere Est • Lévis / St-Romuald / Charny • 4 unités • 1986</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">42</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">785 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.55%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.07</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">17.4</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−4 406$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">72 368$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~levis-les-chutes-de-la-chaudiere-est/28681662" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 45 132$/an (actuels (scrapés))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 4 763$/mois (P&I, prêt 775 580$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1986
-Superficie du terrain
-8 536 pc
-Stationnement total
-Abri d&#x27;auto (8)
-Nombre d’unités
-Résidentiel (4)
-Unités résidentielles
-4 x 4 ½
-Unité principale
-4 pièces, 2 chambres, 1 sal…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 785,000$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 0.55% sous cible 6.00% — déficit 5.45 pts</li><li><span class="marker fail">X</span>DCR 0.07 — appoint mensuel très lourd</li><li><span class="marker warn">~</span>Loyers à 77% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 17.4 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-<div class="deal verdict-red flag-new">
-  <div class="deal-header">
-    <div class="info">
-      <h2>7311 - 7317, Avenue des Belles-Amours, Lévis (Les Chutes-de-la-Chaudière-Est)</h2>
-      <div class="meta">Levis Les Chutes De La Chaudiere Est • Lévis / St-Romuald / Charny • 4 unités • 1986</div>
-      <div class="badges"><span class="badge new">Nouveau</span></div>
-    </div>
-    <div class="score-pill red">
-      <div class="num">42</div>
-      <div class="lbl">Pass</div>
-    </div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">Prix</div><div class="metric-value">800 000$</div></div>
-    <div class="metric bad"><div class="metric-label">TGA</div><div class="metric-value">0.41%</div></div>
-    <div class="metric bad"><div class="metric-label">DCR</div><div class="metric-value">0.06</div></div>
-    <div class="metric bad"><div class="metric-label">MRB</div><div class="metric-value">17.7</div></div>
-    <div class="metric bad"><div class="metric-label">CF/mois</div><div class="metric-value">−4 580$</div></div>
-    <div class="metric"><div class="metric-label">Cash requis</div><div class="metric-value">73 565$</div></div>
-  </div>
-  <div class="deal-actions">
-    <a href="https://www.centris.ca/fr/quadruplex~a-vendre~levis-les-chutes-de-la-chaudiere-est/12965116" target="_blank" rel="noopener">Voir l'annonce →</a>
-    <span class="toggle btn-text">Détails ▾</span>
-  </div>
-  <div class="deal-details">
-    <div style="margin-bottom:8px"><strong>Revenus :</strong> 45 324$/an (actuels (scrapés))</div>
-    <div style="margin-bottom:8px"><strong>Hypothèque :</strong> 4 854$/mois (P&I, prêt 790 400$ à 5.5% sur 25 ans)</div>
-    <div style="margin-bottom:8px"><strong>Description :</strong> Caractéristiques
-?
-Style de vie
-Utilisation de la propriété
-Résidentielle
-Style de bâtiment
-Détaché
-Année de construction
-1986
-Superficie du terrain
-12 098 pc
-Nombre d’unités
-Résidentiel (4)
-Unités résidentielles
-4 x 4 ½
-Unité principale
-4 pièces, 2 chambres, 1 salle de bain
-Revenus bruts potentiels…</div>
-    <ul class="crit-list"><li><span class="marker pass">OK</span>Prix 800,000$ dans la fourchette du secteur (380,000$-800,000$)</li><li><span class="marker fail">X</span>TGA 0.41% sous cible 6.00% — déficit 5.59 pts</li><li><span class="marker fail">X</span>DCR 0.06 — appoint mensuel très lourd</li><li><span class="marker warn">~</span>Loyers à 77% du marché — gros écart, vérifier baux et clause F</li><li><span class="marker pass">OK</span>Secteur priorité 7/10 — solide</li><li><span class="marker fail">X</span>MRB 17.7 — élevé (&gt;12, prix exigeant vs revenus)</li></ul>
-  </div>
-</div>
-
-</div>
-
-<div class="notes">
-Scan effectué le 2026-05-06 18:31:55 • Source : Centris (triplex/quadruplex) • Critères config : prix max 800 000$, 3-4 unités, 1.5h max de Québec.<br>
-Les ratios financiers (TGA / DCR / MRB / cashflow) sont calculés selon les hypothèses du plan (Section 9 SDV + Section 18). Vacance, dépenses opérationnelles et frais d'acquisition sont estimés — à valider sur place.
-</div>
-</main>
 <script>
-(function() {
-  document.querySelectorAll('.toggle').forEach(function(t) {
-    t.addEventListener('click', function() { t.closest('.deal').classList.toggle('open'); });
-  });
-  var btns = document.querySelectorAll('.filter-bar button');
-  btns.forEach(function(b) {
-    b.addEventListener('click', function() {
-      btns.forEach(function(x) { x.classList.remove('active'); });
-      b.classList.add('active');
-      var f = b.dataset.filter;
-      document.querySelectorAll('.deal').forEach(function(d) {
-        var show = f === 'all' || d.classList.contains('verdict-' + f) || d.classList.contains('flag-' + f);
-        d.style.display = show ? '' : 'none';
-      });
-    });
-  });
-  var theme = localStorage.getItem('dealfinder_theme');
-  if (!theme) theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', theme);
-  document.getElementById('theme-toggle').textContent = theme === 'dark' ? 'Clair' : 'Sombre';
-  document.getElementById('theme-toggle').addEventListener('click', function() {
-    var cur = document.documentElement.getAttribute('data-theme') || 'light';
-    var next = cur === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('dealfinder_theme', next);
-    document.documentElement.setAttribute('data-theme', next);
-    this.textContent = next === 'dark' ? 'Clair' : 'Sombre';
-  });
+// Données chiffrées (générées par secure_html.py)
+const ENCRYPTED_DATA = {
+    salt: "TZVMuFpHJ7A568f0tgf6hw==",
+    iv: "E/alf3a5gAvIxQ25",
+    ciphertext: "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"
+};
+
+// Iterations PBKDF2
+const PBKDF2_ITERATIONS = 100000;
+
+// Convert base64 to Uint8Array
+function base64ToBytes(b64) {
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+}
+
+async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(password),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+    );
+
+    return await crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: PBKDF2_ITERATIONS,
+            hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+    );
+}
+
+async function decryptData(password) {
+    try {
+        const salt = base64ToBytes(ENCRYPTED_DATA.salt);
+        const iv = base64ToBytes(ENCRYPTED_DATA.iv);
+        const ciphertext = base64ToBytes(ENCRYPTED_DATA.ciphertext);
+
+        const key = await deriveKey(password, salt);
+
+        const plaintextBuffer = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            ciphertext
+        );
+
+        // Décompression : le contenu est gzippé
+        const compressed = new Uint8Array(plaintextBuffer);
+
+        // Decompress using DecompressionStream (browser native)
+        const ds = new DecompressionStream("gzip");
+        const stream = new Blob([compressed]).stream().pipeThrough(ds);
+        const decompressed = await new Response(stream).text();
+
+        return decompressed;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function unlock() {
+    const passwordInput = document.getElementById('password');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const errorMsg = document.getElementById('error');
+    const loader = document.getElementById('loader');
+
+    const password = passwordInput.value.trim();
+    if (!password) return;
+
+    unlockBtn.disabled = true;
+    unlockBtn.style.display = 'none';
+    loader.style.display = 'block';
+    errorMsg.style.display = 'none';
+
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    const decrypted = await decryptData(password);
+
+    if (decrypted === null) {
+        unlockBtn.disabled = false;
+        unlockBtn.style.display = 'block';
+        loader.style.display = 'none';
+        errorMsg.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+        return;
+    }
+
+    // Sauvegarder le mot de passe :
+    // - sessionStorage : pour la session courante (toujours)
+    // - localStorage : pour partage entre onglets (Outils/Dashboard ouverts en target=_blank)
+    //   et persistance après fermeture du navigateur. Sécurité : le device de l'user est son
+    //   problème ; si quelqu'un a accès à Chrome déverrouillé, il peut déjà tout voir.
+    try { sessionStorage.setItem('plan_password', password); } catch (e) {}
+    try { localStorage.setItem('plan_password', password); } catch (e) {}
+
+    // Remplacer COMPLÈTEMENT la page par le HTML déchiffré
+    // (vs iframe qui cassait les liens anchor)
+    document.open();
+    document.write(decrypted);
+    document.close();
+}
+
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') unlock();
+});
+
+// Auto-unlock silencieux si mot de passe deja sauvegardé
+// Vérifier sessionStorage d'abord (priorité onglet courant), puis localStorage (autres onglets)
+(async () => {
+    try {
+        const saved = sessionStorage.getItem('plan_password') || localStorage.getItem('plan_password');
+        if (!saved) return;
+        document.getElementById('login-container').style.opacity = '0.4';
+        const decrypted = await decryptData(saved);
+        if (decrypted !== null) {
+            // Synchroniser les 2 stockages au cas où
+            try { sessionStorage.setItem('plan_password', saved); } catch(e) {}
+            try { localStorage.setItem('plan_password', saved); } catch(e) {}
+            document.open();
+            document.write(decrypted);
+            document.close();
+        } else {
+            // Mot de passe invalide (peut-être changé) -> nettoyer pour forcer re-saisie
+            sessionStorage.removeItem('plan_password');
+            localStorage.removeItem('plan_password');
+            document.getElementById('login-container').style.opacity = '1';
+        }
+    } catch (e) {}
 })();
 </script>
+
 </body>
 </html>
