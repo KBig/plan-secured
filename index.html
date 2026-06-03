@@ -3,9 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <title>Plan immobilier — chargement</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
@@ -20,8 +17,8 @@
 html,body{margin:0;padding:0;background:#0d0d0d;color:#e5e5e5;font-family:-apple-system,BlinkMacSystemFont,sans-serif;height:100%;}
 .wrap{display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:12px;}
 .spin{width:32px;height:32px;border:3px solid #333;border-top-color:#888;border-radius:50%;animation:s 0.8s linear infinite;}
-@keyframes s{to{transform:rotate(360deg);}}
 </style>
+<style>@keyframes s{to{transform:rotate(360deg);}}</style>
 </head>
 <body>
 <div class="wrap">
@@ -29,7 +26,16 @@ html,body{margin:0;padding:0;background:#0d0d0d;color:#e5e5e5;font-family:-apple
 <div>Chargement de la dernière version...</div>
 </div>
 <script>
-location.replace('plan_complet_secured.html?v=' + Date.now());
+// Enregistre le Service Worker (best effort), puis redirige. La redirection ne dépend
+// PAS du SW (try/catch + toujours exécutée) pour ne jamais bloquer l'accès au plan.
+(function () {
+  try {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    }
+  } catch (e) {}
+  location.replace('plan_complet_secured.html');
+})();
 </script>
 <noscript>
 <meta http-equiv="refresh" content="0;url=plan_complet_secured.html">
