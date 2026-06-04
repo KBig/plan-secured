@@ -2,1024 +2,316 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0d0d0d">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>Outils — Plan immobilier</title>
-
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-title" content="Outils">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="20260604-150324">
+<title>Outils immobiliers — Accès sécurisé</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-:root {
-  --bg: #ffffff;
-  --bg-2: #fafafa;
-  --bg-3: #f0f0f0;
-  --bg-4: #e8e8e8;
-  --text: #111111;
-  --text-2: #444444;
-  --text-3: #777777;
-  --border: #e0e0e0;
-  --border-2: #c8c8c8;
-  --accent: #0066cc;
-  --accent-2: #003d7a;
-  --green: #1a7f37;
-  --red: #cf222e;
-  --orange: #d1841d;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
-  --radius: 6px;
-  --radius-lg: 10px;
-}
-[data-theme="dark"] {
-  --bg: #0d0d0d;
-  --bg-2: #1a1a1a;
-  --bg-3: #222222;
-  --bg-4: #2a2a2a;
-  --text: #e8e8e8;
-  --text-2: #b8b8b8;
-  --text-3: #888888;
-  --border: #333333;
-  --border-2: #444444;
-  --accent: #66b3ff;
-  --accent-2: #99ccff;
-  --green: #3fb950;
-  --red: #f85149;
-  --orange: #f0883e;
-  --shadow: 0 1px 3px rgba(0,0,0,0.4);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.5);
-}
-html, body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    background: #f5f5f5;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* TOPBAR */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--bg-2);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.topbar h1 {
-  font-size: 14px;
-  font-weight: 600;
-  flex: 1 1 100%;
-  order: -1;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 4px;
-  letter-spacing: -0.01em;
-}
-@media (min-width: 560px) {
-  .topbar { flex-wrap: nowrap; }
-  .topbar h1 { flex: 1; order: 0; margin-bottom: 0; }
-}
-.btn-text {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-2);
-  padding: 6px 12px;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.btn-text:hover, .btn-text:active {
-  background: var(--bg-3);
-  border-color: var(--border-2);
-  color: var(--text);
-}
-.back-btn {
-  text-decoration: none;
-  font-weight: 500;
-}
-.back-btn:hover { color: var(--text); }
-
-/* TABS */
-.tabs {
-  position: sticky;
-  top: 51px;
-  z-index: 90;
-  background: var(--bg-2);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex: 0 0 auto;
-  background: transparent;
-  border: none;
-  border-bottom: 3px solid transparent;
-  color: var(--text-3);
-  padding: 14px 18px;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s;
-}
-.tab:hover, .tab:active { color: var(--text); }
-.tab.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  font-weight: 600;
+.login-container {
+    background: #ffffff;
+    padding: 48px 40px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 420px;
 }
 
-/* MAIN */
-main {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 24px 16px 80px;
+.login-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
 }
 
-.tool { display: none; }
-.tool.active { display: block; animation: fade 0.2s; }
-@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-.tool h2 {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  letter-spacing: -0.015em;
-}
-.tool .desc {
-  color: var(--text-2);
-  font-size: 13px;
-  margin-bottom: 24px;
-  line-height: 1.6;
+.login-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 32px;
 }
 
-.card {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  margin-bottom: 16px;
+.password-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
 }
 
-.card-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-2);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 14px;
+.password-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    color: #111;
+    border-radius: 4px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 20px;
+    font-family: inherit;
 }
 
-.field {
-  margin-bottom: 14px;
-}
-.field:last-child { margin-bottom: 0; }
-.field label {
-  display: block;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-2);
-  margin-bottom: 6px;
-}
-.field .help {
-  display: block;
-  font-size: 11px;
-  color: var(--text-3);
-  margin-top: 4px;
-  line-height: 1.4;
+.password-input:focus {
+    border-color: #1a1a1a;
 }
 
-.field input[type="number"],
-.field input[type="text"],
-.field select {
-  width: 100%;
-  padding: 10px 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--text);
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.15s;
-}
-.field input:focus, .field select:focus {
-  border-color: var(--accent);
+.unlock-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: #1a1a1a;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
 }
 
-.field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 14px;
+.unlock-btn:hover {
+    background: #000;
 }
 
-.result {
-  background: var(--bg-3);
-  border: 1px solid var(--border-2);
-  border-radius: var(--radius-lg);
-  padding: 18px;
-  margin-top: 18px;
+.unlock-btn:disabled {
+    background: #999;
+    cursor: not-allowed;
 }
 
-.result-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-}
-.result-row:last-child { border-bottom: none; }
-.result-row.highlight {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--accent);
-}
-.result-row.warn { color: var(--orange); }
-.result-row.bad { color: var(--red); }
-.result-row.good { color: var(--green); }
-.result-row .label { color: var(--text-2); }
-.result-row .value {
-  font-weight: 600;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-.result-row.highlight .value { color: var(--accent); font-size: 18px; }
-.result-row.warn .value { color: var(--orange); }
-.result-row.bad .value { color: var(--red); }
-.result-row.good .value { color: var(--green); }
-
-.note {
-  background: var(--bg-3);
-  border-left: 3px solid var(--accent);
-  padding: 12px 14px;
-  border-radius: 4px;
-  font-size: 12px;
-  color: var(--text-2);
-  line-height: 1.6;
-  margin-top: 16px;
-}
-.note strong { color: var(--text); }
-
-/* COMPARATEUR */
-.comp-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-@media (min-width: 720px) {
-  .comp-grid { grid-template-columns: repeat(3, 1fr); }
-}
-.comp-col {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-}
-.comp-col-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-2);
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-.comp-col input {
-  margin-bottom: 8px;
-  font-size: 13px;
-  padding: 8px 10px;
-}
-.comp-col label {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-3);
-  margin-bottom: 4px;
-  display: block;
-}
-.comp-results {
-  margin-top: 16px;
-  background: var(--bg-3);
-  border: 1px solid var(--border-2);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  overflow-x: auto;
-}
-.comp-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-.comp-table th, .comp-table td {
-  padding: 10px 8px;
-  text-align: right;
-  border-bottom: 1px solid var(--border);
-}
-.comp-table th:first-child, .comp-table td:first-child {
-  text-align: left;
-  color: var(--text-2);
-  font-weight: 500;
-}
-.comp-table th {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-2);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.comp-table td.value {
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-}
-.comp-table .winner { color: var(--green); }
-.comp-table .loser { color: var(--red); }
-.comp-table tr.recommendation td {
-  padding-top: 14px;
-  font-weight: 700;
-  font-size: 13px;
-  border-bottom: none;
+.error-msg {
+    color: #b00020;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
 }
 
-button.action {
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
+.security-info {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
 }
-button.action:hover { background: var(--accent-2); }
 
-@media (max-width: 600px) {
-  main { padding: 16px 12px 80px; }
-  .tool h2 { font-size: 19px; }
-  .field-row { grid-template-columns: 1fr; }
+.security-info strong {
+    color: #333;
+    font-weight: 500;
+}
+
+#content-container {
+    display: none;
+    width: 100%;
+    height: 100vh;
+}
+
+#content-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e5e5;
+    border-top: 2px solid #1a1a1a;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 16px auto 0;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <a href="index.html" class="btn-text back-btn" title="Retour au plan">&larr; Plan</a>
-  <h1>Outils &mdash; Calculateurs</h1>
-  <button class="btn-text" onclick="toggleTheme()" id="theme-btn">Sombre</button>
+<div id="login-container" class="login-container">
+    <h1 class="login-title">Outils immobiliers</h1>
+    <p class="login-subtitle">Document protégé. Mot de passe requis pour accéder au contenu.</p>
+
+    <label for="password" class="password-label">Mot de passe</label>
+    <input type="password" id="password" class="password-input" placeholder="" autofocus autocomplete="current-password">
+    <button id="unlock-btn" class="unlock-btn" onclick="unlock()">Accéder au document</button>
+
+    <div class="loader" id="loader"></div>
+    <div class="error-msg" id="error">Mot de passe incorrect</div>
+
+    <div class="security-info">
+        <strong>Chiffrement</strong> : AES-256-GCM<br>
+        <strong>Dérivation de clé</strong> : PBKDF2-SHA256, 600 000 itérations<br>
+        <strong>Confidentialité</strong> : déchiffrement local, aucune donnée transmise
+    </div>
 </div>
 
-<div class="tabs">
-  <button class="tab active" onclick="showTool('dcr')">DCR</button>
-  <button class="tab" onclick="showTool('mensualite')">Mensualité</button>
-  <button class="tab" onclick="showTool('schl')">Prime SCHL</button>
-  <button class="tab" onclick="showTool('mutation')">Taxe bienvenue</button>
-  <button class="tab" onclick="showTool('croissance')">FHSA/CELI</button>
-  <button class="tab" onclick="showTool('comparateur')">Comparateur 3 immeubles</button>
-</div>
-
-<main>
-
-<!-- =================== DCR =================== -->
-<div class="tool active" id="tool-dcr">
-  <h2>DCR &mdash; Debt Coverage Ratio</h2>
-  <p class="desc">Le ratio de couverture de la dette mesure si l’immeuble génère assez de revenus pour couvrir l’hypothèque. <strong>SCHL Multi-Logement exige minimum 1,20-1,30.</strong></p>
-
-  <div class="card">
-    <div class="card-title">Revenus de l’immeuble</div>
-    <div class="field">
-      <label>Revenus locatifs bruts annuels ($)</label>
-      <input type="number" id="dcr-revenus" placeholder="Ex: 84000" oninput="calcDCR()">
-      <span class="help">Somme des loyers mensuels x 12, tous logements loués</span>
-    </div>
-    <div class="field">
-      <label>Vacance et créances irrécouvrables (%)</label>
-      <input type="number" id="dcr-vacance" placeholder="5" value="5" step="0.5" oninput="calcDCR()">
-      <span class="help">Standard: 3-7% en région Québec</span>
-    </div>
-    <div class="field">
-      <label>Dépenses opérationnelles annuelles ($)</label>
-      <input type="number" id="dcr-depenses" placeholder="Ex: 28000" oninput="calcDCR()">
-      <span class="help">Taxes, assurances, entretien, gestion, hydro communs (PAS l’hypothèque)</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Hypothèque</div>
-    <div class="field-row">
-      <div class="field">
-        <label>Montant emprunté ($)</label>
-        <input type="number" id="dcr-prêt" placeholder="Ex: 665000" oninput="calcDCR()">
-      </div>
-      <div class="field">
-        <label>Taux annuel (%)</label>
-        <input type="number" id="dcr-taux" placeholder="5.5" value="5.5" step="0.1" oninput="calcDCR()">
-      </div>
-    </div>
-    <div class="field">
-      <label>Amortissement (années)</label>
-      <input type="number" id="dcr-amort" placeholder="25" value="25" oninput="calcDCR()">
-      <span class="help">25 ans standard, jusqu'à 40 ans avec SCHL Multi-Log</span>
-    </div>
-  </div>
-
-  <div class="result" id="dcr-result"></div>
-
-  <div class="note">
-    <strong>Interprétation :</strong>
-    <br>&bull; DCR &gt;= 1,30 : excellent, banque approuve facilement
-    <br>&bull; DCR 1,20-1,29 : acceptable SCHL Multi-Log Standard
-    <br>&bull; DCR 1,10-1,19 : limite, certaines banques refusent
-    <br>&bull; DCR &lt; 1,10 : refus presque certain, l’immeuble ne se paye pas
-  </div>
-</div>
-
-<!-- =================== MENSUALITE =================== -->
-<div class="tool" id="tool-mensualite">
-  <h2>Mensualité hypothécaire</h2>
-  <p class="desc">calculé le paiement mensuel principal + intérêts, et te montre la répartition au fil du temps.</p>
-
-  <div class="card">
-    <div class="card-title">Paramètres du prêt</div>
-    <div class="field">
-      <label>Montant emprunté ($)</label>
-      <input type="number" id="mens-prêt" placeholder="Ex: 665000" oninput="calcMensualite()">
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Taux annuel (%)</label>
-        <input type="number" id="mens-taux" placeholder="5.5" value="5.5" step="0.1" oninput="calcMensualite()">
-      </div>
-      <div class="field">
-        <label>Amortissement (années)</label>
-        <input type="number" id="mens-amort" placeholder="25" value="25" oninput="calcMensualite()">
-      </div>
-    </div>
-  </div>
-
-  <div class="result" id="mens-result"></div>
-
-  <div class="note">
-    <strong>Stress test fédéral :</strong> les banques qualifient au max(taux contractuel + 2%, 5,25%). Toujours verifier ta capacite d’emprunt avec le taux stress, pas le taux contractuel.
-  </div>
-</div>
-
-<!-- =================== SCHL =================== -->
-<div class="tool" id="tool-schl">
-  <h2>Prime SCHL (assurance hypothécaire)</h2>
-  <p class="desc">Estime la prime SCHL selon le type de prêt et le LTV. <strong>Important :</strong> la TVQ 9,975% est payable cash au closing, la prime elle-meme est ajoutee au pret.</p>
-
-  <div class="card">
-    <div class="card-title">Type de propriete</div>
-    <div class="field">
-      <label>Programme SCHL</label>
-      <select id="schl-prog" onchange="calcSCHL()">
-        <option value="resid">Résidentiel 1-4 unités (propriétaire-occupant)</option>
-        <option value="resid_loc">Résidentiel 1-4 unités (locatif pur)</option>
-        <option value="multi_std">Multi-Logement Standard (5+ unités)</option>
-        <option value="multi_aph">Multi-Logement APH Select (5+ unités, abordable)</option>
-      </select>
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Prix d’achat ($)</label>
-        <input type="number" id="schl-prix" placeholder="Ex: 700000" oninput="calcSCHL()">
-      </div>
-      <div class="field">
-        <label>Mise de fonds ($)</label>
-        <input type="number" id="schl-down" placeholder="Ex: 35000" oninput="calcSCHL()">
-      </div>
-    </div>
-  </div>
-
-  <div class="result" id="schl-result"></div>
-
-  <div class="note">
-    <strong>Mises a jour 2025-2026 :</strong>
-    <br>&bull; Residentiel 5% down : prime ~4% (LTV 95%)
-    <br>&bull; Residentiel 10% down : prime ~3,1%
-    <br>&bull; Residentiel 15% down : prime ~2,8%
-    <br>&bull; Multi-Log Standard 15% down : prime ~4,5-5,5%
-    <br>&bull; Multi-Log APH Select : rabais 30% sur prime + amort jusqu'a 50 ans
-  </div>
-</div>
-
-<!-- =================== MUTATION =================== -->
-<div class="tool" id="tool-mutation">
-  <h2>Taxe de bienvenue (droits de mutation)</h2>
-  <p class="desc">calculé la taxe de bienvenue selon le bareme du Québec (echelle progressive par tranches).</p>
-
-  <div class="card">
-    <div class="card-title">Prix d’achat</div>
-    <div class="field">
-      <label>Prix d’achat de l’immeuble ($)</label>
-      <input type="number" id="mut-prix" placeholder="Ex: 700000" oninput="calcMutation()">
-    </div>
-  </div>
-
-  <div class="result" id="mut-result"></div>
-
-  <div class="note">
-    <strong>Bareme provincial Québec 2025-2026 :</strong>
-    <br>&bull; 0 - 58 900 $ : 0,5%
-    <br>&bull; 58 900 - 294 600 $ : 1,0%
-    <br>&bull; 294 600 - 500 000 $ : 1,5%
-    <br>&bull; 500 000 - 1 000 000 $ : 2,0%
-    <br>&bull; 1 000 000 - 2 000 000 $ : 2,5%
-    <br>&bull; Au-dela de 2 000 000 $ : 3,0%
-    <br><br>Payable au notaire dans les 90 jours post-closing. Aligne sur le calculateur Python du Dealfinder.
-  </div>
-</div>
-
-<!-- =================== CROISSANCE =================== -->
-<div class="tool" id="tool-croissance">
-  <h2>FHSA / CELI / REER &mdash; Croissance composee</h2>
-  <p class="desc">Projette ce que ton placement vaudra dans X années avec des cotisations régulières.</p>
-
-  <div class="card">
-    <div class="card-title">Parametres</div>
-    <div class="field-row">
-      <div class="field">
-        <label>Solde de depart ($)</label>
-        <input type="number" id="cr-debut" placeholder="Ex: 10000" value="10000" oninput="calcCroissance()">
-      </div>
-      <div class="field">
-        <label>Cotisation annuelle ($)</label>
-        <input type="number" id="cr-cotis" placeholder="Ex: 8000" value="8000" oninput="calcCroissance()">
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Rendement annuel (%)</label>
-        <input type="number" id="cr-rendement" placeholder="6" value="6" step="0.5" oninput="calcCroissance()">
-        <span class="help">Conservatif: 5-6%. Aggressif: 7-9%</span>
-      </div>
-      <div class="field">
-        <label>Durée (années)</label>
-        <input type="number" id="cr-duree" placeholder="5" value="5" oninput="calcCroissance()">
-      </div>
-    </div>
-  </div>
-
-  <div class="result" id="cr-result"></div>
-
-  <div class="note">
-    <strong>Plafonds annuels Canada 2026 :</strong>
-    <br>&bull; FHSA / CELIAPP : 8 000 $/an, max vie 40 000 $
-    <br>&bull; CELI : 7 000 $/an (plafond 2026)
-    <br>&bull; REER : 18% du revenu (max ~32 490 $ en 2026)
-  </div>
-</div>
-
-<!-- =================== COMPARATEUR =================== -->
-<div class="tool" id="tool-comparateur">
-  <h2>Comparateur 3 immeubles</h2>
-  <p class="desc">Saisis les chiffres de 3 immeubles candidats. L'app calculé DCR, mensualite, cashflow et te dit lequel est le meilleur deal.</p>
-
-  <div class="comp-grid" id="comp-grid">
-    <!-- Genere par JS -->
-  </div>
-
-  <div class="comp-results" id="comp-results"></div>
-
-  <div class="note">
-    <strong>Hypotheses du comparateur :</strong>
-    <br>&bull; Mise de fonds : 15% (SCHL Multi-Log) ou 5% si propriétaire-occupant 1-4 unités
-    <br>&bull; Taux : 5,5% / amortissement 25 ans
-    <br>&bull; Vacance : 5%
-    <br>&bull; Dépenses si non saisies : 35% des revenus bruts (estimation conservatrice)
-    <br><br>Tu peux ajuster les hypotheses dans chaque colonne.
-  </div>
-</div>
-
-</main>
+<div id="content-container"></div>
 
 <script>
-// ============== TABS ==============
-function showTool(id) {
-  document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tool-' + id).classList.add('active');
-  event.target.classList.add('active');
-  localStorage.setItem('outils_last_tab', id);
-  // Scroll au top pour ne pas atterrir au milieu de l'outil
-  window.scrollTo({top: 0, behavior: 'instant'});
+// Données chiffrées (générées par secure_html.py)
+const ENCRYPTED_DATA = {
+    salt: "HmUfbP3cU7Z1Ua6nN4XoKQ==",
+    iv: "dJZJ1GaYpwAsCUMJ",
+    ciphertext: "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"
+};
+
+// Iterations PBKDF2 (doit matcher iterations= côté Python dans secure_html.py)
+const PBKDF2_ITERATIONS = 600000;
+
+// Convert base64 to Uint8Array
+function base64ToBytes(b64) {
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
 }
 
-// Restauration tab
-window.addEventListener('DOMContentLoaded', () => {
-  const last = localStorage.getItem('outils_last_tab');
-  if (last && document.getElementById('tool-' + last)) {
-    document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tool-' + last).classList.add('active');
-    document.querySelectorAll('.tab').forEach(t => {
-      if (t.getAttribute('onclick').includes("'" + last + "'")) t.classList.add('active');
-    });
-  }
-  initComparateur();
-  // Calcul initial pour tous les outils si valeurs par défaut
-  calcCroissance();
-});
+async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(password),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+    );
 
-// ============== THEME ==============
-function toggleTheme() {
-  const cur = document.body.getAttribute('data-theme') || 'light';
-  const next = cur === 'light' ? 'dark' : 'light';
-  document.body.setAttribute('data-theme', next);
-  document.getElementById('theme-btn').textContent = next === 'light' ? 'Sombre' : 'Clair';
-  localStorage.setItem('outils_theme', next);
-}
-const savedTheme = localStorage.getItem('outils_theme') || 'dark';
-document.body.setAttribute('data-theme', savedTheme);
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('theme-btn').textContent = savedTheme === 'light' ? 'Sombre' : 'Clair';
-});
-
-// ============== FORMATTERS ==============
-const fmt$ = n => isNaN(n) ? '-' : n.toLocaleString('fr-CA', {style:'currency', currency:'CAD', maximumFractionDigits:0});
-const fmt$2 = n => isNaN(n) ? '-' : n.toLocaleString('fr-CA', {style:'currency', currency:'CAD', maximumFractionDigits:2});
-const fmtPct = n => isNaN(n) ? '-' : n.toFixed(2) + ' %';
-const fmtNum = n => isNaN(n) ? '-' : n.toFixed(2);
-
-// ============== hypothèque (utilité commune) ==============
-function paiementMensuel(principal, tauxAnnuel, anneesAmort) {
-  if (!principal || !tauxAnnuel || !anneesAmort) return 0;
-  // hypothèque canadienne : taux semi-annuel composé, mensualité
-  const tauxSemestriel = Math.pow(1 + (tauxAnnuel/100)/2, 1/6) - 1;
-  const n = anneesAmort * 12;
-  return principal * tauxSemestriel / (1 - Math.pow(1 + tauxSemestriel, -n));
+    return await crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: PBKDF2_ITERATIONS,
+            hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+    );
 }
 
-// ============== CALCUL DCR ==============
-function calcDCR() {
-  const revenus = +document.getElementById('dcr-revenus').value || 0;
-  const vacance = +document.getElementById('dcr-vacance').value || 0;
-  const dépenses = +document.getElementById('dcr-dépenses').value || 0;
-  const prêt = +document.getElementById('dcr-prêt').value || 0;
-  const taux = +document.getElementById('dcr-taux').value || 0;
-  const amort = +document.getElementById('dcr-amort').value || 0;
+async function decryptData(password) {
+    try {
+        const salt = base64ToBytes(ENCRYPTED_DATA.salt);
+        const iv = base64ToBytes(ENCRYPTED_DATA.iv);
+        const ciphertext = base64ToBytes(ENCRYPTED_DATA.ciphertext);
 
-  const revenusNets = revenus * (1 - vacance/100);
-  const noi = revenusNets - dépenses;
-  const mensualite = paiementMensuel(prêt, taux, amort);
-  const annualMortgage = mensualite * 12;
-  const dcr = annualMortgage > 0 ? noi / annualMortgage : 0;
+        const key = await deriveKey(password, salt);
 
-  let interpretation = '';
-  let cls = '';
-  if (dcr >= 1.30) { interpretation = 'Excellent &mdash; banque approuve facilement'; cls = 'good'; }
-  else if (dcr >= 1.20) { interpretation = 'Bon &mdash; SCHL Multi-Log Standard accepte'; cls = 'good'; }
-  else if (dcr >= 1.10) { interpretation = 'Limite &mdash; certaines banques refusent'; cls = 'warn'; }
-  else if (dcr > 0) { interpretation = 'Insuffisant &mdash; refus presque certain'; cls = 'bad'; }
-  else { interpretation = 'Saisis les chiffres pour calculer'; cls = ''; }
+        const plaintextBuffer = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            ciphertext
+        );
 
-  document.getElementById('dcr-result').innerHTML = `
-    <div class="result-row"><span class="label">Revenus nets (après vacance)</span><span class="value">${fmt$(revenusNets)}</span></div>
-    <div class="result-row"><span class="label">NOI (revenus nets &minus; dépenses)</span><span class="value">${fmt$(noi)}</span></div>
-    <div class="result-row"><span class="label">Mensualité hypothécaire</span><span class="value">${fmt$(mensualite)}/mois</span></div>
-    <div class="result-row"><span class="label">Service de la dette annuel</span><span class="value">${fmt$(annualMortgage)}</span></div>
-    <div class="result-row highlight ${cls}"><span class="label">DCR</span><span class="value">${fmtNum(dcr)}</span></div>
-    <div class="result-row ${cls}"><span class="label">Verdict</span><span class="value">${interpretation}</span></div>
-  `;
+        // Décompression : le contenu est gzippé
+        const compressed = new Uint8Array(plaintextBuffer);
+
+        // Decompress using DecompressionStream (browser native)
+        const ds = new DecompressionStream("gzip");
+        const stream = new Blob([compressed]).stream().pipeThrough(ds);
+        const decompressed = await new Response(stream).text();
+
+        return decompressed;
+    } catch (e) {
+        return null;
+    }
 }
 
-// ============== CALCUL MENSUALITE ==============
-function calcMensualite() {
-  const prêt = +document.getElementById('mens-prêt').value || 0;
-  const taux = +document.getElementById('mens-taux').value || 0;
-  const amort = +document.getElementById('mens-amort').value || 0;
+async function unlock() {
+    const passwordInput = document.getElementById('password');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const errorMsg = document.getElementById('error');
+    const loader = document.getElementById('loader');
 
-  if (!prêt || !taux || !amort) {
-    document.getElementById('mens-result').innerHTML = '<div class="result-row"><span class="label">Saisis les valeurs ci-dessus</span><span class="value">-</span></div>';
-    return;
-  }
+    const password = passwordInput.value.trim();
+    if (!password) return;
 
-  const mensualite = paiementMensuel(prêt, taux, amort);
-  const annuel = mensualite * 12;
-  const totalPayé = mensualite * amort * 12;
-  const interetsTotal = totalPayé - prêt;
+    unlockBtn.disabled = true;
+    unlockBtn.style.display = 'none';
+    loader.style.display = 'block';
+    errorMsg.style.display = 'none';
 
-  // Stress test
-  const tauxStress = Math.max(taux + 2, 5.25);
-  const mensualiteStress = paiementMensuel(prêt, tauxStress, amort);
+    await new Promise(resolve => setTimeout(resolve, 50));
 
-  // Repartition année 1 (approximation)
-  const interetsAn1 = prêt * (taux/100);
-  const capitalAn1 = annuel - interetsAn1;
+    const decrypted = await decryptData(password);
 
-  document.getElementById('mens-result').innerHTML = `
-    <div class="result-row highlight"><span class="label">Mensualite</span><span class="value">${fmt$2(mensualite)}/mois</span></div>
-    <div class="result-row"><span class="label">Paiement annuel</span><span class="value">${fmt$(annuel)}/an</span></div>
-    <div class="result-row"><span class="label">Capital remboursé an 1</span><span class="value">${fmt$(capitalAn1)}</span></div>
-    <div class="result-row"><span class="label">Intérêts payés an 1</span><span class="value">${fmt$(interetsAn1)}</span></div>
-    <div class="result-row"><span class="label">Total intérêts sur ${amort} ans</span><span class="value">${fmt$(interetsTotal)}</span></div>
-    <div class="result-row"><span class="label">Total paye (capital + intérêts)</span><span class="value">${fmt$(totalPayé)}</span></div>
-    <div class="result-row warn"><span class="label">Stress test (taux ${tauxStress}%)</span><span class="value">${fmt$2(mensualiteStress)}/mois</span></div>
-  `;
-}
-
-// ============== CALCUL SCHL ==============
-function calcSCHL() {
-  const prog = document.getElementById('schl-prog').value;
-  const prix = +document.getElementById('schl-prix').value || 0;
-  const down = +document.getElementById('schl-down').value || 0;
-
-  if (!prix || !down) {
-    document.getElementById('schl-result').innerHTML = '<div class="result-row"><span class="label">Saisis prix + mise de fonds</span><span class="value">-</span></div>';
-    return;
-  }
-
-  const prêt = prix - down;
-  const ltv = (prêt / prix) * 100;
-  const downPct = (down / prix) * 100;
-
-  // Tables de prime SCHL approximatives 2025-2026
-  let primeRate = 0;
-  let warning = '';
-
-  if (prog === 'resid') {
-    if (downPct >= 20) { primeRate = 0; }
-    else if (downPct >= 15) { primeRate = 2.8; }
-    else if (downPct >= 10) { primeRate = 3.1; }
-    else if (downPct >= 5) { primeRate = 4.0; }
-    else { warning = 'Mise de fonds < 5% non admissible (residentiel)'; }
-  } else if (prog === 'resid_loc') {
-    if (downPct >= 20) { primeRate = 1.45; }
-    else { warning = 'Locatif pur 1-4 unités exige minimum 20% down'; }
-  } else if (prog === 'multi_std') {
-    if (downPct >= 25) { primeRate = 3.0; }
-    else if (downPct >= 20) { primeRate = 4.0; }
-    else if (downPct >= 15) { primeRate = 5.0; }
-    else { warning = 'Multi-Log Standard exige minimum 15% down'; }
-  } else if (prog === 'multi_aph') {
-    // Rabais 30% sur prime base
-    if (downPct >= 25) { primeRate = 3.0 * 0.7; }
-    else if (downPct >= 20) { primeRate = 4.0 * 0.7; }
-    else if (downPct >= 15) { primeRate = 5.0 * 0.7; }
-    else { warning = 'Multi-Log APH exige minimum 15% down'; }
-  }
-
-  const prime = prêt * (primeRate / 100);
-  const tvq = prime * 0.09975;  // TVQ payable cash
-  const prêtAvecPrime = prêt + prime;
-
-  const html = `
-    <div class="result-row"><span class="label">Prêt avant assurance</span><span class="value">${fmt$(prêt)}</span></div>
-    <div class="result-row"><span class="label">LTV (loan-to-value)</span><span class="value">${fmtPct(ltv)}</span></div>
-    <div class="result-row"><span class="label">Mise de fonds</span><span class="value">${fmtPct(downPct)} (${fmt$(down)})</span></div>
-    <div class="result-row highlight"><span class="label">Prime SCHL (${fmtPct(primeRate)} du prêt)</span><span class="value">${fmt$(prime)}</span></div>
-    <div class="result-row warn"><span class="label">TVQ 9,975% sur prime (CASH au closing)</span><span class="value">${fmt$(tvq)}</span></div>
-    <div class="result-row"><span class="label">Prêt total avec prime ajoutee</span><span class="value">${fmt$(prêtAvecPrime)}</span></div>
-    ${warning ? `<div class="result-row bad"><span class="label">Attention</span><span class="value">${warning}</span></div>` : ''}
-  `;
-  document.getElementById('schl-result').innerHTML = html;
-}
-
-// ============== CALCUL MUTATION ==============
-function calcMutation() {
-  const prix = +document.getElementById('mut-prix').value || 0;
-
-  if (!prix) {
-    document.getElementById('mut-result').innerHTML = '<div class="result-row"><span class="label">Saisis le prix</span><span class="value">-</span></div>';
-    return;
-  }
-
-  // Bareme provincial Québec 2025-2026 (aligne sur scripts/dealfinder/analyzer.py droits_mutation).
-  // Tranches officielles (Loi sur les droits sur les mutations immobilieres) :
-  const tranches = [
-    {jusqua: 58900,    taux: 0.005},
-    {jusqua: 294600,   taux: 0.010},
-    {jusqua: 500000,   taux: 0.015},
-    {jusqua: 1000000,  taux: 0.020},
-    {jusqua: 2000000,  taux: 0.025},
-    {jusqua: Infinity, taux: 0.030},
-  ];
-  let total = 0;
-  let détail = [];
-  let prev = 0;
-  for (const t of tranches) {
-    if (prix <= prev) break;
-    const tranchePrix = Math.min(prix, t.jusqua) - prev;
-    const tax = tranchePrix * t.taux;
-    total += tax;
-    const label = t.jusqua === Infinity
-      ? `${fmt$(prev)}+ a ${(t.taux*100).toFixed(1)}%`
-      : `${fmt$(prev)} - ${fmt$(t.jusqua)} a ${(t.taux*100).toFixed(1)}%`;
-    detail.push({label, value: tax});
-    prev = t.jusqua;
-  }
-
-  let html = '';
-  detail.forEach(d => {
-    html += `<div class="result-row"><span class="label">${d.label}</span><span class="value">${fmt$(d.value)}</span></div>`;
-  });
-  html += `<div class="result-row highlight"><span class="label">Taxe de bienvenue totale</span><span class="value">${fmt$(total)}</span></div>`;
-
-  document.getElementById('mut-result').innerHTML = html;
-}
-
-// ============== CALCUL CROISSANCE ==============
-function calcCroissance() {
-  const debut = +document.getElementById('cr-debut').value || 0;
-  const cotis = +document.getElementById('cr-cotis').value || 0;
-  const rend = (+document.getElementById('cr-rendement').value || 0) / 100;
-  const duree = +document.getElementById('cr-duree').value || 0;
-
-  // Croissance composee avec cotisations annuelles en debut d'année
-  let solde = debut;
-  let cotisationsTotal = 0;
-  for (let i = 0; i < duree; i++) {
-    solde += cotis;  // cotisation au debut
-    cotisationsTotal += cotis;
-    solde *= (1 + rend);  // croissance fin d'annee
-  }
-  const croissance = solde - debut - cotisationsTotal;
-
-  document.getElementById('cr-result').innerHTML = `
-    <div class="result-row"><span class="label">Solde de depart</span><span class="value">${fmt$(debut)}</span></div>
-    <div class="result-row"><span class="label">Cotisations totales (${duree} ans)</span><span class="value">${fmt$(cotisationsTotal)}</span></div>
-    <div class="result-row good"><span class="label">Croissance gagnee</span><span class="value">+${fmt$(croissance)}</span></div>
-    <div class="result-row highlight"><span class="label">Solde final dans ${duree} ans</span><span class="value">${fmt$(solde)}</span></div>
-  `;
-}
-
-// ============== COMPARATEUR ==============
-function initComparateur() {
-  const grid = document.getElementById('comp-grid');
-  let html = '';
-  for (let i = 1; i <= 3; i++) {
-    html += `
-      <div class="comp-col">
-        <div class="comp-col-title">Immeuble ${i}</div>
-        <label>Adresse / nom</label>
-        <input type="text" data-comp="nom" data-i="${i}" placeholder="Ex: 123 rue X" oninput="calcComparateur()">
-        <label>Prix demande ($)</label>
-        <input type="number" data-comp="prix" data-i="${i}" placeholder="700000" oninput="calcComparateur()">
-        <label>Nb logements</label>
-        <input type="number" data-comp="logs" data-i="${i}" placeholder="4" oninput="calcComparateur()">
-        <label>Loyers mensuels totaux ($)</label>
-        <input type="number" data-comp="loyers" data-i="${i}" placeholder="4200" oninput="calcComparateur()">
-        <label>Dépenses opérationnelles annuelles ($, optionnel)</label>
-        <input type="number" data-comp="dep" data-i="${i}" placeholder="auto: 35% loyers" oninput="calcComparateur()">
-        <label>Mise de fonds (%)</label>
-        <input type="number" data-comp="down" data-i="${i}" value="5" step="1" oninput="calcComparateur()">
-      </div>
-    `;
-  }
-  grid.innerHTML = html;
-  // Restaurer données sauvegardées
-  try {
-    const saved = JSON.parse(localStorage.getItem('outils_comp') || '{}');
-    document.querySelectorAll('[data-comp]').forEach(input => {
-      const key = input.dataset.comp + input.dataset.i;
-      if (saved[key] !== undefined && saved[key] !== '') input.value = saved[key];
-    });
-  } catch(e){}
-  calcComparateur();
-}
-
-function calcComparateur() {
-  // Sauvegarder
-  const saveData = {};
-  document.querySelectorAll('[data-comp]').forEach(input => {
-    const key = input.dataset.comp + input.dataset.i;
-    saveData[key] = input.value;
-  });
-  localStorage.setItem('outils_comp', JSON.stringify(saveData));
-
-  // Calculer pour chaque immeuble
-  const results = [];
-  for (let i = 1; i <= 3; i++) {
-    const get = key => document.querySelector(`[data-comp="${key}"][data-i="${i}"]`).value;
-    const nom = get('nom') || `Immeuble ${i}`;
-    const prix = +get('prix') || 0;
-    const logs = +get('logs') || 0;
-    const loyers = +get('loyers') || 0;
-    const downPct = +get('down') || 5;
-    const depSaisi = +get('dep') || 0;
-
-    if (!prix || !loyers) {
-      results.push({nom, vide: true});
-      continue;
+    if (decrypted === null) {
+        unlockBtn.disabled = false;
+        unlockBtn.style.display = 'block';
+        loader.style.display = 'none';
+        errorMsg.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+        return;
     }
 
-    const revenusBruts = loyers * 12;
-    const vacance = revenusBruts * 0.05;
-    const revenusNets = revenusBruts - vacance;
-    const dépenses = depSaisi || (revenusBruts * 0.35);
-    const noi = revenusNets - dépenses;
+    // Sauvegarder le mot de passe :
+    // - sessionStorage : pour la session courante (toujours)
+    // - localStorage : pour partage entre onglets (Outils/Dashboard ouverts en target=_blank)
+    //   et persistance après fermeture du navigateur. Sécurité : le device de l'user est son
+    //   problème ; si quelqu'un a accès à Chrome déverrouillé, il peut déjà tout voir.
+    try { sessionStorage.setItem('plan_password', password); } catch (e) {}
+    try { localStorage.setItem('plan_password', password); } catch (e) {}
 
-    const down = prix * (downPct / 100);
-    const prêt = prix - down;
-    const mensualite = paiementMensuel(prêt, 5.5, 25);
-    const annualMortgage = mensualite * 12;
-    const cashflowAnnuel = noi - annualMortgage;
-    const cashflowMensuel = cashflowAnnuel / 12;
-    const dcr = annualMortgage > 0 ? noi / annualMortgage : 0;
-    const capRate = prix > 0 ? (noi / prix) * 100 : 0;
-    const mrb = revenusBruts > 0 ? prix / revenusBruts : 0;
-    const prixParLog = logs > 0 ? prix / logs : 0;
+    // Remplacer COMPLÈTEMENT la page par le HTML déchiffré
+    // (vs iframe qui cassait les liens anchor)
+    document.open();
+    document.write(decrypted);
+    document.close();
+}
 
-    results.push({
-      nom, vide: false, prix, logs, loyers, down, prêt, mensualite,
-      noi, dcr, capRate, mrb, prixParLog, cashflowMensuel, cashflowAnnuel
-    });
-  }
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') unlock();
+});
 
-  // Trouver les "winners" pour chaque metrique
-  const valides = results.filter(r => !r.vide);
-  const bestDCR = Math.max(...valides.map(r => r.dcr));
-  const bestCap = Math.max(...valides.map(r => r.capRate));
-  const bestCashflow = Math.max(...valides.map(r => r.cashflowMensuel));
-  const bestMRB = Math.min(...valides.filter(r => r.mrb > 0).map(r => r.mrb));
-  const bestPrixLog = Math.min(...valides.filter(r => r.prixParLog > 0).map(r => r.prixParLog));
-
-  // Score global : DCR (30%) + Cashflow (40%) + Cap rate (20%) + Prix/log (10%)
-  let scores = valides.map(r => ({
-    nom: r.nom,
-    score: (r.dcr / Math.max(...valides.map(x => x.dcr || 0.001)) * 30) +
-           (r.cashflowMensuel / Math.max(...valides.map(x => x.cashflowMensuel || 0.001), 1) * 40) +
-           (r.capRate / Math.max(...valides.map(x => x.capRate || 0.001), 1) * 20) +
-           ((bestPrixLog / r.prixParLog) * 10 || 0)
-  }));
-  scores.sort((a, b) => b.score - a.score);
-
-  // Construire le tableau
-  let html = '';
-  if (valides.length === 0) {
-    html = '<div style="padding: 20px; text-align: center; color: var(--text-3);">Saisis les chiffres d\'au moins un immeuble pour comparer.</div>';
-  } else {
-    html = '<table class="comp-table"><thead><tr><th>Metrique</th>';
-    results.forEach(r => html += `<th>${r.nom || ''}</th>`);
-    html += '</tr></thead><tbody>';
-
-    const rows = [
-      {label: 'Prix demande', key: 'prix', fmt: fmt$, dir: 'min'},
-      {label: 'Logements', key: 'logs', fmt: n => n, dir: 'max'},
-      {label: 'Prix par logement', key: 'prixParLog', fmt: fmt$, dir: 'min', best: bestPrixLog},
-      {label: 'Loyers mensuels', key: 'loyers', fmt: fmt$, dir: 'max'},
-      {label: 'NOI annuel', key: 'noi', fmt: fmt$, dir: 'max'},
-      {label: 'Mise de fonds', key: 'down', fmt: fmt$, dir: 'min'},
-      {label: 'Mensualité hypothécaire', key: 'mensualite', fmt: fmt$2, dir: 'min'},
-      {label: 'Cashflow / mois', key: 'cashflowMensuel', fmt: fmt$2, dir: 'max', best: bestCashflow, highlight: true},
-      {label: 'Cashflow / an', key: 'cashflowAnnuel', fmt: fmt$, dir: 'max'},
-      {label: 'DCR', key: 'dcr', fmt: fmtNum, dir: 'max', best: bestDCR, highlight: true},
-      {label: 'Cap rate (TGA)', key: 'capRate', fmt: fmtPct, dir: 'max', best: bestCap},
-      {label: 'MRB (multiplicateur revenu brut)', key: 'mrb', fmt: fmtNum, dir: 'min', best: bestMRB},
-    ];
-
-    rows.forEach(row => {
-      html += `<tr><td>${row.label}</td>`;
-      results.forEach(r => {
-        if (r.vide) { html += '<td class="value">-</td>'; return; }
-        const val = r[row.key];
-        let cls = 'value';
-        if (row.best !== undefined && val === row.best && valides.length > 1) cls += ' winner';
-        if (row.highlight) cls += ' highlight';
-        html += `<td class="${cls}">${row.fmt(val)}</td>`;
-      });
-      html += '</tr>';
-    });
-
-    // Recommandation finale
-    if (scores.length > 0) {
-      html += '<tr class="recommendation"><td>Recommandation</td>';
-      results.forEach(r => {
-        if (r.vide) { html += '<td class="value">-</td>'; return; }
-        if (r.nom === scores[0].nom) {
-          html += '<td class="value winner">MEILLEUR DEAL</td>';
+// Auto-unlock silencieux si mot de passe deja sauvegardé
+// Vérifier sessionStorage d'abord (priorité onglet courant), puis localStorage (autres onglets)
+(async () => {
+    try {
+        const saved = sessionStorage.getItem('plan_password') || localStorage.getItem('plan_password');
+        if (!saved) return;
+        document.getElementById('login-container').style.opacity = '0.4';
+        const decrypted = await decryptData(saved);
+        if (decrypted !== null) {
+            // Synchroniser les 2 stockages au cas où
+            try { sessionStorage.setItem('plan_password', saved); } catch(e) {}
+            try { localStorage.setItem('plan_password', saved); } catch(e) {}
+            document.open();
+            document.write(decrypted);
+            document.close();
         } else {
-          const rank = scores.findIndex(s => s.nom === r.nom) + 1;
-          html += `<td class="value">#${rank}</td>`;
+            // Mot de passe invalide (peut-être changé) -> nettoyer pour forcer re-saisie
+            sessionStorage.removeItem('plan_password');
+            localStorage.removeItem('plan_password');
+            document.getElementById('login-container').style.opacity = '1';
         }
-      });
-      html += '</tr>';
-    }
-
-    html += '</tbody></table>';
-  }
-  document.getElementById('comp-results').innerHTML = html;
-}
+    } catch (e) {}
+})();
 </script>
+
 </body>
 </html>

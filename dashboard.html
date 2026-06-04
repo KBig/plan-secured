@@ -2,1332 +2,316 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0d0d0d">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>Dashboard — Plan immobilier</title>
-
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-title" content="Dashboard">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="20260604-150324">
+<title>Tableau de bord — Accès sécurisé</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-:root {
-  --bg: #ffffff;
-  --bg-2: #fafafa;
-  --bg-3: #f0f0f0;
-  --bg-4: #e8e8e8;
-  --text: #111111;
-  --text-2: #444444;
-  --text-3: #777777;
-  --border: #e0e0e0;
-  --border-2: #c8c8c8;
-  --accent: #0066cc;
-  --accent-2: #003d7a;
-  --green: #1a7f37;
-  --red: #cf222e;
-  --orange: #d1841d;
-  --purple: #6639ba;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08);
-  --radius: 6px;
-  --radius-lg: 10px;
-}
-[data-theme="dark"] {
-  --bg: #0d0d0d;
-  --bg-2: #1a1a1a;
-  --bg-3: #222222;
-  --bg-4: #2a2a2a;
-  --text: #e8e8e8;
-  --text-2: #b8b8b8;
-  --text-3: #888888;
-  --border: #333333;
-  --border-2: #444444;
-  --accent: #66b3ff;
-  --accent-2: #99ccff;
-  --green: #3fb950;
-  --red: #f85149;
-  --orange: #f0883e;
-  --purple: #a371f7;
-  --shadow: 0 1px 3px rgba(0,0,0,0.4);
-}
-html, body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    background: #f5f5f5;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* TOPBAR */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--bg-2);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.topbar h1 {
-  font-size: 15px;
-  font-weight: 600;
-  flex: 1;
-  letter-spacing: -0.01em;
-}
-.btn-text {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-2);
-  padding: 6px 12px;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.btn-text:hover, .btn-text:active {
-  background: var(--bg-3);
-  border-color: var(--border-2);
-  color: var(--text);
-}
-.back-btn {
-  text-decoration: none;
-  font-weight: 500;
-}
-.back-btn:hover { color: var(--text); }
-
-/* TABS */
-.tabs {
-  position: sticky;
-  top: 51px;
-  z-index: 90;
-  background: var(--bg-2);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex: 0 0 auto;
-  background: transparent;
-  border: none;
-  border-bottom: 3px solid transparent;
-  color: var(--text-3);
-  padding: 14px 18px;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s;
-}
-.tab:hover, .tab:active { color: var(--text); }
-.tab.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  font-weight: 600;
-}
-.coach-checklist { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
-.coach-checklist li { background: var(--bg-3); border-radius: 6px; padding: 10px 12px; border-left: 3px solid var(--text-3); }
-.coach-checklist li.done { border-left-color: var(--green); }
-.coach-checklist li.failed { border-left-color: var(--red); opacity: 0.85; }
-.coach-checklist label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; }
-.coach-checklist input[type=checkbox] { margin-top: 3px; flex-shrink: 0; transform: scale(1.15); cursor: pointer; }
-.coach-checklist small { color: var(--text-3); font-size: 11.5px; }
-.coach-checklist .auto-status { font-weight: 600; margin-left: auto; padding: 2px 8px; border-radius: 999px; font-size: 11px; }
-.coach-checklist .auto-status.green { background: var(--green-bg); color: var(--green); }
-.coach-checklist .auto-status.red { background: var(--red-bg); color: var(--red); }
-
-/* MAIN */
-main {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 32px 16px 80px;
+.login-container {
+    background: #ffffff;
+    padding: 48px 40px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 420px;
 }
 
-.tool { display: none; }
-.tool.active { display: block; animation: fade 0.2s; }
-@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-.tool h2 {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  letter-spacing: -0.015em;
-  scroll-margin-top: 110px;
-}
-.tool .desc {
-  color: var(--text-2);
-  font-size: 13px;
-  margin-bottom: 20px;
-  line-height: 1.6;
+.login-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
 }
 
-.card {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 18px;
-  margin-bottom: 16px;
+.login-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 32px;
 }
 
-.card-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-2);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 14px;
+.password-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
 }
 
-.field { margin-bottom: 12px; }
-.field:last-child { margin-bottom: 0; }
-.field label {
-  display: block;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-2);
-  margin-bottom: 6px;
-}
-.field .help {
-  display: block;
-  font-size: 11px;
-  color: var(--text-3);
-  margin-top: 4px;
-}
-.field input, .field select {
-  width: 100%;
-  padding: 10px 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--text);
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.15s;
-}
-.field input:focus, .field select:focus {
-  border-color: var(--accent);
+.password-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    background: #ffffff;
+    color: #111;
+    border-radius: 4px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 20px;
+    font-family: inherit;
 }
 
-/* COMPARISON ROWS */
-.cmp-row {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
+.password-input:focus {
+    border-color: #1a1a1a;
 }
-.cmp-row:last-child { border-bottom: none; }
-.cmp-row .cmp-label {
-  font-size: 13px;
-  color: var(--text-2);
-  font-weight: 500;
-}
-.cmp-row .cmp-val {
-  font-size: 14px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-}
-.cmp-row .cmp-target {
-  font-size: 13px;
-  color: var(--text-3);
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-}
-.cmp-status {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.cmp-status.good { background: var(--green); }
-.cmp-status.warn { background: var(--orange); }
-.cmp-status.bad { background: var(--red); }
-.cmp-status.empty { background: var(--text-3); opacity: 0.3; }
 
-@media (max-width: 600px) {
-  .cmp-row {
-    grid-template-columns: 1fr 1fr auto;
-    gap: 8px;
+.unlock-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: #1a1a1a;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.unlock-btn:hover {
+    background: #000;
+}
+
+.unlock-btn:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.error-msg {
+    color: #b00020;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+}
+
+.security-info {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e5;
     font-size: 12px;
-  }
-  .cmp-row .cmp-target { display: none; }
+    color: #666;
+    line-height: 1.5;
 }
 
-/* GRAPHIQUE */
-.chart-container {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  margin-bottom: 16px;
+.security-info strong {
+    color: #333;
+    font-weight: 500;
 }
-canvas {
-  width: 100% !important;
-  height: auto !important;
-  max-height: 400px;
-  display: block;
-}
-.chart-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-}
-.chart-legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-2); }
-.chart-legend-color { width: 14px; height: 3px; border-radius: 1px; }
-.chart-legend-color.dot { width: 8px; height: 8px; border-radius: 50%; }
-.chart-jalons { margin-top: 8px; padding: 8px 10px; background: var(--bg-3); border-radius: 6px; font-size: 11.5px; color: var(--text-2); line-height: 1.6; }
-.chart-jalons strong { color: var(--text); }
 
-/* HEADER STAT */
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  margin-bottom: 20px;
+#content-container {
+    display: none;
+    width: 100%;
+    height: 100vh;
 }
-.stat {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 14px;
-  text-align: center;
-}
-.stat-value {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
-}
-.stat-label {
-  font-size: 11px;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 4px;
-}
-.stat.good .stat-value { color: var(--green); }
-.stat.warn .stat-value { color: var(--orange); }
-.stat.bad .stat-value { color: var(--red); }
 
-.note {
-  background: var(--bg-3);
-  border-left: 3px solid var(--accent);
-  padding: 12px 14px;
-  border-radius: 4px;
-  font-size: 12px;
-  color: var(--text-2);
-  line-height: 1.6;
-  margin-top: 16px;
+#content-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
 }
-.note strong { color: var(--text); }
 
-button.action {
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-  margin-right: 8px;
+.loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e5e5;
+    border-top: 2px solid #1a1a1a;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 16px auto 0;
 }
-button.action:hover { background: var(--accent-2); }
-button.action.secondary {
-  background: var(--bg-3);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-button.action.secondary:hover { background: var(--bg-4); }
 
-.path-selector {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
-.path-btn {
-  flex: 1;
-  background: var(--bg-2);
-  border: 2px solid var(--border);
-  color: var(--text-2);
-  padding: 12px;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s;
-  text-align: left;
-}
-.path-btn.active {
-  border-color: var(--accent);
-  background: var(--bg-3);
-  color: var(--text);
-}
-.path-btn .path-name { font-weight: 600; display: block; margin-bottom: 4px; }
-.path-btn .path-target { font-size: 11px; color: var(--text-3); }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <a href="index.html" class="btn-text back-btn" title="Retour au plan">&larr; Plan</a>
-  <h1>Dashboard &mdash; Plan vs Réalité</h1>
-  <button class="btn-text" onclick="toggleTheme()" id="theme-btn">Sombre</button>
+<div id="login-container" class="login-container">
+    <h1 class="login-title">Tableau de bord</h1>
+    <p class="login-subtitle">Document protégé. Mot de passe requis pour accéder au contenu.</p>
+
+    <label for="password" class="password-label">Mot de passe</label>
+    <input type="password" id="password" class="password-input" placeholder="" autofocus autocomplete="current-password">
+    <button id="unlock-btn" class="unlock-btn" onclick="unlock()">Accéder au document</button>
+
+    <div class="loader" id="loader"></div>
+    <div class="error-msg" id="error">Mot de passe incorrect</div>
+
+    <div class="security-info">
+        <strong>Chiffrement</strong> : AES-256-GCM<br>
+        <strong>Dérivation de clé</strong> : PBKDF2-SHA256, 600 000 itérations<br>
+        <strong>Confidentialité</strong> : déchiffrement local, aucune donnée transmise
+    </div>
 </div>
 
-<div class="tabs">
-  <button class="tab active" onclick="showTool('saisie')">Mes chiffres</button>
-  <button class="tab" onclick="showTool('comparaison')">Comparaison vs cibles</button>
-  <button class="tab" onclick="showTool('graphique')">Graphique 21-50 ans</button>
-  <button class="tab" onclick="showTool('coach')">Coach préparation</button>
-</div>
-
-<main>
-
-<!-- =================== SAISIE =================== -->
-<div class="tool active" id="tool-saisie">
-  <h2>Mes chiffres réels</h2>
-  <p class="desc">Saisis tes chiffres actuels. Ils sont sauvegardés localement (jamais envoyés en ligne) et utilisés pour la comparaison vs plan et le graphique.</p>
-
-  <div class="card">
-    <div class="card-title">Date de référence</div>
-    <div class="field">
-      <label>Date du snapshot</label>
-      <input type="date" id="r-date" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>Mon âge</label>
-      <input type="number" id="r-age" placeholder="21" min="18" max="80" oninput="saveData()">
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Placements et cash</div>
-    <div class="field">
-      <label>FHSA / CELIAPP ($)</label>
-      <input type="number" id="r-fhsa" placeholder="10000" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>CELI ($)</label>
-      <input type="number" id="r-celi" placeholder="2600" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>REER ($)</label>
-      <input type="number" id="r-reer" placeholder="0" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>Cash + fonds urgence ($)</label>
-      <input type="number" id="r-cash" placeholder="5000" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>Compte non-enregistré ($)</label>
-      <input type="number" id="r-nonreg" placeholder="0" oninput="saveData()">
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Revenu et dettes</div>
-    <div class="field">
-      <label>Revenu net annuel (toi seul) ($)</label>
-      <input type="number" id="r-revenu" placeholder="39900" oninput="saveData()">
-      <span class="help">T4 + vacances CCQ + remb impôt = revenu net total</span>
-    </div>
-    <div class="field">
-      <label>Dette consommation (auto, cartes) ($)</label>
-      <input type="number" id="r-dette" placeholder="18900" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>Cote de crédit (Equifax)</label>
-      <input type="number" id="r-credit" placeholder="758" min="300" max="900" oninput="saveData()">
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Immobilier</div>
-    <div class="field">
-      <label>Nombre de portes (logements détenus)</label>
-      <input type="number" id="r-portes" placeholder="0" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>Équité immobilière totale ($)</label>
-      <input type="number" id="r-equity" placeholder="0" oninput="saveData()">
-      <span class="help">Valeur des immeubles - hypothèques restantes</span>
-    </div>
-    <div class="field">
-      <label>Cashflow mensuel net ($/mois)</label>
-      <input type="number" id="r-cashflow" placeholder="0" oninput="saveData()">
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Conjointe (Mode B 50/50, optionnel)</div>
-    <p class="desc" style="margin-bottom:10px">Si renseigné : utilisé pour calculer le patrimoine couple réel. Sinon : approximation × 2 (Mode B 50/50 strict, hypothèse identique à toi).</p>
-    <div class="field">
-      <label>FHSA conjointe ($)</label>
-      <input type="number" id="r-c-fhsa" placeholder="laisser vide = identique à toi" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>CELI conjointe ($)</label>
-      <input type="number" id="r-c-celi" placeholder="laisser vide = identique à toi" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>REER conjointe ($)</label>
-      <input type="number" id="r-c-reer" placeholder="laisser vide = identique à toi" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>Cash + fonds urgence conjointe ($)</label>
-      <input type="number" id="r-c-cash" placeholder="laisser vide = identique à toi" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>Compte non-enregistré conjointe ($)</label>
-      <input type="number" id="r-c-nonreg" placeholder="laisser vide = identique à toi" oninput="saveData()">
-    </div>
-    <div class="field">
-      <label>Équité immobilière conjointe ($)</label>
-      <input type="number" id="r-c-equity" placeholder="laisser vide = identique à toi" oninput="saveData()">
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Choix de path (Section 24)</div>
-    <div class="path-selector">
-      <button class="path-btn active" data-path="A" onclick="selectPath('A')">
-        <span class="path-name">Path A</span>
-        <span class="path-target">Avec maison perso 28-30 ans &mdash; cible 30-38M$</span>
-      </button>
-      <button class="path-btn" data-path="B" onclick="selectPath('B')">
-        <span class="path-name">Path B</span>
-        <span class="path-target">Sans maison perso &mdash; cible 38-42M$</span>
-      </button>
-    </div>
-  </div>
-
-  <button class="action" onclick="exportData()">Exporter mes données</button>
-  <button class="action secondary" onclick="importData()">Importer</button>
-  <button class="action secondary" onclick="resetData()">Réinitialiser</button>
-</div>
-
-<!-- =================== COMPARAISON =================== -->
-<div class="tool" id="tool-comparaison">
-  <h2>Comparaison Réalité vs Cibles plan</h2>
-  <p class="desc">Compare tes chiffres saisis avec les cibles du plan pour ton âge. Indicateurs vert/jaune/rouge.</p>
-
-  <div class="stat-grid" id="cmp-stats"></div>
-
-  <div class="card">
-    <div class="card-title">Détails ligne par ligne</div>
-    <div id="cmp-rows"></div>
-  </div>
-
-  <div class="note">
-    <strong>Légende :</strong>
-    <br>&bull; <span style="color:var(--green); font-weight:600;">Vert</span> &mdash; au-dessus ou a la cible
-    <br>&bull; <span style="color:var(--orange); font-weight:600;">Orange</span> &mdash; entre 70-99% de la cible (rattrapable)
-    <br>&bull; <span style="color:var(--red); font-weight:600;">Rouge</span> &mdash; sous 70% de la cible (action requise)
-  </div>
-</div>
-
-<!-- =================== GRAPHIQUE =================== -->
-<div class="tool" id="tool-graphique">
-  <h2>Trajectoire patrimoine 21-50 ans</h2>
-  <p class="desc">Visualise les courbes de patrimoine (couple) prévues par le plan, avec ta progression réelle annotée.</p>
-
-  <div class="chart-container">
-    <canvas id="chart" width="900" height="420"></canvas>
-    <div class="chart-legend">
-      <div class="chart-legend-item">
-        <span class="chart-legend-color" style="background:#6db3f2;"></span>
-        Path B (max patrimoine)
-      </div>
-      <div class="chart-legend-item">
-        <span class="chart-legend-color" style="background:#a371f7;"></span>
-        Path A (avec maison)
-      </div>
-      <div class="chart-legend-item">
-        <span class="chart-legend-color" style="background:#3fb950;"></span>
-        Plancher robuste 95%+
-      </div>
-      <div class="chart-legend-item">
-        <span class="chart-legend-color dot" style="background:#f0883e;"></span>
-        Ta réalité
-      </div>
-    </div>
-    <div class="chart-jalons">
-      <strong>Jalons clés :</strong>
-      25 ans = 1er achat (quadruplex 700k$) •
-      27 ans = 1er APH Select •
-      29 ans = 2e APH Select •
-      30 ans = Compagnon CCQ + ImmoCo •
-      40 ans = ~10 immeubles
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Données du plan (couple, $K)</div>
-    <div id="chart-table"></div>
-  </div>
-
-  <div class="note">
-    <strong>Source :</strong> Section 24 (les 2 paths) + SOURCE_DE_VERITE.md. Les cibles sont en milliers de dollars (k$). Patrimoine couple = ta part x 2 (Mode B 50/50).
-  </div>
-</div>
-
-<!-- =================== COACH PRÉPARATION =================== -->
-<div class="tool" id="tool-coach">
-  <h2>Coach préparation à l'achat — Score 0/100</h2>
-  <p class="desc">Évalue ta préparation à l'achat 1er multiplex (jan 2030). Coche ce que tu as déjà fait. Le système te dit ce qui manque et l'urgence.</p>
-
-  <div class="card">
-    <div class="card-title">Ton score : <span id="coach-score" style="color:var(--accent);font-size:24px">—</span> / 100</div>
-    <div id="coach-bar" style="background:var(--bg-3);border-radius:6px;height:12px;overflow:hidden;margin:8px 0">
-      <div id="coach-bar-fill" style="background:var(--accent);height:100%;width:0%;transition:width 0.3s"></div>
-    </div>
-    <div id="coach-verdict" class="note" style="margin-top:8px">Coche les items pour calculer ton score.</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Critères financiers (auto-détectés depuis "Mes chiffres")</div>
-    <ul id="coach-financial" class="coach-checklist"></ul>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Critères opérationnels (à cocher manuellement)</div>
-    <p class="desc" style="margin-bottom:10px">Ces items sont à compléter d'ici jan 2030. Coche au fur et à mesure.</p>
-    <ul class="coach-checklist">
-      <li><label><input type="checkbox" data-coach-item="prequal" data-coach-pts="12"> Pré-qualification hypothécaire faite (multi-log) <small>— d'ici 2027 | 12 pts</small></label></li>
-      <li><label><input type="checkbox" data-coach-item="visites" data-coach-pts="8"> Visité 5+ multiplex similaires en personne <small>— 2027-2029 | 8 pts</small></label></li>
-      <li><label><input type="checkbox" data-coach-item="inspecteur" data-coach-pts="5"> Inspecteur en bâtiment identifié + budget réservé <small>— 2028 | 5 pts</small></label></li>
-      <li><label><input type="checkbox" data-coach-item="notaire" data-coach-pts="3"> Notaire spécialisé multi-log identifié <small>— 2029 | 3 pts</small></label></li>
-      <li><label><input type="checkbox" data-coach-item="comptable" data-coach-pts="3"> Comptable spécialisé immobilier identifié <small>— 2029 | 3 pts</small></label></li>
-      <li><label><input type="checkbox" data-coach-item="courtier" data-coach-pts="5"> Courtier hypothécaire multi-log identifié <small>— 2027 | 5 pts</small></label></li>
-      <li><label><input type="checkbox" data-coach-item="formation" data-coach-pts="6"> Formation CIIQ ou équivalent multi-log <small>— 2027-2028 | 6 pts</small></label></li>
-      <li><label><input type="checkbox" data-coach-item="rdl" data-coach-pts="4"> Comprendre RDL + clause F + baux QC <small>— Section 4 | 4 pts</small></label></li>
-      <li><label><input type="checkbox" data-coach-item="reseau" data-coach-pts="4"> Réseau professionnel actif (parents flippers, courtiers) <small>— 2027+ | 4 pts</small></label></li>
-      <li><label><input type="checkbox" data-coach-item="convention" data-coach-pts="5"> Convention notariée 50/50 signée avec conjointe <small>— Section 8 — avant achat | 5 pts</small></label></li>
-      <li><label><input type="checkbox" data-coach-item="urgence" data-coach-pts="5"> Fonds urgence 6 mois dépenses (séparé du cash 1er achat) <small>— 2029 | 5 pts</small></label></li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Recommandations action immédiate</div>
-    <div id="coach-recommendations" class="note">Coche les items pour recevoir des recommandations.</div>
-  </div>
-</div>
-
-</main>
+<div id="content-container"></div>
 
 <script>
-// ============== DATA MODEL ==============
-// Cibles patrimoine couple (k$) selon path, par âge
-// Source: Section 24 + SDV
-const CIBLES = {
-  // Path A (avec maison perso 350-500k$ — voir Section 24)
-  A: [
-    {age: 21, value: 35},     // 17,6k toi + 17,6k conjointe = 35k$ couple (approximation)
-    {age: 25, value: 60},     // 1er achat quadruplex 700k$ proprio-occupant (SDV §10)
-    {age: 27, value: 220},    // 1er APH Select (sextuplex/8-plex) (SDV §10 : 440k$ couple)
-    {age: 28, value: 350},    // achat maison personnelle
-    {age: 30, value: 700},    // 2e APH + transition ImmoCo
-    {age: 35, value: 1750},   // 5+ immeubles
-    {age: 40, value: 6000},   // 10+ immeubles
-    {age: 45, value: 17500},
-    {age: 50, value: 34000},  // cible Path A: 30-38M$
-  ],
-  // Path B (sans maison perso, max patrimoine — voir Section 24)
-  B: [
-    {age: 21, value: 35},
-    {age: 25, value: 60},
-    {age: 27, value: 250},    // 1er APH Select plus tôt (cash libre)
-    {age: 29, value: 500},    // 2e APH Select (SDV §10 : 830k$ couple à 29)
-    {age: 30, value: 700},    // transition ImmoCo
-    {age: 35, value: 2250},
-    {age: 40, value: 8000},
-    {age: 45, value: 22500},
-    {age: 50, value: 40000},  // cible Path B: 38-42M$
-  ],
-  // Plancher robuste (95%+ probabilité, peu importe path)
-  PLANCHER: [
-    {age: 21, value: 35},
-    {age: 25, value: 50},
-    {age: 28, value: 100},
-    {age: 30, value: 200},
-    {age: 35, value: 1000},
-    {age: 40, value: 3500},
-    {age: 45, value: 12000},
-    {age: 50, value: 26000},  // plancher 22-30M$
-  ]
+// Données chiffrées (générées par secure_html.py)
+const ENCRYPTED_DATA = {
+    salt: "bxxtEq2jZiOgPDchOW0uFQ==",
+    iv: "tS2QMHNZPn+s+Y+3",
+    ciphertext: "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"
 };
 
-// Cibles individuelles par âge (toi seul, à comparer avec les chiffres saisis)
-function getCiblesParAge(age, path) {
-  // Cible patrimoine TOI = patrimoine couple / 2 (Mode B 50/50)
-  const courbe = CIBLES[path] || CIBLES.A;
-  // Interpolation linéaire entre points
-  let prev = courbe[0], next = courbe[courbe.length - 1];
-  for (let i = 0; i < courbe.length - 1; i++) {
-    if (age >= courbe[i].age && age <= courbe[i+1].age) {
-      prev = courbe[i]; next = courbe[i+1]; break;
+// Iterations PBKDF2 (doit matcher iterations= côté Python dans secure_html.py)
+const PBKDF2_ITERATIONS = 600000;
+
+// Convert base64 to Uint8Array
+function base64ToBytes(b64) {
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
     }
-  }
-  const ratio = (age - prev.age) / (next.age - prev.age || 1);
-  const valueCouple = prev.value + (next.value - prev.value) * ratio;
-  return {
-    patrimoineCouple_k: valueCouple,
-    patrimoineToi_k: valueCouple / 2,
-  };
+    return bytes;
 }
 
-// Cibles spécifiques par âge (toi seul) issues du plan détaillé
-const CIBLES_DETAIL = {
-  21: { fhsa: 10000, celi: 2600, reer: 0, cash: 5000, total: 17600, revenu: 39900, dette: 18900, credit: 720, portes: 0, equity: 0 },
-  22: { fhsa: 18500, celi: 8100, reer: 0, cash: 6500, total: 33100, revenu: 47000, dette: 14000, credit: 730, portes: 0, equity: 0 },
-  23: { fhsa: 26500, celi: 15100, reer: 1500, cash: 12500, total: 55600, revenu: 56000, dette: 8000, credit: 745, portes: 0, equity: 0 },
-  24: { fhsa: 34500, celi: 22100, reer: 6500, cash: 24500, total: 87600, revenu: 70000, dette: 0, credit: 760, portes: 0, equity: 0 },
-  25: { fhsa: 40000, celi: 29100, reer: 17000, cash: 38500, total: 124600, revenu: 85000, dette: 0, credit: 770, portes: 0, equity: 0 },
-  26: { fhsa: 0, celi: 30000, reer: 5000, cash: 15000, total: 50000, revenu: 95000, dette: 0, credit: 770, portes: 4, equity: 30000 },
-  27: { fhsa: 0, celi: 38000, reer: 7000, cash: 25000, total: 70000, revenu: 100000, dette: 0, credit: 775, portes: 4, equity: 60000 },
-  28: { fhsa: 0, celi: 47000, reer: 12000, cash: 35000, total: 94000, revenu: 105000, dette: 0, credit: 775, portes: 4, equity: 90000 },
-  30: { fhsa: 0, celi: 65000, reer: 20000, cash: 40000, total: 125000, revenu: 110000, dette: 0, credit: 780, portes: 9, equity: 175000 },
-  35: { fhsa: 0, celi: 100000, reer: 50000, cash: 100000, total: 250000, revenu: 130000, dette: 0, credit: 800, portes: 25, equity: 875000 },
-  40: { fhsa: 0, celi: 200000, reer: 120000, cash: 200000, total: 520000, revenu: 150000, dette: 0, credit: 800, portes: 60, equity: 3000000 },
-  45: { fhsa: 0, celi: 400000, reer: 250000, cash: 500000, total: 1150000, revenu: 200000, dette: 0, credit: 800, portes: 130, equity: 8750000 },
-  50: { fhsa: 0, celi: 800000, reer: 500000, cash: 1500000, total: 2800000, revenu: 250000, dette: 0, credit: 800, portes: 250, equity: 17000000 },
-};
+async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(password),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+    );
 
-function ciblesPourAge(age) {
-  if (CIBLES_DETAIL[age]) return CIBLES_DETAIL[age];
-  // Interpolation entre les âges les plus proches
-  const ages = Object.keys(CIBLES_DETAIL).map(Number).sort((a,b)=>a-b);
-  let lower = ages[0], upper = ages[ages.length-1];
-  for (let i = 0; i < ages.length-1; i++) {
-    if (age >= ages[i] && age <= ages[i+1]) { lower = ages[i]; upper = ages[i+1]; break; }
-  }
-  const cl = CIBLES_DETAIL[lower];
-  const cu = CIBLES_DETAIL[upper];
-  const ratio = (age - lower) / ((upper - lower) || 1);
-  const result = {};
-  Object.keys(cl).forEach(k => {
-    result[k] = cl[k] + (cu[k] - cl[k]) * ratio;
-  });
-  return result;
+    return await crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: PBKDF2_ITERATIONS,
+            hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+    );
 }
 
-// ============== STORAGE ==============
-const STORAGE_KEY = 'dashboard_data_v2';
-let userData = null;
-let selectedPath = 'A';
+async function decryptData(password) {
+    try {
+        const salt = base64ToBytes(ENCRYPTED_DATA.salt);
+        const iv = base64ToBytes(ENCRYPTED_DATA.iv);
+        const ciphertext = base64ToBytes(ENCRYPTED_DATA.ciphertext);
 
-// Valeurs par défaut au 1er chargement = chiffres canoniques Mathis mai 2026
-// (tirés de SOURCE_DE_VERITE.md). L'utilisateur peut les modifier ensuite.
-const DEFAULTS = {
-  date: new Date().toISOString().slice(0, 10),
-  age: '21',
-  fhsa: '10000',
-  celi: '2600',
-  reer: '0',
-  cash: '5000',
-  nonreg: '0',
-  revenu: '39900',
-  dette: '18900',
-  credit: '758',
-  portes: '0',
-  equity: '0',
-  cashflow: '0'
-};
+        const key = await deriveKey(password, salt);
 
-function loadData() {
-  try {
-    userData = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-  } catch(e) { userData = null; }
+        const plaintextBuffer = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: iv },
+            key,
+            ciphertext
+        );
 
-  // Si aucune donnée sauvegardée, pré-populer avec les défauts (chiffres Mathis)
-  if (!userData || Object.keys(userData).length === 0) {
-    userData = Object.assign({}, DEFAULTS);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-  }
+        // Décompression : le contenu est gzippé
+        const compressed = new Uint8Array(plaintextBuffer);
 
-  selectedPath = localStorage.getItem('dashboard_path') || 'A';
+        // Decompress using DecompressionStream (browser native)
+        const ds = new DecompressionStream("gzip");
+        const stream = new Blob([compressed]).stream().pipeThrough(ds);
+        const decompressed = await new Response(stream).text();
 
-  // Restaurer les inputs depuis userData (qui contient soit le sauvegardé, soit les défauts)
-  Object.keys(userData).forEach(k => {
-    const el = document.getElementById('r-' + k);
-    if (el && userData[k] !== undefined && userData[k] !== '') el.value = userData[k];
-  });
-
-  // Restaurer le path
-  document.querySelectorAll('.path-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.path === selectedPath);
-  });
-}
-
-function saveData() {
-  userData = {};
-  // Champs Mathis
-  ['date','age','fhsa','celi','reer','cash','nonreg','revenu','dette','credit','portes','equity','cashflow'].forEach(k => {
-    const el = document.getElementById('r-' + k);
-    if (el) userData[k] = el.value;
-  });
-  // Champs conjointe (préfixe c-) — optionnels
-  ['c-fhsa','c-celi','c-reer','c-cash','c-nonreg','c-equity'].forEach(k => {
-    const el = document.getElementById('r-' + k);
-    if (el) userData[k] = el.value;
-  });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-  renderComparaison();
-  drawChart();
-}
-
-// Helper : retourne la valeur conjointe (champ rempli OU fallback identique à toi)
-function getConjointeValue(key) {
-  const cKey = 'c-' + key;
-  const cVal = userData[cKey];
-  if (cVal !== undefined && cVal !== '' && !Number.isNaN(+cVal)) return +cVal;
-  return +userData[key] || 0;  // Fallback Mode B 50/50 strict
-}
-
-function selectPath(p) {
-  selectedPath = p;
-  localStorage.setItem('dashboard_path', p);
-  document.querySelectorAll('.path-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.path === p);
-  });
-  renderComparaison();
-  drawChart();
-}
-
-function exportData() {
-  const blob = JSON.stringify({data: userData, path: selectedPath}, null, 2);
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(blob).then(() => {
-      alert('Données copiées dans le presse-papier. Garde-les en sécurité (texte clair).');
-    }).catch(() => {
-      prompt('Copie ces données :', blob);
-    });
-  } else {
-    prompt('Copie ces données :', blob);
-  }
-}
-
-function importData() {
-  const txt = prompt('Colle les données exportées :');
-  if (!txt) return;
-  try {
-    const obj = JSON.parse(txt);
-    if (obj.data) {
-      userData = obj.data;
-      selectedPath = obj.path || 'A';
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-      localStorage.setItem('dashboard_path', selectedPath);
-      loadData();
-      renderComparaison();
-      drawChart();
-      alert('Données importées.');
+        return decompressed;
+    } catch (e) {
+        return null;
     }
-  } catch(e) {
-    alert('Format invalide.');
-  }
 }
 
-function resetData() {
-  if (!confirm('Réinitialiser aux chiffres canoniques de Mathis (mai 2026) ? Tes saisies actuelles seront perdues.')) return;
-  localStorage.removeItem(STORAGE_KEY);
-  userData = Object.assign({}, DEFAULTS);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-  // Repopuler les inputs
-  Object.keys(userData).forEach(k => {
-    const el = document.getElementById('r-' + k);
-    if (el) el.value = userData[k];
-  });
-  renderComparaison();
-  drawChart();
-}
+async function unlock() {
+    const passwordInput = document.getElementById('password');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const errorMsg = document.getElementById('error');
+    const loader = document.getElementById('loader');
 
-// ============== COMPARAISON ==============
-function renderComparaison() {
-  const age = +userData.age || 21;
-  const cibles = ciblesPourAge(age);
+    const password = passwordInput.value.trim();
+    if (!password) return;
 
-  const reel = {
-    fhsa: +userData.fhsa || 0,
-    celi: +userData.celi || 0,
-    reer: +userData.reer || 0,
-    cash: +userData.cash || 0,
-    total: (+userData.fhsa || 0) + (+userData.celi || 0) + (+userData.reer || 0) + (+userData.cash || 0) + (+userData.nonreg || 0),
-    revenu: +userData.revenu || 0,
-    dette: +userData.dette || 0,
-    credit: +userData.credit || 0,
-    portes: +userData.portes || 0,
-    equity: +userData.equity || 0,
-  };
+    unlockBtn.disabled = true;
+    unlockBtn.style.display = 'none';
+    loader.style.display = 'block';
+    errorMsg.style.display = 'none';
 
-  // Stats top
-  const totalEcart = cibles.total > 0 ? (reel.total / cibles.total - 1) * 100 : 0;
-  const statClass = (pct) => pct >= 0 ? 'good' : pct >= -30 ? 'warn' : 'bad';
-  document.getElementById('cmp-stats').innerHTML = `
-    <div class="stat ${statClass(totalEcart)}">
-      <div class="stat-value">${totalEcart >= 0 ? '+' : ''}${totalEcart.toFixed(0)}%</div>
-      <div class="stat-label">Vs cible total liquide</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">${age}</div>
-      <div class="stat-label">Âge actuel</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">$${(reel.total/1000).toFixed(1)}k</div>
-      <div class="stat-label">Total liquide</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">$${(reel.equity/1000).toFixed(0)}k</div>
-      <div class="stat-label">Équité immo</div>
-    </div>
-  `;
+    await new Promise(resolve => setTimeout(resolve, 50));
 
-  // Lignes comparées
-  const rows = [
-    {label: 'FHSA / CELIAPP', reel: reel.fhsa, cible: cibles.fhsa, fmt: '$', dir: 'max'},
-    {label: 'CELI', reel: reel.celi, cible: cibles.celi, fmt: '$', dir: 'max'},
-    {label: 'REER', reel: reel.reer, cible: cibles.reer, fmt: '$', dir: 'max'},
-    {label: 'Cash + urgence', reel: reel.cash, cible: cibles.cash, fmt: '$', dir: 'max'},
-    {label: 'Total liquide', reel: reel.total, cible: cibles.total, fmt: '$', dir: 'max', bold: true},
-    {label: 'Revenu annuel net', reel: reel.revenu, cible: cibles.revenu, fmt: '$', dir: 'max'},
-    {label: 'Dette consommation', reel: reel.dette, cible: cibles.dette, fmt: '$', dir: 'min'},
-    {label: 'Cote de crédit', reel: reel.credit, cible: cibles.credit, fmt: 'pts', dir: 'max'},
-    {label: 'Portes (logements)', reel: reel.portes, cible: cibles.portes, fmt: 'log', dir: 'max'},
-    {label: 'Équité immobilière', reel: reel.equity, cible: cibles.equity, fmt: '$', dir: 'max'},
-  ];
+    const decrypted = await decryptData(password);
 
-  const fmtVal = (n, type) => {
-    if (n === 0) return type === '$' ? '$0' : '0' + (type === 'pts' ? '' : type === 'log' ? '' : '');
-    if (type === '$') return '$' + (n >= 1000 ? (n/1000).toFixed(1) + 'k' : n.toFixed(0));
-    if (type === 'pts') return n + ' pts';
-    if (type === 'log') return n + ' log';
-    return n;
-  };
-
-  let html = '';
-  rows.forEach(r => {
-    let status = 'empty';
-    if (r.reel > 0 || r.cible > 0) {
-      if (r.dir === 'max') {
-        const pct = r.cible > 0 ? r.reel / r.cible : (r.reel > 0 ? 1 : 0);
-        status = pct >= 1 ? 'good' : pct >= 0.7 ? 'warn' : 'bad';
-      } else {
-        // dir = min : moins c'est mieux (ex: dette)
-        if (r.cible === 0) status = r.reel === 0 ? 'good' : 'warn';
-        else status = r.reel <= r.cible ? 'good' : r.reel <= r.cible * 1.3 ? 'warn' : 'bad';
-      }
+    if (decrypted === null) {
+        unlockBtn.disabled = false;
+        unlockBtn.style.display = 'block';
+        loader.style.display = 'none';
+        errorMsg.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+        return;
     }
-    html += `
-      <div class="cmp-row">
-        <div class="cmp-label" style="${r.bold ? 'font-weight:700; color:var(--text);' : ''}">${r.label}</div>
-        <div class="cmp-val">${fmtVal(r.reel, r.fmt)}</div>
-        <div class="cmp-target">cible: ${fmtVal(r.cible, r.fmt)}</div>
-        <div class="cmp-status ${status}" title="${status}"></div>
-      </div>
-    `;
-  });
-  document.getElementById('cmp-rows').innerHTML = html;
+
+    // Sauvegarder le mot de passe :
+    // - sessionStorage : pour la session courante (toujours)
+    // - localStorage : pour partage entre onglets (Outils/Dashboard ouverts en target=_blank)
+    //   et persistance après fermeture du navigateur. Sécurité : le device de l'user est son
+    //   problème ; si quelqu'un a accès à Chrome déverrouillé, il peut déjà tout voir.
+    try { sessionStorage.setItem('plan_password', password); } catch (e) {}
+    try { localStorage.setItem('plan_password', password); } catch (e) {}
+
+    // Remplacer COMPLÈTEMENT la page par le HTML déchiffré
+    // (vs iframe qui cassait les liens anchor)
+    document.open();
+    document.write(decrypted);
+    document.close();
 }
 
-// ============== GRAPHIQUE (Canvas natif, pas de lib) ==============
-function drawChart() {
-  const canvas = document.getElementById('chart');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  // Resize for crispness
-  const dpr = window.devicePixelRatio || 1;
-  const cssWidth = canvas.parentElement.clientWidth - 40;
-  const cssHeight = 380;
-  canvas.style.width = cssWidth + 'px';
-  canvas.style.height = cssHeight + 'px';
-  canvas.width = cssWidth * dpr;
-  canvas.height = cssHeight * dpr;
-  ctx.scale(dpr, dpr);
-
-  const W = cssWidth;
-  const H = cssHeight;
-  const PAD_L = 60, PAD_R = 16, PAD_T = 20, PAD_B = 40;
-  const plotW = W - PAD_L - PAD_R;
-  const plotH = H - PAD_T - PAD_B;
-
-  const ageMin = 21, ageMax = 50;
-  // Échelle log pour mieux voir les phases début
-  const valMin = 30;       // 30k$ couple
-  const valMax = 45000;    // 45M$ couple
-
-  // Couleurs (depuis les CSS vars)
-  const styles = getComputedStyle(document.body);
-  const colorBg = styles.getPropertyValue('--bg-2').trim() || '#1a1a1a';
-  const colorBorder = styles.getPropertyValue('--border').trim() || '#333';
-  const colorText = styles.getPropertyValue('--text').trim() || '#e8e8e8';
-  const colorText2 = styles.getPropertyValue('--text-2').trim() || '#b8b8b8';
-  const isLight = !document.body.getAttribute('data-theme') || document.body.getAttribute('data-theme') === 'light';
-
-  // Clear
-  ctx.fillStyle = isLight ? '#ffffff' : '#1a1a1a';
-  ctx.fillRect(0, 0, W, H);
-
-  // Helpers
-  const xPos = age => PAD_L + ((age - ageMin) / (ageMax - ageMin)) * plotW;
-  const yPos = val => {
-    // log scale
-    const lv = Math.log10(Math.max(val, 1));
-    const lmin = Math.log10(valMin);
-    const lmax = Math.log10(valMax);
-    return PAD_T + plotH - ((lv - lmin) / (lmax - lmin)) * plotH;
-  };
-
-  // Grille
-  ctx.strokeStyle = colorBorder;
-  ctx.lineWidth = 1;
-  ctx.fillStyle = colorText2;
-  ctx.font = '11px -apple-system, sans-serif';
-
-  // Lignes Y (valeurs k$ en log)
-  const yTicks = [50, 100, 500, 1000, 5000, 10000, 40000];
-  yTicks.forEach(v => {
-    const y = yPos(v);
-    ctx.beginPath();
-    ctx.moveTo(PAD_L, y);
-    ctx.lineTo(W - PAD_R, y);
-    ctx.stroke();
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'middle';
-    const label = v >= 1000 ? '$' + (v/1000) + 'M' : '$' + v + 'k';
-    ctx.fillText(label, PAD_L - 6, y);
-  });
-
-  // Lignes X (ages tous les 5 ans)
-  for (let age = ageMin; age <= ageMax; age += 5) {
-    const x = xPos(age);
-    ctx.beginPath();
-    ctx.moveTo(x, PAD_T);
-    ctx.lineTo(x, H - PAD_B);
-    ctx.stroke();
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-    ctx.fillText(age + ' ans', x, H - PAD_B + 6);
-  }
-
-  // Tracer une courbe
-  function drawCurve(points, color, dashed) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2.5;
-    ctx.setLineDash(dashed ? [6, 4] : []);
-    ctx.beginPath();
-    points.forEach((p, i) => {
-      const x = xPos(p.age);
-      const y = yPos(p.value);
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-
-  // Path B (max, en bleu)
-  drawCurve(CIBLES.B, '#6db3f2', false);
-  // Path A (avec maison, en violet)
-  drawCurve(CIBLES.A, '#a371f7', false);
-  // Plancher (en vert pointillé)
-  drawCurve(CIBLES.PLANCHER, '#3fb950', true);
-
-  // Jalons clés du plan (annotations)
-  const JALONS = [
-    {age: 25, label: '1er achat\n(quadruplex 700k$)'},
-    {age: 27, label: '1er APH Select\n(sextuplex/8-plex)'},
-    {age: 29, label: '2e APH Select\n(12-plex)'},
-    {age: 30, label: 'Compagnon CCQ\n+ ImmoCo'},
-    {age: 40, label: '~10 immeubles\n+100 portes'},
-  ];
-  ctx.fillStyle = colorText2;
-  ctx.font = '10px -apple-system, sans-serif';
-  ctx.textAlign = 'center';
-  JALONS.forEach(j => {
-    const x = xPos(j.age);
-    // Petit triangle au-dessus du graphique
-    ctx.fillStyle = isLight ? '#888' : '#666';
-    ctx.beginPath();
-    ctx.moveTo(x - 4, PAD_T - 4);
-    ctx.lineTo(x + 4, PAD_T - 4);
-    ctx.lineTo(x, PAD_T);
-    ctx.closePath();
-    ctx.fill();
-    // Ligne pointillée verticale légère
-    ctx.strokeStyle = isLight ? 'rgba(136,136,136,0.25)' : 'rgba(180,180,180,0.18)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([3, 3]);
-    ctx.beginPath();
-    ctx.moveTo(x, PAD_T);
-    ctx.lineTo(x, H - PAD_B);
-    ctx.stroke();
-    ctx.setLineDash([]);
-  });
-
-  // Point réalité (si données saisies)
-  const age = +userData.age || 0;
-  // Toi
-  const equity = +userData.equity || 0;
-  const liquidite = (+userData.fhsa||0) + (+userData.celi||0) + (+userData.reer||0) + (+userData.cash||0) + (+userData.nonreg||0);
-  const patrimoineToi_k = (liquidite + equity) / 1000;
-  // Conjointe (vraies données si saisies, sinon fallback identique à toi)
-  const cEquity = getConjointeValue('equity');
-  const cLiquidite = getConjointeValue('fhsa') + getConjointeValue('celi') + getConjointeValue('reer') + getConjointeValue('cash') + getConjointeValue('nonreg');
-  const patrimoineConjointe_k = (cLiquidite + cEquity) / 1000;
-  const patrimoineCouple_k = patrimoineToi_k + patrimoineConjointe_k;
-
-  if (age >= ageMin && age <= ageMax && patrimoineCouple_k > 0) {
-    const x = xPos(age);
-    const y = yPos(patrimoineCouple_k);
-    // Point
-    ctx.fillStyle = '#f0883e';
-    ctx.beginPath();
-    ctx.arc(x, y, 7, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = isLight ? '#fff' : '#1a1a1a';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    // Label
-    ctx.fillStyle = '#f0883e';
-    ctx.font = 'bold 12px -apple-system, sans-serif';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    const label = `Toi (${age} ans) : ${patrimoineCouple_k >= 1000 ? '$' + (patrimoineCouple_k/1000).toFixed(1) + 'M' : '$' + patrimoineCouple_k.toFixed(0) + 'k'} couple`;
-    // Position label intelligemment
-    if (x < W / 2) ctx.fillText(label, x + 12, y);
-    else { ctx.textAlign = 'right'; ctx.fillText(label, x - 12, y); }
-  }
-
-  // Titre axes
-  ctx.fillStyle = colorText2;
-  ctx.font = '12px -apple-system, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Âge', W / 2, H - 8);
-  ctx.save();
-  ctx.translate(15, H / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText('Patrimoine couple (échelle log)', 0, 0);
-  ctx.restore();
-
-  // Tableau données sous le graphique
-  let tableHtml = '<table style="width:100%; border-collapse:collapse; font-size:12px;"><thead><tr>';
-  tableHtml += '<th style="text-align:left; padding:6px; border-bottom:1px solid var(--border); color:var(--text-2);">Âge</th>';
-  CIBLES.A.forEach(p => tableHtml += `<th style="text-align:right; padding:6px; border-bottom:1px solid var(--border); color:var(--text-2);">${p.age}</th>`);
-  tableHtml += '</tr></thead><tbody>';
-  ['Path A', 'Path B', 'Plancher'].forEach(name => {
-    const key = name === 'Path A' ? 'A' : name === 'Path B' ? 'B' : 'PLANCHER';
-    const color = name === 'Path A' ? '#a371f7' : name === 'Path B' ? '#6db3f2' : '#3fb950';
-    tableHtml += `<tr><td style="padding:6px; color:${color}; font-weight:600;">${name}</td>`;
-    CIBLES[key].forEach(p => tableHtml += `<td style="padding:6px; text-align:right; font-variant-numeric:tabular-nums;">${p.value >= 1000 ? '$' + (p.value/1000).toFixed(1) + 'M' : '$' + p.value + 'k'}</td>`);
-    tableHtml += '</tr>';
-  });
-  tableHtml += '</tbody></table>';
-  document.getElementById('chart-table').innerHTML = tableHtml;
-}
-
-// ============== TABS ==============
-function showTool(id) {
-  document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tool-' + id).classList.add('active');
-  event.target.classList.add('active');
-  localStorage.setItem('dashboard_last_tab', id);
-  // Scroll au top de la page (compense la sticky topbar + tabs)
-  window.scrollTo({top: 0, behavior: 'instant'});
-  if (id === 'graphique') setTimeout(drawChart, 50);
-  if (id === 'comparaison') renderComparaison();
-  if (id === 'coach') updateCoachScore();
-}
-
-// ============== COACH PRÉPARATION ==============
-const COACH_KEY = 'dashboard_coach_v1';
-function loadCoach() {
-  try { return JSON.parse(localStorage.getItem(COACH_KEY) || '{}'); }
-  catch(e) { return {}; }
-}
-function saveCoach(o) {
-  try { localStorage.setItem(COACH_KEY, JSON.stringify(o)); } catch(e) {}
-}
-
-const COACH_FINANCIAL = [
-  {id:'credit',  pts:8,  label:'Cote crédit ≥ 750',
-    check: u => (+u.credit||0) >= 750},
-  {id:'fhsa',    pts:8,  label:'FHSA ≥ 25 000$ accumulé',
-    check: u => (+u.fhsa||0) >= 25000},
-  {id:'celi',    pts:6,  label:'CELI ≥ 15 000$ accumulé',
-    check: u => (+u.celi||0) >= 15000},
-  {id:'cash',    pts:5,  label:'Cash + fonds urgence ≥ 5 000$',
-    check: u => (+u.cash||0) >= 5000},
-  {id:'dette',   pts:8,  label:'Dette consommation < 5 000$',
-    check: u => (+u.dette||0) < 5000},
-  {id:'liq25',   pts:10, label:'Capital total ≥ 100 000$ (toi seul, cible 25 ans)',
-    check: u => ((+u.fhsa||0)+(+u.celi||0)+(+u.reer||0)+(+u.cash||0)+(+u.nonreg||0)) >= 100000},
-];
-
-function _clearChildren(node) {
-  while (node && node.firstChild) node.removeChild(node.firstChild);
-}
-
-function updateCoachScore() {
-  var u = userData || {};
-  var totalScore = 0;
-  var maxScore = 0;
-  var failedFinancial = [];
-  var failedManual = [];
-
-  var financialList = document.getElementById('coach-financial');
-  if (financialList) {
-    _clearChildren(financialList);
-    COACH_FINANCIAL.forEach(function(c) {
-      maxScore += c.pts;
-      var ok = c.check(u);
-      if (ok) totalScore += c.pts;
-      else failedFinancial.push(c.label);
-      var li = document.createElement('li');
-      if (ok) li.classList.add('done'); else li.classList.add('failed');
-      var lbl = document.createElement('label');
-      var statusSpan = document.createElement('span');
-      statusSpan.className = 'auto-status ' + (ok ? 'green' : 'red');
-      statusSpan.textContent = (ok ? '✓' : '✗') + ' ' + c.pts + ' pts';
-      lbl.appendChild(document.createTextNode(c.label + ' '));
-      lbl.appendChild(statusSpan);
-      li.appendChild(lbl);
-      financialList.appendChild(li);
-    });
-  }
-
-  var coach = loadCoach();
-  document.querySelectorAll('[data-coach-item]').forEach(function(cb) {
-    var key = cb.dataset.coachItem;
-    var pts = parseInt(cb.dataset.coachPts) || 0;
-    maxScore += pts;
-    cb.checked = !!coach[key];
-    if (cb.checked) {
-      totalScore += pts;
-      cb.closest('li').classList.add('done');
-    } else {
-      cb.closest('li').classList.remove('done');
-      failedManual.push(cb.parentNode.textContent.trim().split('—')[0].trim());
-    }
-    cb.onchange = function() {
-      coach[key] = cb.checked;
-      saveCoach(coach);
-      updateCoachScore();
-    };
-  });
-
-  var pct = maxScore > 0 ? Math.round(totalScore * 100 / maxScore) : 0;
-  document.getElementById('coach-score').textContent = pct;
-  var fill = document.getElementById('coach-bar-fill');
-  if (fill) {
-    fill.style.width = pct + '%';
-    fill.style.background = pct >= 80 ? 'var(--green)' : (pct >= 50 ? 'var(--orange)' : 'var(--red)');
-  }
-
-  var verdict = document.getElementById('coach-verdict');
-  if (verdict) {
-    _clearChildren(verdict);
-    var msg;
-    if (pct >= 90) msg = "Préparation excellente — prêt à acheter dès qu'un deal apparaît.";
-    else if (pct >= 75) msg = "Préparation solide — finalise les derniers items, tu es presque prêt.";
-    else if (pct >= 60) msg = "Préparation moyenne — il reste du travail mais tu progresses.";
-    else if (pct >= 40) msg = "Préparation insuffisante — ne pas acheter avant de monter à 75+.";
-    else msg = "Préparation faible — focus sur les fondations financières d'abord.";
-    var s1 = document.createElement('strong');
-    s1.textContent = 'Verdict : ';
-    verdict.appendChild(s1);
-    verdict.appendChild(document.createTextNode(msg));
-  }
-
-  var recos = document.getElementById('coach-recommendations');
-  if (recos) {
-    _clearChildren(recos);
-    if (failedFinancial.length === 0 && failedManual.length === 0) {
-      recos.appendChild(document.createTextNode("Tous les critères sont validés. Tu es prêt à agir dès qu'un deal apparaît."));
-      return;
-    }
-    var s2 = document.createElement('strong');
-    s2.textContent = 'Prochaines actions prioritaires :';
-    recos.appendChild(s2);
-    var ul = document.createElement('ul');
-    ul.style.margin = '8px 0 0 20px';
-    failedFinancial.slice(0, 3).forEach(function(f) {
-      var li = document.createElement('li');
-      li.textContent = f;
-      ul.appendChild(li);
-    });
-    failedManual.slice(0, 4).forEach(function(f) {
-      var li = document.createElement('li');
-      li.textContent = f;
-      ul.appendChild(li);
-    });
-    recos.appendChild(ul);
-  }
-}
-
-// ============== THEME ==============
-function toggleTheme() {
-  const cur = document.body.getAttribute('data-theme') || 'light';
-  const next = cur === 'light' ? 'dark' : 'light';
-  document.body.setAttribute('data-theme', next);
-  document.getElementById('theme-btn').textContent = next === 'light' ? 'Sombre' : 'Clair';
-  localStorage.setItem('dashboard_theme', next);
-  drawChart();
-}
-const savedTheme = localStorage.getItem('dashboard_theme') || 'dark';
-document.body.setAttribute('data-theme', savedTheme);
-
-// ============== INIT ==============
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('theme-btn').textContent = savedTheme === 'light' ? 'Sombre' : 'Clair';
-  // Date par défaut = aujourd'hui
-  if (!document.getElementById('r-date').value) {
-    document.getElementById('r-date').value = new Date().toISOString().slice(0, 10);
-  }
-  loadData();
-  renderComparaison();
-  // Restaurer dernier tab
-  const last = localStorage.getItem('dashboard_last_tab');
-  if (last && document.getElementById('tool-' + last)) {
-    document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tool-' + last).classList.add('active');
-    document.querySelectorAll('.tab').forEach(t => {
-      if (t.getAttribute('onclick').includes("'" + last + "'")) t.classList.add('active');
-    });
-    if (last === 'graphique') setTimeout(drawChart, 100);
-  }
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') unlock();
 });
 
-// Redraw chart on resize
-window.addEventListener('resize', () => {
-  if (document.getElementById('tool-graphique').classList.contains('active')) {
-    drawChart();
-  }
-});
+// Auto-unlock silencieux si mot de passe deja sauvegardé
+// Vérifier sessionStorage d'abord (priorité onglet courant), puis localStorage (autres onglets)
+(async () => {
+    try {
+        const saved = sessionStorage.getItem('plan_password') || localStorage.getItem('plan_password');
+        if (!saved) return;
+        document.getElementById('login-container').style.opacity = '0.4';
+        const decrypted = await decryptData(saved);
+        if (decrypted !== null) {
+            // Synchroniser les 2 stockages au cas où
+            try { sessionStorage.setItem('plan_password', saved); } catch(e) {}
+            try { localStorage.setItem('plan_password', saved); } catch(e) {}
+            document.open();
+            document.write(decrypted);
+            document.close();
+        } else {
+            // Mot de passe invalide (peut-être changé) -> nettoyer pour forcer re-saisie
+            sessionStorage.removeItem('plan_password');
+            localStorage.removeItem('plan_password');
+            document.getElementById('login-container').style.opacity = '1';
+        }
+    } catch (e) {}
+})();
 </script>
+
 </body>
 </html>
