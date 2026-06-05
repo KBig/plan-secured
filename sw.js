@@ -1,4 +1,4 @@
-const VERSION = '20260604-150324';
+const VERSION = '20260605-145426';
 const CACHE = 'plan-' + VERSION;
 
 self.addEventListener('install', (e) => { self.skipWaiting(); });

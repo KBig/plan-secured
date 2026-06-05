@@ -1027,7 +1027,7 @@ td.négative { color: var(--red); }
       <button type="submit" class="fs-btn">Déverrouiller</button>
     </form>
     <div class="fs-info mt-16">
-      Données chiffrées AES-256 (PBKDF2 100k itérations). Stockées localement (IndexedDB) + sync optionnelle vers ton repo GitHub privé.
+      Données chiffrées AES-256 (PBKDF2 600k itérations). Stockées localement (IndexedDB) + sync optionnelle vers ton repo GitHub privé.
     </div>
   </div>
 </div>
@@ -1240,14 +1240,20 @@ function showSuccess(msg) { toast(msg, 'success'); }
 /* ===========================================================================
  * CRYPTO — AES-256-GCM avec PBKDF2
  * =========================================================================== */
+// Iterations PBKDF2 : 600k = standard durci 2026 (aligné sur le plan chiffre).
+// LEGACY 100k conserve : les blobs ne stockent pas le compteur d'iterations,
+// donc on tente 600k au dechiffrement puis on retombe sur 100k pour les anciennes
+// donnees. Tout re-save ré-écrit automatiquement en 600k (migration transparente).
+const PBKDF2_ITERATIONS = 600000;
+const PBKDF2_ITERATIONS_LEGACY = 100000;
 const crypto_utils = {
-  async deriveKey(password, salt) {
+  async deriveKey(password, salt, iterations = PBKDF2_ITERATIONS) {
     const enc = new TextEncoder();
     const baseKey = await crypto.subtle.importKey(
       'raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']
     );
     return await crypto.subtle.deriveKey(
-      { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+      { name: 'PBKDF2', salt, iterations, hash: 'SHA-256' },
       baseKey,
       { name: 'AES-GCM', length: 256 },
       false,
@@ -1257,7 +1263,7 @@ const crypto_utils = {
   async encrypt(plaintext, password) {
     const salt = crypto.getRandomValues(new Uint8Array(16));
     const iv = crypto.getRandomValues(new Uint8Array(12));
-    const key = await this.deriveKey(password, salt);
+    const key = await this.deriveKey(password, salt, PBKDF2_ITERATIONS);
     const enc = new TextEncoder();
     const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(plaintext));
     const out = new Uint8Array(salt.length + iv.length + ct.byteLength);
@@ -1271,9 +1277,17 @@ const crypto_utils = {
     const salt = data.slice(0, 16);
     const iv = data.slice(16, 28);
     const ct = data.slice(28);
-    const key = await this.deriveKey(password, salt);
-    const dec = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
-    return new TextDecoder().decode(dec);
+    // Tente le standard durci (600k) d'abord, puis retombe sur le legacy (100k).
+    for (const iterations of [PBKDF2_ITERATIONS, PBKDF2_ITERATIONS_LEGACY]) {
+      try {
+        const key = await this.deriveKey(password, salt, iterations);
+        const dec = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
+        return new TextDecoder().decode(dec);
+      } catch (e) {
+        if (iterations === PBKDF2_ITERATIONS_LEGACY) throw e;
+        // sinon : donnee probablement legacy 100k, on reessaie
+      }
+    }
   },
   b64encode(bytes) {
     let s = '';
@@ -4346,7 +4360,7 @@ function renderSettings() {
     <p class="muted text-sm">Cree le : ${fmt.date(APP.data.meta.createdAt)}</p>
     <p class="muted text-sm">Derniere modification : ${new Date(APP.data.meta.updatedAt).toLocaleString("fr-CA")}</p>
     <p class="muted text-sm">Stockage : IndexedDB (navigateur) + GitHub prive (si configure)</p>
-    <p class="muted text-sm">Chiffrement : AES-256-GCM avec PBKDF2 (100 000 iterations SHA-256)</p>
+    <p class="muted text-sm">Chiffrement : AES-256-GCM avec PBKDF2 (600 000 iterations SHA-256)</p>
   ` }));
   root.appendChild(cardInfo);
 }
