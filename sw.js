@@ -1,4 +1,4 @@
-const VERSION = '20260606-223133';
+const VERSION = '20260606-223936';
 const CACHE = 'plan-' + VERSION;
 
 self.addEventListener('install', (e) => { self.skipWaiting(); });
@@ -6,17 +6,12 @@ self.addEventListener('install', (e) => { self.skipWaiting(); });
 self.addEventListener('activate', (e) => {
   e.waitUntil((async () => {
     const keys = await caches.keys();
-    const hadOld = keys.some((k) => k !== CACHE);  // true => c'est une MISE A JOUR
     await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
     await self.clients.claim();
-    // AUTO-UPDATE : si une ancienne version existait, on force le rechargement de
-    // TOUTES les fenetres ouvertes -> elles servent la nouvelle version SANS aucune
-    // action de l'utilisateur. Corrige le cas PWA iOS qui "reprend" la page en cache.
-    // (skip au 1er install : pas d'ancien cache -> pas de reload inutile.)
-    if (hadOld) {
-      const wins = await self.clients.matchAll({ type: 'window' });
-      for (const w of wins) { try { await w.navigate(w.url); } catch (e) {} }
-    }
+    // NOTE : on NE force PLUS le rechargement des fenetres (clients.navigate) — ca
+    // entrait en collision avec le rendu du contenu dechiffre et figeait la page.
+    // Le network-first ci-dessous suffit : la prochaine ouverture sert deja la
+    // derniere version, sans rien casser.
   })());
 });
 
