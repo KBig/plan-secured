@@ -1088,7 +1088,7 @@ td.négative { color: var(--red); }
     <button class="topbar-burger" onclick="toggleSidebar()" aria-label="Menu">
       <span class="burger-icon"><span></span></span>
     </button>
-    <a href="index.html" class="topbar-btn" title="Retour au plan" style="text-decoration:none; display:inline-flex; align-items:center;">&larr; Plan</a>
+    <a href="index.html" onclick="location.href='index.html';return false;" class="topbar-btn" title="Retour au plan" style="text-decoration:none; display:inline-flex; align-items:center;">&larr; Plan</a>
     <button class="topbar-profile" id="topbar-profile-btn" onclick="goProfileSelect()">
       <div class="topbar-profile-avatar" id="tp-avatar">M</div>
       <div class="topbar-profile-name" id="tp-name">Mathis</div>
