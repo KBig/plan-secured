@@ -31,7 +31,10 @@ html,body{margin:0;padding:0;background:#0d0d0d;color:#e5e5e5;font-family:-apple
 (function () {
   try {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(function () {});
+      // updateViaCache:'none' -> sw.js toujours revalide (detection fiable des MAJ).
+      // .update() force une verification immediate des le demarrage.
+      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+        .then(function (r) { if (r) r.update(); }).catch(function () {});
     }
   } catch (e) {}
   location.replace('plan_complet_secured.html');
