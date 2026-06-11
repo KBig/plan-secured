@@ -29,11 +29,18 @@ html,body{margin:0;padding:0;background:#0d0d0d;color:#e5e5e5;font-family:-apple
 // Enregistre le Service Worker (best effort), puis redirige. La redirection ne dépend
 // PAS du SW (try/catch + toujours exécutée) pour ne jamais bloquer l'accès au plan.
 (function () {
+  // Service worker RETIRE (cause de freeze/cache/login casse). On nettoie tout
+  // ancien SW + caches DIRECTEMENT ici, puis on redirige. Plus aucun SW enregistre.
   try {
-    if ('serviceWorker' in navigator) {
-      // Enregistrement simple. updateViaCache:'none' = sw.js toujours revalide
-      // (detection des MAJ fiable) SANS forcer de rechargement (qui figeait l'app).
-      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(function () {});
+    if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        regs.forEach(function (r) { r.unregister(); });
+      }).catch(function () {});
+    }
+  } catch (e) {}
+  try {
+    if (window.caches && caches.keys) {
+      caches.keys().then(function (ks) { ks.forEach(function (k) { caches.delete(k); }); }).catch(function () {});
     }
   } catch (e) {}
   location.replace('plan_complet_secured.html');
